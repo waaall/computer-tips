@@ -230,6 +230,20 @@ wslconfig /setdefault Ubuntu #修改"Ubuntu"为默认的wsl
 wsl —shutdown #关闭WSL中的Linux内核
 ```
 
+#### wsl 解决ls文件夹颜色
+
+```bash
+#修改wsl里面查看windows磁盘文件的颜色
+dircolors -p > $HOME/.dircolors
+
+vim $HOME/.dircolors
+#将 STICKY_OTHER_WRITABLE 后面的数字改成02;32
+#将 OTHER_WRITABLE 后面的数字改成01;34
+
+#然后在$HOME/.bashrc(如果用zsh, $HOME/.zshrc)后面添加:
+eval $(dircolors -b $HOME/.dircolors)
+```
+
 
 
 ## 动态库
