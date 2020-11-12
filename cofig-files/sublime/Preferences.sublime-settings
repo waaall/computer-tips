@@ -1,0 +1,20 @@
+{
+	"auto_complete_selector": "source, text",
+	"color_scheme": "Packages/Color Scheme - Default/Breakers.sublime-color-scheme",
+	"font_size": 13,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"indent_to_bracket": true,
+	"line_padding_bottom": 2,
+	"line_padding_top": 2,
+	"match_brackets": false,
+	"open_files_in_new_window": false,
+	"tab_completion": false,
+	"theme": "Adaptive.sublime-theme",
+	"translate_tabs_to_spaces": true,
+	"hot_exit": false,
+	"remember_open_files": false,
+	"close_windows_when_empty": true,
+}

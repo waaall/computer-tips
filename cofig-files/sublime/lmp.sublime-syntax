@@ -1,0 +1,67 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - lmp
+scope: source.lmp
+
+contexts:
+  # The prototype context is prepended to all contexts but those setting
+  # meta_include_prototype: false.
+  prototype:
+    - include: comments
+
+  main:
+    # The main context is the initial starting point of our syntax.
+    # Include other contexts from here (or specify them directly).
+    - include: keywords
+    - include: numbers
+    - include: strings
+    - include: functions
+    - include: opertions
+    - include: parameter
+
+  keywords:
+    # Keywords are if, else for and while.
+    # Note that blackslashes don't need to be escaped within single quoted
+    # strings in YAML. When using single quoted strings, only single quotes
+    # need to be escaped: this is done by using two single quotes next to each
+    # other.
+    - match: '\b(Performance|Total|total|restart|read_restart|neighbor|thermo_style|clear|echo|if|include|jump|label|log|units|dimension|run|atom_style|bond_style|angle_style|boundary|pair_style|timestep|thermo|group|dump|lattice|mass|minimize|read_data)\b'
+      scope: keyword.control.lmp
+
+  functions:
+
+    - match: '\b(create_box|create_atoms|create_bonds|move|print|region|union|fix|unfix|compute|variable|velocity|pair_coeff|bond_coeff|angle_coeff|set|setforce|addforce)\b'
+      scope: support.function.lmp
+
+
+  #numbers:
+    #- match: '\b((-)?[0-9.]+|NULL)\b'
+      #scope: constant.numeric.lmp
+
+  strings:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character.
+    - match: '\b(|Masses|Pair|MPI|pair|Bond|Neigh|Comm|Output|Modify|Force|force|Energy|Other|CPU|linear|couple|block|box|BOX|sw|lmptrj|NVE|nve|npt|nvt|NVT|langevin|fcc|fcp|airebo|tersoff|metal|type|types|atom|atoms|Atoms)\b'
+      scope: punctuation.definition.string.lmp
+
+  opertions:
+    - match: '\b(|equal|all|sum|reduce|=|max|min|avg)\b'
+      scope: keyword.operator.lmp
+
+  parameter:
+    - match: '\b([x,y,z]hi|[x,y,z]lo|Step|PotEng|KinEng|TotEng|lj/cut|ke[0-9.]+|pe[0-9.]+|f[x,y,z]nn|[x,y,z,f,v]cm|temp|TEMP|ke|pe|KE|KB|PE|press|pressure|volume|Volume|[c,v,f]_pe[0-9.]+|[c,v,f]_ke[0-9.]+)\b'
+      scope: string.regexp.lmp
+
+#|x|y|z|vg[0-9.]+[x,y,z]|fg[0-9.]+[x,y,z]|pg[0-9.]+[x,y,z]|g[0-9.]+
+
+  comments:
+    # Comments begin with a '//' and finish at the end of the line.
+    - match: '#'
+      scope: punctuation.definition.comment.lmp
+      push:
+        # This is an anonymous context push for brevity.
+        - meta_scope: comment.line.double-slash.lmp
+        - match: $\n?
+          pop: true
