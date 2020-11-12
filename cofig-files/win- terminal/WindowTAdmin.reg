@@ -1,0 +1,11 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\runas]
+@="Terminal Admin"
+"Icon"="C:\\Users\\hpc\\Documents\\Window Terminal\\terminal.ico"
+"ShowBasedOnVelocityId"=dword:00639bc8
+ 
+[HKEY_CLASSES_ROOT\Directory\Background\shell\runas\command]
+@="wt.exe"
+
+

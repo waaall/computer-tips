@@ -1,0 +1,86 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - in
+scope: source.in
+
+contexts:
+  # The prototype context is prepended to all contexts but those setting
+  # meta_include_prototype: false.
+  prototype:
+    - include: comments
+
+  main:
+    # The main context is the initial starting point of our syntax.
+    # Include other contexts from here (or specify them directly).
+    - include: keywords
+    - include: numbers
+    - include: strings
+    - include: functions
+    - include: opertions
+    - include: parameter
+    - include: physical
+
+  keywords:
+    # Keywords are if, else for and while.
+    # Note that blackslashes don't need to be escaped within single quoted
+    # strings in YAML. When using single quoted strings, only single quotes
+    # need to be escaped: this is done by using two single quotes next to each
+    # other.
+    - match: '\b(restart|reset_timestep|read_restart|neighbor|thermo_style|clear|echo|if|include|jump|label|log|units|dimension|run|atom_style|bond_style|angle_style|boundary|pair_style|timestep|thermo|group|dump|lattice|mass|minimize|read_data)\b'
+      scope: keyword.control.in
+
+  functions:
+
+    - match: '\b(thermo_modify|neigh_modify|create_box|create_atoms|create_bonds|move|print|region|union|fix|unfix|compute|variable|velocity|pair_coeff|bond_coeff|angle_coeff|set|setforce|addforce)\b'
+      scope: support.function.in
+
+
+  numbers:
+    - match: '\b((-)?[0-9.]+|NULL|zero|INF|[0-9.]+e)\b'
+      scope: constant.numeric.in
+
+  physical:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character.
+    - match: '\b(heat/flux|orient|stress|sw|nve|npt|gaussian|nvt|langevin|fcc|fcp|airebo|tersoff|eam|ke[0-9.]+|pe[0-9.]+|f[x,y,z]nn|[x,y,z,f,v]cm|temp|ke|pe|press|pressure|volume|[c,v,f]_pe[0-9.]+|[c,v,f]_ke[0-9.]+)\b'
+      scope: string.regexp.in
+
+  strings:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character.
+    - match: '"'
+      scope: punctuation.definition.string.begin.in
+      push: inside_string
+
+  inside_string:
+    - meta_include_prototype: false
+    - meta_scope: string.quoted.double.in
+    - match: '\.'
+      scope: constant.character.escape.in
+    - match: '"'
+      scope: punctuation.definition.string.end.in
+      pop: true
+
+
+
+  opertions:
+    - match: '\b(|equal|all|sum|reduce|=|max|yes|no|true|false|delete|lower|reduced|subtract)\b'
+      scope: keyword.operator.in
+
+  parameter:
+    - match: '\b(step|ave/correlate|create|dist|ave/chunk|file|ehex|check|data.lmp|linear|chunk|couple|block|box|delay|eam/alloy|lammpstrj|metal|type|multi|nsq|bin|hybrid/overlay|hybrid|lj/cut|atom)\b'
+      scope: punctuation.definition.string.in
+
+#|x|y|z|vg[0-9.]+[x,y,z]|fg[0-9.]+[x,y,z]|pg[0-9.]+[x,y,z]|g[0-9.]+
+
+  comments:
+    # Comments begin with a '//' and finish at the end of the line.
+    - match: '#'
+      scope: punctuation.definition.comment.in
+      push:
+        # This is an anonymous context push for brevity.
+        - meta_scope: comment.line.double-slash.in
+        - match: $\n?
+          pop: true
