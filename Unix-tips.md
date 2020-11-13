@@ -807,24 +807,24 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 **官网**
 
-* Sublime	        ---文本编辑器
-* Itsycal               ---日期显示
-* Rectangle         ---窗口管理
-* FDM                  ---下载工具
-* Typaro               ---Markdown
-* IINA                   ---视频播放器
-* Appcleaner        ---软件卸载
-* Unarchiver         ---解压工具
-* f.lux                    ---动态色温
-* Cleaner Onelite  ---垃圾清理
-* MacFanControll ---风扇控制
+* [Sublime](https://www.sublimetext.com)	        ---文本编辑器
+* [Itsycal](https://www.mowglii.com/itsycal/)               ---日期显示
+* [Rectangle](https://rectangleapp.com)         ---窗口管理
+* [FDM](https://www.freedownloadmanager.org)                  ---下载工具
+* [Typaro](https://typora.io)               ---Markdown
+* [IINA](https://iina.io)                   ---视频播放器
+* [Appcleaner](https://freemacsoft.net/appcleaner/)        ---软件卸载
+* [f.lux](https://justgetflux.com)                    ---动态色温
+* [MacFanControll](https://crystalidea.com/macs-fan-control) ---风扇控制
 * BackgroundMusic-调节声音
 
 **App Store**
 
 * HiddenBar         ---隐藏图标
+* Unarchiver         ---解压工具
 * BlackMagicDisk ---硬盘测速
 * NewFileMenu    ---右键新建文件
+* Cleaner Onelite  ---垃圾清理
 
 - - - -
 
@@ -919,6 +919,10 @@ netstat -an | grep 1080	 #查看端口号信息(lsof -i:80 也是看端口号)
 sudo tlmgr repository set http://mirror.hust.edu.cn/CTAN/systems/texlive/tlnet #latex包设置镜像
 
 tlmgr update --self #更新tlmgr
+
+#finder显示隐藏文件
+defaults write com.apple.finder AppleShowAllFiles -bool true
+KillAll Finder
 
 sudo scutil --set HostName username #终端行首不显示 
 defaults write com.apple.dock springboard-rows -int 7 #改launchpad图标
