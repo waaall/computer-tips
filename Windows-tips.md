@@ -175,11 +175,25 @@ tasklist|findstr "9208"
 
 * [配置ssh：](https://www.cnblogs.com/sparkdev/p/10166061.html)、
 
+### 磁盘管理
 
+#### [Diskpart](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/diskpart) : 
 
-### Winfr [命令](https://support.microsoft.com/en-us/windows/recover-lost-files-on-windows-10-61f5b28a-f5b8-3cc2-0f8e-a63cb4e1d4c4)：
+```bash
+list disk
+list partition
+list volume
+list vdisk
 
-#### 介绍
+select disk
+select partition
+select vdisk
+select volume
+
+assign letter=e
+```
+
+#### Winfr [命令](https://support.microsoft.com/en-us/windows/recover-lost-files-on-windows-10-61f5b28a-f5b8-3cc2-0f8e-a63cb4e1d4c4)：
 
 > 1. If necessary, [download and launch the app](https://www.microsoft.com/store/r/9N26S50LN705) from the Microsoft Store.
 > 2. Press the Windows key, enter **Windows File Recovery** in the search box, and then select **Windows File Recovery.**
@@ -199,7 +213,7 @@ There are three modes you can use to recover files: Default, Segment, and Signat
 
 
 
-#### Default mode examples
+##### Default mode examples
 
 Recover a specific file from your C: drive to the recovery folder on an E: drive：
 
@@ -225,7 +239,7 @@ Don’t forget the backslash (\) at the end of the folder.
 
 
 
-#### Segment mode examples (/r)
+##### Segment mode examples (/r)
 
 Recover PDF and Word files from your C: drive to the recovery folder on an E: drive.
 ```bash
@@ -237,7 +251,7 @@ Recover any file with the string "invoice" in the filename by using wildcard cha
 winfr C: E: /r /n *invoice*
 ```
 
-**Signature mode examples (/x)**
+##### Signature mode examples (/x)**
 
 When using signature mode, it's helpful to first see the supported extension groups and corresponding file types.
 ```bash
@@ -260,6 +274,10 @@ winfr C: E:\RecoveryTest /x /y:ZIP
    Depending on the size of your source drive, this may take a while.
 
    To stop the recovery process, press Ctrl+C.
+
+#### fsutil [指令](https://docs.microsoft.com/zh-cn/windows-server/administration/windows-commands/fsutil)：
+
+
 
 ## Linux on Win
 
