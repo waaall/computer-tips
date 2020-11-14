@@ -175,6 +175,92 @@ tasklist|findstr "9208"
 
 * [配置ssh：](https://www.cnblogs.com/sparkdev/p/10166061.html)、
 
+
+
+### Winfr [命令](https://support.microsoft.com/en-us/windows/recover-lost-files-on-windows-10-61f5b28a-f5b8-3cc2-0f8e-a63cb4e1d4c4)：
+
+#### 介绍
+
+> 1. If necessary, [download and launch the app](https://www.microsoft.com/store/r/9N26S50LN705) from the Microsoft Store.
+> 2. Press the Windows key, enter **Windows File Recovery** in the search box, and then select **Windows File Recovery.**
+> 3. When you are prompted to allow the app to make changes to your device, select **Yes**.
+> 4. In the **Command Prompt** window, enter the command in the following format:
+
+```bash
+winfr source-drive: destination-drive: [/switches]
+```
+
+
+The source and destination drives must be different. When recovering from the operating system drive (often C: ), use the /n <filter> and /y:<type<(s)> switches to specify the user files or folder.
+
+Microsoft automatically creates a recovery folder for you called, Recovery_<date and time> on the destination drive.
+
+There are three modes you can use to recover files: Default, Segment, and Signature.
+
+
+
+#### Default mode examples
+
+Recover a specific file from your C: drive to the recovery folder on an E: drive：
+
+```bash
+winfr C: E: /n \Users\<username>\Documents\QuarterlyStatement.docx
+```
+
+
+Recover jpeg and png photos from your Pictures folder to the recovery folder on an E: drive：
+
+```bash
+winfr C: E: /n \Users\<username>\Pictures\*.JPEG /n \Users\<username>\Pictures\*.PNG
+```
+
+
+Recover your Documents folder from your C: drive to the recovery folder on an E: drive.
+
+```bash
+winfr C: E: /n \Users\<username>\Documents\
+```
+
+Don’t forget the backslash (\) at the end of the folder.
+
+
+
+#### Segment mode examples (/r)
+
+Recover PDF and Word files from your C: drive to the recovery folder on an E: drive.
+```bash
+winfr C: E: /r /n *.pdf /n *.docx
+```
+
+Recover any file with the string "invoice" in the filename by using wildcard characters.
+```bash
+winfr C: E: /r /n *invoice*
+```
+
+**Signature mode examples (/x)**
+
+When using signature mode, it's helpful to first see the supported extension groups and corresponding file types.
+```bash
+winfr /#
+```
+
+Recover JPEG (jpg, jpeg, jpe, jif, jfif, jfi) and PNG photos from your C: drive to the recovery folder on an E: drive.
+```bash
+winfr C: E: /x /y:JPEG,PNG
+```
+
+Recover ZIP files (zip, docx, xlsx, ptpx, and so on) from your C: drive to the recovery folder on an E: drive.
+
+```bash
+winfr C: E:\RecoveryTest /x /y:ZIP
+```
+
+1. When you are prompted for confirmation to continue, enter **Y** to start the recovery operation.
+
+   Depending on the size of your source drive, this may take a while.
+
+   To stop the recovery process, press Ctrl+C.
+
 ## Linux on Win
 
 以GNU套件为主的Liunx编程环境，在Windows上实现主要有四种方式：**虚拟机、双系统、mingw 和 WSL**。而只要不是重度使用，在2020年强烈推荐**mingw +  WSL** 方案。
@@ -259,6 +345,7 @@ eval $(dircolors -b $HOME/.dircolors)
 - [ ] geek                卸载软件
 - [ ] quicklook        空格预览
 - [ ] freefilesync    本地同步文件
+- [ ] [windows File Recovery](https://www.microsoft.com/store/r/9N26S50LN705) 文件恢复工具（官方）也成为`winfr`
 - [ ] Rufus              启动盘（2020直接[Windows官网](https://go.microsoft.com/fwlink/?LinkId=691209)自动下载制作启动盘）
 - [ ] potplayer        看视频
 - [ ] f.lux                 调色温
