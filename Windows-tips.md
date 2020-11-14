@@ -25,31 +25,21 @@ windir 变量：规定操作系统的系统目录的路径。
 
 > 打开注册表：`win+R`输入 `regedit` 按回车键之后，打开注册表编辑器。
 >
-> 
->
 > 1. 添加鼠标右键新建项：对应**单击桌面空白处**，新建菜单中的项目对应注册表中的位置 ：
 >
 > HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Discardable\PostSetup\ShellNew
->
->  
 >
 > 2. 鼠标单击桌面：**桌面空白处点击右键菜单**对应注册表位置：
 >
 > HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers
 >
->  
->
 > 3. 右键单击文件：鼠标**右键文件**，弹出的菜单项对应注册表中的位置：
 >
 > HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers
 >
->  
->
 > 4. 单机文件夹：鼠标**右键文件夹**，弹出的菜单项对应注册表中的位置：
 >
 > HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers
->
->  
 >
 > 5. 鼠标单击ie浏览器里：鼠标**右键在IE浏览器**里，弹出的菜单明细对应注册表中的位置：
 >
@@ -276,6 +266,14 @@ winfr C: E:\RecoveryTest /x /y:ZIP
    To stop the recovery process, press Ctrl+C.
 
 #### fsutil [指令](https://docs.microsoft.com/zh-cn/windows-server/administration/windows-commands/fsutil)：
+
+
+
+
+
+#### chkdsk [指令](https://docs.microsoft.com/zh-cn/windows-server/administration/windows-commands/chkdsk)：
+
+检查卷的文件系统和文件系统元数据，以查找逻辑错误和物理错误。 如果在没有参数的情况下使用， **chkdsk** 只显示卷的状态，并且不会修复任何错误。 如果与 **/f**、 **/r**、 **/x**或 **/b** 参数一起使用，则会修复卷上的错误。
 
 
 
