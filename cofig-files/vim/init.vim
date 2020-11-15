@@ -11,7 +11,7 @@ set backspace=2
 syntax on
 
 "系统快捷键
-"set clipboard=unnamed
+set clipboard=unnamed
 "nnoremap <C-c> "+y # ctrl+c为vim内复制
 
 "自动对齐
