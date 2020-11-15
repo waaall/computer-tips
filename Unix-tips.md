@@ -287,6 +287,8 @@ man ln
 #### 常用
 
 ```bash
+uname #查看计算机类型等系统信息
+
 chsh -s /bin/zsh    #设置默认shell为zsh
 
 env  #查看系统全部环境变量
