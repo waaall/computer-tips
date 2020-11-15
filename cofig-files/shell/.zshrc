@@ -85,6 +85,8 @@ ZSH_THEME="robbyrussell"
 
 plugins=(git sublime z zsh-syntax-highlighting zsh-autosuggestions)
 
+DISABLE_AUTO_TITLE="true"
+
 source $ZSH/oh-my-zsh.sh
 
 setopt HIST_IGNORE_DUPS  #消除重复记录

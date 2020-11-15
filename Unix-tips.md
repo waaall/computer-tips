@@ -941,6 +941,14 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 ```
 
+#### mac terminal 标题
+
+```shell
+#加入.zshrc，取消ohmyzsh自动生成题目
+DISABLE_AUTO_TITLE="true"
+#再在terminal设置中window中设置显示项目
+```
+
 
 
 #### 指令
