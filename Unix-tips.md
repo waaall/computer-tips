@@ -233,7 +233,7 @@ void creat_daemon(void)
 
 在/ etc / fstab中找到有关swap的行，并对其进行注释。是这样的：
 
-```bash
+```shell
 UUID=6880a28d-a9dc-4bfb-ba47-0876b50e96b3 /               ext4    errors=remount-ro 0       1
 UUID=7350e6f2-e3a7-4d80-9a95-8741c7db118f /home           ext4    defaults        0       2
 UUID=E2E26AD1E26AAA0D /media/windows  ntfs    defaults,umask=007,gid=46 0       0
@@ -244,7 +244,7 @@ UUID=E2E26AD1E26AAA0D /media/windows  ntfs    defaults,umask=007,gid=46 0       
 
 您可以使用gedit编辑该文件。首先备份它，以防万一：
 
-```bash
+```shell
 sudo cp /etc/fstab /etc/fstab_backup
 gksu gedit /etc/fstab
 ```
@@ -256,7 +256,7 @@ gksu gedit /etc/fstab
 
 硬链接是指针，所有的硬链接都是指向同一个磁盘块。 删除一个指针不会真正删除文件，只有把所有的指针都删除才会真正删除文件。 软连接是另外一种类型的文件，保存的是它指向文件的全路径， 访问时会替换成绝对路径。具体应用见`mac`中的`链接动态库`一节。
 
-```bash
+```shell
 man ln
 #得到下面描述 ========
   指令名称 : ln
@@ -286,7 +286,7 @@ man ln
 
 #### 常用
 
-```bash
+```shell
 uname #查看计算机类型等系统信息
 
 chsh -s /bin/zsh    #设置默认shell为zsh
@@ -317,13 +317,13 @@ Linux/Unix 的文件调用权限分为三级 : 文件所有者（Owner）、用�
 
 ##### 语法
 
-```
+```shell
 chmod [-cfvR] [--help] [--version] mode file...
 ```
 
 mode : 权限设定字串，格式如下 :
 
-```
+```shell
 [ugoa...][[+-=][rwxX]...][,...]
 ```
 
@@ -387,7 +387,7 @@ chmod命令可以使用八进制数来指定权限。文件或目录的权限位
 | 1    | 只执行         | --x  | 001    |
 | 0    | 无             | ---  | 000    |
 
-```bash
+```shell
 #语法为：
 chmod abc file
 其中a,b,c各为一个数字，分别表示User、Group、及Other的权限。
@@ -402,7 +402,7 @@ chmod a=rwx file
 
 #### 文件相关
 
-```bash
+```shell
 diskutil list       # 显示磁盘列表
 echo $SHELL         #查看当前使用的shell类型
 cat /etc/shells     #查看已安装的shell
@@ -527,7 +527,7 @@ s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可
 
 #### 编译相关
 
-```bash
+```shell
 ##============================ c系语言 =============================
 gcc -v				#查看gcc版本信息
 python3             # enter the python shell
@@ -552,7 +552,7 @@ java test #运行java
 
 ####  网络相关
 
-```bash
+```shell
 sudo apt install net-tools #安装ifconfig等工具
 traceroute www.apple.com #追踪网络连接所跳转的路由器列表
 ssh username@ip     # Users/zxll/.ssh/known而且mei ssh 记录着已有信息
@@ -575,7 +575,7 @@ unset ALL_PROXY	#取消代理
 
 #### screen
 
-```bash
+```shell
 screen -S yourname -> 新建一个叫yourname的session
 screen -ls -> 列出当前所有的session
 screen -r yourname -> 回到yourname这个session
@@ -603,7 +603,7 @@ C-a [ -> #进入 copy mode，在 copy mode 下可以回滚、搜索、复制就�
 
 #### curl
 
-```bash
+```shell
 curl ifconfig.me
 --->123.112.11.172%
 
@@ -635,7 +635,7 @@ curl ifconfig.me
 
 镜像源：http://mirrors.aliyun.com/pypi/simple/
 
-```bash
+```shell
 [global] #pip.conf来修改默认下载源
 index-url=https://pypi.tuna.tsinghua.edu.cn/simple/
 [install]
@@ -648,7 +648,7 @@ https://blog.csdn.net/lixiaozhe_csdn/article/details/94414108
 
 * 指令
 
-```bash
+```shell
 pip install pandas -i https://pypi.tuna.tsinghua.edu.cn/simple/ #pip 换源
 
 #Home-brew安装的python，包所在地址如下
@@ -681,7 +681,7 @@ touch ~/.gitignore_global
 
 然后对这个文件进行修改。
 
-```
+```shell
 # Mac OS
 **/.DS_Store
 ```
@@ -700,7 +700,7 @@ git config --global core.excludesfile ~/.gitignore_global
 
 ##### 指令
 
-```bash
+```shell
 ##=====================编辑、保存、退出====================
 `a`/`i` #在光标处开始编辑: append/insert
 `o`		#在下一行开始编辑: open a line
@@ -780,7 +780,7 @@ git config --global core.excludesfile ~/.gitignore_global
 
 * 我的vimrc : 备份文件里
 
-```bash
+```shell
 ls /usr/share/vim/vim81/colors #查看mac vim本地 主题
 ```
 
@@ -932,11 +932,11 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 #### 终端中文支持
 
-将下面几行代码加`.bashrc/.zshrc`。
+将下面几行代码加`.shellrc/.zshrc`。
 
 但要注意的是，若有`ohmyzsh`，它会重置语言环境，所以需要将其添加在`source oh-my-zsh.sh`后。
 
-```bash
+```shell
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
 ```
@@ -949,13 +949,19 @@ DISABLE_AUTO_TITLE="true"
 #再在terminal设置中window中设置显示项目
 ```
 
+#### mac terminal 取消login信息显示
+
+```shell
+touch ~/.hushlogin
+```
+
 
 
 #### 指令
 
 ##### 常用
 
-```bash
+```shell
 top -l 1 | head -n 10 | grep PhysMem  #查看mac内存占用
 sudo purge          #mac清理RAM  
 
@@ -973,7 +979,7 @@ netstat -an | grep 1080	 #查看端口号信息(lsof -i:80 也是看端口号)
 
 ##### 杂
 
-```bash
+```shell
 sudo tlmgr repository set http://mirror.hust.edu.cn/CTAN/systems/texlive/tlnet #latex包设置镜像
 
 tlmgr update --self #更新tlmgr
@@ -1004,7 +1010,7 @@ defaults write com.apple.Finder FXPreferredViewStyle Nlsv
 
 ##### 链接动态库！
 
-```bash
+```shell
 man ln
 #得到下面描述 ========
   指令名称 : ln
@@ -1090,7 +1096,7 @@ clone 与 $ 之间的网址就是安装文件GitHub网址，上述命令指：�
 
 [**oh my zsh 有很多内置插件但默认不打开**](https://hufangyun.com/2017/zsh-plugin/)： `cd ~/.oh-my-zsh/plugins` 就可以看下，然后比如使用sublime，就在.zshrc中的plugins=（）中加入sublime，就可以在终端使用如下代码了：
 
-```bash
+```shell
 omz update #更新ohmyzsh 
 st filename	#用sublime 打开文件
 stt		#用sublime打开当前文件夹
@@ -1118,33 +1124,23 @@ mac上终端设置代理然后运行下面的install.sh（因为我用的是beta
 
 ---
 
-```bash
+```shell
 brew list #列出已安装的软件
-
 brew outdated #查看哪些需要更新
-
 brew update #更新brew
-
 brew home #用浏览器打开brew的官方网站
-
 brew info #显示软件信息brew deps #显示包依赖
-
 brew upgrade #更新所有
-
 brew upgrade  [Name] #更新指定包
-
 brew cleanup #清理所有包的旧版本
-
 brew cleanup  [Name] #清理指定包的旧版本
-
 brew cleanup -n #查看可清理的旧版本包，不执行实际操作
-
 brew deps --installed --tree #查看所有依赖关系
 ```
 
 [brew清华源](https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/)：
 
-```bash
+```shell
 # brew 程序本身，Homebrew/Linuxbrew 相同
 git -C "$(brew --repo)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
 
@@ -1157,7 +1153,7 @@ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://mirr
 
 brew 设置原有源：
 
-```bash
+```shell
 # brew 程序本身，Homebrew/Linuxbrew 相同
 git -C "$(brew --repo)" remote set-url origin https://github.com/Homebrew/brew.git
 
@@ -1176,7 +1172,7 @@ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://gith
 
 ### Neovim
 
-```bash
+```shell
 #安装
 brew install neovim
 pip3 install neovim --upgrade
@@ -1271,7 +1267,7 @@ In Sublime , we can create our own language highlight document named “.sublime
 
 ### Ubuntu安装驱动
 
-```bash
+```shell
 ubuntu-drivers devices
 sudo ubuntu-drivers autoinstall
 #如果想安装特定项，就用apt install 
@@ -1290,7 +1286,7 @@ sudo ubuntu-drivers autoinstall
 
 * 指令
 
-```bash
+```shell
 systemctl start sshd.service   # 开启ssh服务
 
 systemctl enable sshd.service #ssh 开机自启
@@ -1306,7 +1302,7 @@ dpkg -L gcc #Ubuntu查看gcc所有文件都安装在哪里
 
 1. 安装Gnome tweak tool（可视化）
 
-```bash
+```shell
 sudo apt install gnome-tweak-tool
 sudo apt install chrome-gnome-shell
 sudo apt install gnome-shell-extensions
@@ -1342,7 +1338,7 @@ sudo apt install gnome-shell-extensions
 
    建议您在使用dconf reset命令之前执行备份。为此，请创建一个备份 `~/.config/dconf/user` 除了在Gnome Tweaks中发布的设置外，您还可以在系统设置中重置Gnome设置。保存dconf设置 `/org/gnome/`，以及其他Gnome设置。使用以下命令：
 
-   ```bash
+   ```shell
    dconf reset -f /org/gnome/
    mv .config/dconf/user .config/dconf/user.bak && sudo reboot
    ```
@@ -1354,10 +1350,7 @@ sudo apt install gnome-shell-extensions
 
 * **[mac 设置指南](https://github.com/macdao/ocds-guide-to-setting-up-mac)**
 * **[mac dock设置](https://sspai.com/post/33493)**
-
 * **[Linux文件系统](http://cn.linux.vbird.org/linux_basic/0210filepermission_3.php)**
-
-
 * **[oh my zsh配置](https://www.zrahh.com/archives/167.html)**
 * **[win-vim安装](https://segmentfault.com/a/1190000019360991)**
 

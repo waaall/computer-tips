@@ -59,7 +59,7 @@ windir 变量：规定操作系统的系统目录的路径。
  * 命令1 && 命令2 && 命令3....(仅当前面命令成功时,才执行后面)   
  * 命令1 || 命令2 || 命令3.... (仅当前面命令失败时.才执行后面)
 
-```bash
+```powershell
 #文件操作
 md test #新建文件夹
 dir #显示目录
@@ -94,7 +94,7 @@ wmic memorychip list brief #看内存
 
 ### powershell配置指令
 
-```bash
+```powershell
 
 ##==================使用powershell模块===========================
 PS C:\Users\zxll> Import-Module PackageManagement
@@ -123,15 +123,13 @@ Install-Module -Name PSReadLine -AllowPrerelease -Force
 Install-Module posh-git -Scope CurrentUser 
 
 Install-Module oh-my-posh -Scope CurrentUser 
-
-
 ```
 
 
 
 ### 常用指令
 
-```bash
+```powershell
 start . #用文件管理器打开当前文件夹（ii .也可以）
 Get-Alias #查看现在有的指令别名
 
@@ -147,7 +145,7 @@ Remove-Item alias:\curl #删除"curl"这个别名
 
 ### 网络指令
 
-```bash
+```powershell
 ssh：（用管理员打开powershell）
 net start sshd   #开启ssh
 Get-NetFirewallRule -Name *ssh*   #查看防火墙
@@ -169,7 +167,7 @@ tasklist|findstr "9208"
 
 #### [Diskpart](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/diskpart) : 
 
-```bash
+```powershell
 list disk
 list partition
 list volume
@@ -190,7 +188,7 @@ assign letter=e
 > 3. When you are prompted to allow the app to make changes to your device, select **Yes**.
 > 4. In the **Command Prompt** window, enter the command in the following format:
 
-```bash
+```powershell
 winfr source-drive: destination-drive: [/switches]
 ```
 
@@ -207,21 +205,21 @@ There are three modes you can use to recover files: Default, Segment, and Signat
 
 Recover a specific file from your C: drive to the recovery folder on an E: drive：
 
-```bash
+```powershell
 winfr C: E: /n \Users\<username>\Documents\QuarterlyStatement.docx
 ```
 
 
 Recover jpeg and png photos from your Pictures folder to the recovery folder on an E: drive：
 
-```bash
+```powershell
 winfr C: E: /n \Users\<username>\Pictures\*.JPEG /n \Users\<username>\Pictures\*.PNG
 ```
 
 
 Recover your Documents folder from your C: drive to the recovery folder on an E: drive.
 
-```bash
+```powershell
 winfr C: E: /n \Users\<username>\Documents\
 ```
 
@@ -232,30 +230,30 @@ Don’t forget the backslash (\) at the end of the folder.
 ##### Segment mode examples (/r)
 
 Recover PDF and Word files from your C: drive to the recovery folder on an E: drive.
-```bash
+```powershell
 winfr C: E: /r /n *.pdf /n *.docx
 ```
 
 Recover any file with the string "invoice" in the filename by using wildcard characters.
-```bash
+```powershell
 winfr C: E: /r /n *invoice*
 ```
 
 ##### Signature mode examples (/x)**
 
 When using signature mode, it's helpful to first see the supported extension groups and corresponding file types.
-```bash
+```powershell
 winfr /#
 ```
 
 Recover JPEG (jpg, jpeg, jpe, jif, jfif, jfi) and PNG photos from your C: drive to the recovery folder on an E: drive.
-```bash
+```powershell
 winfr C: E: /x /y:JPEG,PNG
 ```
 
 Recover ZIP files (zip, docx, xlsx, ptpx, and so on) from your C: drive to the recovery folder on an E: drive.
 
-```bash
+```powershell
 winfr C: E:\RecoveryTest /x /y:ZIP
 ```
 
@@ -291,7 +289,7 @@ winfr C: E:\RecoveryTest /x /y:ZIP
 
 [windows上msys2配置及填坑](https://hustlei.github.io/2018/11/msys2-for-win.html)
 
-```bash
+```powershell
 clang++ -O3 -target x86_64-pc-windows-gnu for.cpp -o for.exe
 ```
 
@@ -323,7 +321,7 @@ windows 应用商店安装Ubuntu
 
 * 需要在控制面板——程序
 
-```bash
+```powershell
 wsl --set-version Ubuntu 2 #将Ubuntu虚拟内核换成WSL2版本
 wsl -l -v #查看现有的wsl
 wslconfig /list #查看默认的wsl
@@ -334,7 +332,7 @@ wsl —shutdown #关闭WSL中的Linux内核
 
 #### wsl 解决ls文件夹颜色
 
-```bash
+```powershell
 #修改wsl里面查看windows磁盘文件的颜色
 dircolors -p > $HOME/.dircolors
 
