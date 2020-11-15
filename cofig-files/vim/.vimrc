@@ -5,7 +5,8 @@ set backspace=2
 
 syntax on
 
-"set clipboard=unnamed
+"使用系统剪贴板
+set clipboard=unnamed
 "nnoremap <C-c> "+y # ctrl+c为vim内复制
 
 set autoindent

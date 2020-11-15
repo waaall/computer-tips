@@ -737,6 +737,9 @@ git config --global core.excludesfile ~/.gitignore_global
 
 `.`	 #重复上一个动作，⚠️是重复！
 
+`v`/鼠标双击选中 	#进入visual模式
+`y`				#复制选中文本，若vimrc中
+
 `yy` #复制光标所在行：yank
 `p`	 #粘贴内容到光标下一行：paste
 `P`	 #粘贴内容到光标上一行
