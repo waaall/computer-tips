@@ -680,52 +680,55 @@ pip install - -ignore-installed Name #重装最新版插件
 ##### 指令
 
 ```bash
-`A` #在光标处开始编辑
+##=====================编辑、保存、退出====================
+`a`/`i` #在光标处开始编辑
+`o`		#在下一行开始编辑
 
-`/name` #搜索光标以下
+`:wq` 		#保存并退出
+`:w Name` 	#另存为Name
+`:q!` 		#强制退出
 
+`esc` #退出编辑模式
+
+##=====================搜索====================
+`/name` #搜索光标以下,回车
+`n`	#光标到下一个搜索结果
+`:noh` #取消搜索后高亮 
 `N` #反向上一个搜索
 
-`U` #复原前一个动作
-
+##=====================移动光标====================
+`数字+Enter` #光标向下移动n行
+`数字+gg`	#移动到第n行
 `数字键+space` #光标向后移动n个字符
 
-`数字键+Enter` #光标向下移动n行
+`gg` 	#移动到第一行
+`G` 	#移动到最后一行
 
-`G` #移动到最后一行
+##=====================复制、粘贴、删除、撤销====================
+`u` #复原前一个动作，等于`command+z`
+`yy` #复制光标所在行
+`dd` #删除光标所在行
 
+
+
+
+##=====================复杂功能====================
 `Ctrl+F` #下一页
-
 `Ctrl+B` #上一页
-
 `Ctrl+O` #前一个buffer
-
 `Ctrl+i` #后一个buffer
 
 `:%s/word1/word2/gc` #全部替换,c表示需要确认
 
 `:2,99s/word1/word2/g` #替换从1行到99行
 
-`DD` #删除光标所在行
-
-`YY` #复制光标所在行
-
-`:wq` #保存并退出
-
-`:w Name` #另存为Name
-
 `:vs Name` #竖直方向再打开一个窗口显示文件‘Name’，水平为`sv`
 
 `:n1,n2 w run/Name` #将n1行到n2行的内容另存为run文件夹下，名为Name
 
-`esc` #退出编辑模式
-
 `:set fileencoding` #查看编码格式
-
 `:set fileencoding=utf-8` #转码为UTF-8
-
 `set list` #查看不可见字符（空格换行等）
-
 `set nolist` # 隐藏不可见字符
 ```
 
@@ -920,11 +923,13 @@ sudo tlmgr repository set http://mirror.hust.edu.cn/CTAN/systems/texlive/tlnet #
 
 tlmgr update --self #更新tlmgr
 
+
+
 #finder显示隐藏文件
 defaults write com.apple.finder AppleShowAllFiles -bool true
 KillAll Finder
 
-sudo scutil --set HostName username #终端行首不显示 
+sudo scutil --set HostName zx #设置机器名，也就是@后的名字
 defaults write com.apple.dock springboard-rows -int 7 #改launchpad图标
 defaults write com.apple.dock springboard-columns -int 8
 defaults write com.apple.dock ResetLaunchPad -bool TRUE
