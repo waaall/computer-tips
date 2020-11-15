@@ -681,21 +681,26 @@ pip install - -ignore-installed Name #重装最新版插件
 
 ```bash
 ##=====================编辑、保存、退出====================
-`a`/`i` #在光标处开始编辑
-`o`		#在下一行开始编辑
+`a`/`i` #在光标处开始编辑: append/insert
+`o`		#在下一行开始编辑: open a line
+`c`		#删除并插入: change
+`ct)`	# change to ）
+`ci"`	#把双引号内的删除并插入 : change inner "
 
-`:wq` 		#保存并退出
+`:wq` 		#保存并退出: 
 `:w Name` 	#另存为Name
 `:q!` 		#强制退出
 
 `esc` #退出编辑模式
 
 ##=====================搜索====================
+`fs`	#跳转到s这个字母: find s
+
 `/name` #搜索光标以下,回车
 `?word` #搜索光标以下,回车
-`n`	#光标到下一个搜索结果
-`:noh` #取消搜索后高亮 
-`N` #反向上一个搜索
+`n`		#光标到下一个搜索结果: next
+`:noh` 	#取消搜索后高亮 
+`N` 	#反向上一个搜索
 
 ##=====================移动光标====================
 `数字+Enter` #光标向下移动n行
@@ -711,11 +716,13 @@ pip install - -ignore-installed Name #重装最新版插件
 
 `.`	 #重复上一个动作，⚠️是重复！
 
-`yy` #复制光标所在行
-`p`	 #粘贴内容到光标下一行
+`yy` #复制光标所在行：yank
+`p`	 #粘贴内容到光标下一行：paste
 `P`	 #粘贴内容到光标上一行
 
-`dd` #删除光标所在行
+`dd` #删除光标所在行: delete
+`dw` #delete a word
+`ctrl+w` #在insert模式下delete
 
 ##=====================多光标操作====================
 "g+d" 	#高亮显示所有相同的单词
@@ -834,6 +841,7 @@ A: 全屏显示NERDTree，或者关闭全屏
 * [Appcleaner](https://freemacsoft.net/appcleaner/)        ---软件卸载
 * [f.lux](https://justgetflux.com)                    ---动态色温
 * [MacFanControll](https://crystalidea.com/macs-fan-control) ---风扇控制
+* [Shadowsocks](https://github.com/shadowsocks/ShadowsocksX-NG)    ---代理
 * BackgroundMusic-调节声音
 
 **App Store**
