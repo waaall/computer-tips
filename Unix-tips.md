@@ -671,7 +671,26 @@ pip install - -ignore-installed Name #重装最新版插件
 
 单独写了一个git的描述文档在learn code里。
 
+git 忽略mac中的`.DS_Store`文件方法见下：
 
+```shell
+touch ~/.gitignore_global
+```
+
+然后对这个文件进行修改。
+
+```
+# Mac OS
+**/.DS_Store
+```
+
+然后对git进行全局设置，让git忽略.gitignore_global中的所有文件：
+
+```shell
+git config --global core.excludesfile ~/.gitignore_global
+```
+
+这样就不用每个git目录都设置忽略.DS_Store文件了！
 
 #### vim
 
