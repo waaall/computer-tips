@@ -121,6 +121,10 @@ alias la="ls -a"
 alias clr="clear"
 alias python="/usr/local/bin/python3"
 alias pip="/usr/local/bin/pip3"
+
+#mac terminal vs使用vscode打开
+alias vs="/Applications/'Visual Studio Code.app'/Contents/Resources/app/bin/code"
+
 #alias -s py=st
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
