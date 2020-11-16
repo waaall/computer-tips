@@ -356,7 +356,7 @@ eval $(dircolors -b $HOME/.dircolors)
 
 [10个经验的国产软件](https://sspai.com/post/42153)、
 
-- [ ] geek                卸载软件
+- [ ] [geek](https://geekuninstaller.com/download)                卸载软件
 - [ ] quicklook        空格预览
 - [ ] freefilesync    本地同步文件
 - [ ] [windows File Recovery](https://www.microsoft.com/store/r/9N26S50LN705) 文件恢复工具（官方）也成为`winfr`
@@ -364,13 +364,13 @@ eval $(dircolors -b $HOME/.dircolors)
 - [ ] potplayer        看视频
 - [ ] f.lux                 调色温
 - [ ] 华为管家        避免过充
-- [ ] sublime          文本编辑器
-- [ ] Typora            Markdown
-- [ ] Bandzip          解压缩软件
+- [ ] [sublime](https://www.sublimetext.com)          文本编辑器
+- [ ] [Typora](https://typora.io)            Markdown
+- [ ] [Bandzip](https://cn.bandisoft.com/bandizip/)          解压缩软件
 - [ ] Wisedata Recovery 数据恢复
 - [ ] 火绒                杀毒软件
 - [ ] Listary/everything   搜索
-- [ ] XMind             思维导图
+- [ ] [XMind](https://www.xmind.cn)             思维导图
 - [ ] Snipaste         截图
-- [ ] FDM                下载
+- [ ] [FDM](https://www.freedownloadmanager.org/zh/)                下载
 
