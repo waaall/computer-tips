@@ -406,7 +406,7 @@ chmod a=rwx file
 #磁盘管理
 diskutil list       # 显示磁盘列表
 df -h               # disk free查看磁盘可用空间
-
+lsblk               # 查看所有磁盘和分区
 
 echo $SHELL         #查看当前使用的shell类型
 cat /etc/shells     #查看已安装的shell
