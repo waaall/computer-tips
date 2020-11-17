@@ -696,10 +696,6 @@ git config --global core.excludesfile ~/.gitignore_global
 
 #### vim
 
-- - - -
-
-##### 指令
-
 ```shell
 ##=====================编辑、保存、退出====================
 `a`/`i` #在光标处开始编辑: append/insert
@@ -714,7 +710,7 @@ git config --global core.excludesfile ~/.gitignore_global
 
 `esc` #退出编辑模式
 
-##=====================搜索====================
+##=====================搜索、替换====================
 `fs`	#跳转到s这个字母: find s
 
 `/name` #搜索光标以下,回车
@@ -722,6 +718,9 @@ git config --global core.excludesfile ~/.gitignore_global
 `n`		#光标到下一个搜索结果: next
 `:noh` 	#取消搜索后高亮 
 `N` 	#反向上一个搜索
+
+`:%s/preword/newword/gc`	#全局(%)查找"preword"替换为"nweword"并且需要确认(c)
+`:%s/foo/bar/i`				#全局(%)查找"foo"替换为"bar"，大小写不敏感(i)，敏感用(I)
 
 ##=====================移动光标====================
 `数字+Enter` #光标向下移动n行
