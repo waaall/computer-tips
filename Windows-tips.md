@@ -143,6 +143,38 @@ Remove-Item alias:\curl #删除"curl"这个别名
 
 
 
+### mklink
+
+mklink，有点像Unix中的ln指令，又有些不同，它和Windows下的快捷方式也有些不同
+
+|                  | 不带参数      | `/D` 参数              | `/H` 参数      | `J` 参数               |
+| :--------------- | :------------ | :--------------------- | :------------- | :--------------------- |
+| 中文名称         | 符号链接      | 符号链接               | 硬链接         | 联接                   |
+| 英文名称         | Symbolic Link | Symbolic Link          | Hard Link      | Junction               |
+| 作用对象         | 文件          | 目录                   | 文件           | 目录                   |
+| 是否一定指向路径 | 否            | 否                     | 否             | 是                     |
+| `dir` 类型       | `SYMLINK`     | `SYMLINK`              | 无特殊显示     | `JUNCTION`             |
+| 资源管理器类型   | `.symlink`    | 文件夹                 | 无特殊显示     | 文件夹                 |
+| 资源管理器图标   | 快捷方式      | 文件夹快捷方式         | 无特殊显示     | 文件夹快捷方式         |
+| 修改同步         | 是            | 是                     | 是             | 是                     |
+| 删除同步         | 否            | 否                     | 否             | 否                     |
+| 彻底删除源       | 删除源路径    | 删除源路径             | 删除所有硬链接 | 删除源路径             |
+| 引用错误报错     | 无            | 引用了一个不可用的位置 | -              | 引用了一个不可用的位置 |
+
+```powershell
+mklink source_link.txt source.txt		#为文件创建符号链接
+mklink /D source_link source			#为文件夹创建符号链接
+
+#下面这几步让Ubuntu和powershell都可以使用atomsk指令，且只需要将bin文件夹加入系统环境变量即可
+
+# mklink /H bin\atomsk atomsk-win\atomsk.exe	#这是用cmd，用powershell或者wsl使用下面指令 
+cmd.exe /c mklink /H 'bin\atomsk' 'atomsk-win\atomsk.exe'	#为文件创建硬链接
+cmd.exe /c mklink /H 'bin\atomsk.exe' 'atomsk-win\atomsk.exe'
+cmd.exe /c mklink /H 'bin\cmake.exe' 'c-compiler\cmake\bin\cmake.exe'
+```
+
+
+
 ### 网络指令
 
 ```powershell
