@@ -37,6 +37,7 @@ alias clr="clear"
 alias python="python3"
 alias pip="pip3"
 alias st="/mnt/c/'Program Files'/'Sublime Text 3'/sublime_text.exe"
+#alias vs="/mnt/c/'Program Files'/'Microsoft VS Code'/code.exe"
 alias mklink="cmd.exe /c mklink"
 
 # ================================= 设置wsl颜色问题 =====================================
