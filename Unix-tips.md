@@ -14,13 +14,124 @@
 
 
 
-### 进程
+### 一 Unix 文件系统：
+
+当然，Mac有自己的文件系统，2020年为APFS；Linux也更新了自己的文件系统，2020年为ZFS。但同为Unix内核，很多文件的逻辑依然保持一致，这里只谈一致的问题，不谈具体的文件系统特性。
+
+#### 磁盘分区
+
+> windows是先有硬盘分区，再有分区上的目录。
+> linux是先有目录，再有每个目录对应的分区，进入一个分区的目录入口就叫挂载点。
+> linux中不是每个目录都是挂载点，通常只要求根目录/是挂载点。其他的目录可以用户自己决定要不要挂载单独的分区，如果不挂载，这个目录实际的存储位置和它的父目录相同。
+>
+> win和linux的区别主要是文件结构(目录)和物理结构(存储)的侧重不同。目录在linux里是更基础的概念，在目录的基础上安排磁盘分区。win则是相反。
 
 
 
-#### 守护进程
+#### 目录结构
 
-## 一，守护进程概述
+根据上述理论，所以磁盘是挂载在目录底下的。
+
+ **[Linux文件系统](http://cn.linux.vbird.org/linux_basic/0210filepermission_3.php)**、 [FHS](https://www.pathname.com/fhs/)、[文件系统层次结构标准维基百科](https://zh.wikipedia.org/zh-cn/文件系统层次结构标准)、
+
+
+
+* /(root, 根目录)：与开机系统有关；
+* /usr (unix software resource)：与软件安装/执行有关；
+* /var (variable)：与系统运作过程有关。
+* /etc：配置文件
+* /bin：重要执行档
+* /dev：所需要的装置文件
+* /lib：执行档所需的函式库与核心所需的模块
+* /sbin：重要的系统执行文件
+* /mnt：
+* /swap：虚拟内存（硬盘作为内存）
+
+
+
+##### 常见配置文件
+
+>`/etc/profile`
+>
+> 在用户登录时，操作系统定制用户环境时使用的第一个文件，此文件为系统的每个用户设置环境信息，当用户第一次登录时，该文件被执行。
+>
+>`/etc /environment`
+>
+> 在用户登录时，操作系统使用的第二个文件， 系统在读取用户个人的profile前，设置环境文件的环境变量。
+>
+>`~/.profile`
+>
+> 在用户登录时，用到的第三个文件 是.profile文件，每个用户都可使用该文件输入专用于自己使用的shell信息，当用户登录时，该文件仅仅执行一次！默认情况下，会设置一些环境变量，执行用户的.bashrc文件。
+>
+>`/etc/bashrc`
+>
+> 为每一个运行bash shell的用户执行此文件，当bash shell被打开时，该文件被读取。
+>
+>`~/.bashrc`
+>
+> 该文件包含专用于用户的bash shell的bash信息，当登录时以及每次打开新的shell时，该该文件被读取。
+
+用户文件夹里又很多.文件，这些都是系统和软件配置相关的，系统也会把这类文件设为隐藏，我们可以自己创建，以个性化定制app的设置（尤其是以终端为可视化界面的软件）er qi。以vim为例：
+
+* /Users/zxll/.vimrc   #vim用户配置文件
+* /Users/zxll/.vim/    #vim用户配置文件夹
+
+##### 永久关闭swap分区
+
+在/ etc / fstab中找到有关swap的行，并对其进行注释。是这样的：
+
+```shell
+UUID=6880a28d-a9dc-4bfb-ba47-0876b50e96b3 /               ext4    errors=remount-ro 0       1
+UUID=7350e6f2-e3a7-4d80-9a95-8741c7db118f /home           ext4    defaults        0       2
+UUID=E2E26AD1E26AAA0D /media/windows  ntfs    defaults,umask=007,gid=46 0       0
+
+# Swap a usb extern (3.7 GB):
+#/dev/sdb1 none swap sw 0 0
+```
+
+您可以使用gedit编辑该文件。首先备份它，以防万一：
+
+```shell
+sudo cp /etc/fstab /etc/fstab_backup
+gksu gedit /etc/fstab
+```
+
+只需在交换所在行的开头添加＃，然后重新启动计算机即可。
+
+
+#### 文件链接(非编译链接)
+
+硬链接是指针，所有的硬链接都是指向同一个磁盘块。 删除一个指针不会真正删除文件，只有把所有的指针都删除才会真正删除文件。 软连接是另外一种类型的文件，保存的是它指向文件的全路径， 访问时会替换成绝对路径。具体应用见`mac`中的`链接动态库`一节。
+
+```shell
+man ln
+#得到下面描述 ========
+  指令名称 : ln
+  使用权限 : 所有使用者
+  使用方式 : ln [options] source dist，其中 option 的格式为 :
+  [-bdfinsvF] [-S backup-suffix] [-V {numbered,existing,simple}]
+  [--help] [--version] [--]
+  说明 : Linux/Unix 档案系统中，有所谓的连结(link)，我们可以将其视为档案的别名，而连结又可分为两种 : 硬连结(hard link)与软连结(symbolic link)，硬连结的意思是一个档案可以有多个名称，而软连结的方式则是产生一个特殊的档案，该档案的内容是指向另一个档案的位置。硬连结是存在同一个档 案系统中，而软连结却可以跨越不同的档案系统。
+  ln source dist 是产生一个连结(dist)到 source，至于使用硬连结或软链结则由参数决定。
+  不论是硬连结或软链结都不会将原本的档案复制一份，只会占用非常少量的磁碟空间。
+  -f : 链结时先将与 dist 同档名的档案删除
+  -d : 允许系统管理者硬链结自己的目录
+  -i : 在删除与 dist 同档名的档案时先进行询问
+  -n : 在进行软连结时，将 dist 视为一般的档案
+  -s : 进行软链结(symbolic link)
+  -v : 在连结之前显示其档名
+  -b : 将在链结时会被覆写或删除的档案进行备份
+  -S SUFFIX : 将备份的档案都加上 SUFFIX 的字尾
+  -V METHOD : 指定备份的方式
+  --help : 显示辅助说明
+  --version : 显示版本
+```
+
+
+
+### 二 守护进程
+
+#### 1. 守护进程概述
 
 Linux Daemon（守护进程）是运行在后台的一种特殊进程。它独立于控制终端并且周期性地执行某种任务或等待处理某些发生的事件。它不需要用户输入就能运行而且提供某种服务，不是对整个系统就是对某个用户程序提供服务。Linux系统的大多数服务器就是通过守护进程实现的。常见的守护进程包括系统日志进程syslogd、 web服务器httpd、邮件服务器sendmail和数据库服务器mysqld等。
 
@@ -30,95 +141,112 @@ Linux Daemon（守护进程）是运行在后台的一种特殊进程。它独�
 
 守护进程的名称通常以d结尾，比如sshd、xinetd、crond等
 
-## 二，创建守护进程步骤
+#### 2. 创建守护进程步骤
 
 首先我们要了解一些基本概念：
 
 进程组 ：
 
-- 每个进程也属于一个进程组 
-- 每个进程主都有一个进程组号，该号等于该进程组组长的PID号 .
-- 一个进程只能为它自己或子进程设置进程组ID号 
+> * 每个进程也属于一个进程组 
+>
+> - 每个进程主都有一个进程组号，该号等于该进程组组长的PID号 .
+> - 一个进程只能为它自己或子进程设置进程组ID号 
 
 会话期： 
 
-会话期(session)是一个或多个进程组的集合。
+> 会话期(session)是一个或多个进程组的集合。
 
 setsid()函数可以建立一个对话期：
 
  如果，调用setsid的进程不是一个进程组的组长，此函数创建一个新的会话期。
 
-(1)此进程变成该对话期的首进程 
-
-(2)此进程变成一个新进程组的组长进程。 
-
-(3)此进程没有控制终端，如果在调用setsid前，该进程有控制终端，那么与该终端的联系被解除。 如果该进程是一个进程组的组长，此函数返回错误。
-
-(4)为了保证这一点，我们先调用fork()然后exit()，此时只有子进程在运行
+> (1)此进程变成该对话期的首进程 
+>
+> (2)此进程变成一个新进程组的组长进程。 
+>
+> (3)此进程没有控制终端，如果在调用setsid前，该进程有控制终端，那么与该终端的联系被解除。 如果该进程是一个进程组的组长，此函数返回错误。
+>
+> (4)为了保证这一点，我们先调用fork()然后exit()，此时只有子进程在运行
 
 现在我们来给出创建守护进程所需步骤：
 
 编写守护进程的一般步骤步骤：
 
-（1）在父进程中执行fork并exit推出；
-
-（2）在子进程中调用setsid函数创建新的会话；
-
-（3）在子进程中调用chdir函数，让根目录 ”/” 成为子进程的工作目录；
-
-（4）在子进程中调用umask函数，设置进程的umask为0；
-
-（5）在子进程中关闭任何不需要的文件描述符
+> （1）在父进程中执行fork并exit推出；
+>
+> （2）在子进程中调用setsid函数创建新的会话；
+>
+> （3）在子进程中调用chdir函数，让根目录 ”/” 成为子进程的工作目录；
+>
+> （4）在子进程中调用umask函数，设置进程的umask为0；
+>
+> （5）在子进程中关闭任何不需要的文件描述符
 
 说明：
 
-\1. 在后台运行。 
-为避免挂起控制终端将Daemon放入后台执行。方法是在进程中调用fork使父进程终止，让Daemon在子进程中后台执行。 
-if(pid=fork()) 
-exit(0);//是父进程，结束父进程，子进程继续 
-\2. 脱离控制终端，登录会话和进程组 
-有必要先介绍一下Linux中的进程与控制终端，登录会话和进程组之间的关系：进程属于一个进程组，进程组号（GID）就是进程组长的进程号（PID）。登录会话可以包含多个进程组。这些进程组共享一个控制终端。这个控制终端通常是创建进程的登录终端。 
-控制终端，登录会话和进程组通常是从父进程继承下来的。我们的目的就是要摆脱它们，使之不受它们的影响。方法是在第1点的基础上，调用setsid()使进程成为会话组长： 
-setsid(); 
-说明：当进程是会话组长时setsid()调用失败。但第一点已经保证进程不是会话组长。setsid()调用成功后，进程成为新的会话组长和新的进程组长，并与原来的登录会话和进程组脱离。由于会话过程对控制终端的独占性，进程同时与控制终端脱离。 
-\3. 禁止进程重新打开控制终端 
-现在，进程已经成为无终端的会话组长。但它可以重新申请打开一个控制终端。可以通过使进程不再成为会话组长来禁止进程重新打开控制终端： 
-if(pid=fork()) 
-exit(0);//结束第一子进程，第二子进程继续（第二子进程不再是会话组长） 
-\4. 关闭打开的文件描述符 
-进程从创建它的父进程那里继承了打开的文件描述符。如不关闭，将会浪费系统资源，造成进程所在的文件系统无法卸下以及引起无法预料的错误。按如下方法关闭它们： 
-for(i=0;i 关闭打开的文件描述符close(i);> 
-\5. 改变当前工作目录 
-进程活动时，其工作目录所在的文件系统不能卸下。一般需要将工作目录改变到根目录。对于需要转储核心，写运行日志的进程将工作目录改变到特定目录如/tmpchdir("/") 
-\6. 重设文件创建掩模 
-进程从创建它的父进程那里继承了文件创建掩模。它可能修改守护进程所创建的文件的存取位。为防止这一点，将文件创建掩模清除：umask(0); 
-\7. 处理SIGCHLD信号 
-处理SIGCHLD信号并不是必须的。但对于某些进程，特别是服务器进程往往在请求到来时生成子进程处理请求。如果父进程不等待子进程结束，子进程将成为僵尸进程（zombie）从而占用系统资源。如果父进程等待子进程结束，将增加父进程的负担，影响服务器进程的并发性能。在Linux下可以简单地将SIGCHLD信号的操作设为SIG_IGN。 
-signal(SIGCHLD,SIG_IGN); 
-这样，内核在子进程结束时不会产生僵尸进程。这一点与BSD4不同，BSD4下必须显式等待子进程结束才能释放僵尸进程。 
+1. 在后台运行。 
 
-## 三，创建守护进程
+   > 为避免挂起控制终端将Daemon放入后台执行。方法是在进程中调用fork使父进程终止，让Daemon在子进程中后台执行。 
+   > if(pid=fork()) 
+   > exit(0);//是父进程，结束父进程，子进程继续 
+
+2. 脱离控制终端，登录会话和进程组 
+
+   > 有必要先介绍一下Linux中的进程与控制终端，登录会话和进程组之间的关系：进程属于一个进程组，进程组号（GID）就是进程组长的进程号（PID）。登录会话可以包含多个进程组。这些进程组共享一个控制终端。这个控制终端通常是创建进程的登录终端。 
+   >    控制终端，登录会话和进程组通常是从父进程继承下来的。我们的目的就是要摆脱它们，使之不受它们的影响。方法是在第1点的基础上，调用setsid()使进程成为会话组长： 
+   >    setsid(); 
+   >    说明：当进程是会话组长时setsid()调用失败。但第一点已经保证进程不是会话组长。setsid()调用成功后，进程成为新的会话组长和新的进程组长，并与原来的登录会话和进程组脱离。由于会话过程对控制终端的独占性，进程同时与控制终端脱离。 
+
+3. 禁止进程重新打开控制终端 
+
+   > 现在，进程已经成为无终端的会话组长。但它可以重新申请打开一个控制终端。可以通过使进程不再成为会话组长来禁止进程重新打开控制终端： 
+   > if(pid=fork()) 
+   > exit(0);//结束第一子进程，第二子进程继续（第二子进程不再是会话组长） 
+
+4. 关闭打开的文件描述符 
+
+   > 进程从创建它的父进程那里继承了打开的文件描述符。如不关闭，将会浪费系统资源，造成进程所在的文件系统无法卸下以及引起无法预料的错误。按如下方法关闭它们： 
+   > for(i=0;i 关闭打开的文件描述符close(i);> 
+
+5. 改变当前工作目录 
+
+   > 进程活动时，其工作目录所在的文件系统不能卸下。一般需要将工作目录改变到根目录。对于需要转储核心，写运行日志的进程将工作目录改变到特定目录如/tmpchdir("/") 
+
+6. 重设文件创建掩模 
+
+   > 进程从创建它的父进程那里继承了文件创建掩模。它可能修改守护进程所创建的文件的存取位。为防止这一点，将文件创建掩模清除：umask(0); 
+
+7. 处理SIGCHLD信号 
+
+   > 处理SIGCHLD信号并不是必须的。但对于某些进程，特别是服务器进程往往在请求到来时生成子进程处理请求。如果父进程不等待子进程结束，子进程将成为僵尸进程（zombie）从而占用系统资源。如果父进程等待子进程结束，将增加父进程的负担，影响服务器进程的并发性能。在Linux下可以简单地将SIGCHLD信号的操作设为SIG_IGN。 
+   > signal(SIGCHLD,SIG_IGN); 
+   > 这样，内核在子进程结束时不会产生僵尸进程。这一点与BSD4不同，BSD4下必须显式等待子进程结束才能释放僵尸进程。 
+
+
+
+#### 3. 创建守护进程
 
 在创建之前我们先了解setsid()使用：
 
- \#include <unistd.h>
+```c
+ #include <unistd.h>
+	pid_t setsid(void);
+```
 
-​    pid_t setsid(void);
-
-DESCRIPTION 
-    setsid() creates a new session if the calling process is not a process 
-    group leader. The calling process is the leader of the new session, 
-    the process group leader of the new process group, and has no control- 
-    ling tty. The process group ID and session ID of the calling process 
-    are set to the PID of the calling process. The calling process will be 
-    the only process in this new process group and in this new session.
+> DESCRIPTION 
+>  setsid() creates a new session if the calling process is not a process 
+>  group leader. The calling process is the leader of the new session, 
+>  the process group leader of the new process group, and has no control- 
+>  ling tty. The process group ID and session ID of the calling process 
+>  are set to the PID of the calling process. The calling process will be 
+>  the only process in this new process group and in this new session.
 
 //调用进程必须是非当前进程组组长，调用后，产生一个新的会话期，且该会话期中只有一个进程组，且该进程组组长为调用进程，没有控制终端，新产生的group ID 和 session ID 被设置成调用进程的PID
 
-RETURN VALUE 
-    On success, the (new) session ID of the calling process is returned. 
-    On error, (pid_t) -1 is returned, and errno is set to indicate the 
-    error.
+> RETURN VALUE 
+>  On success, the (new) session ID of the calling process is returned. 
+>  On error, (pid_t) -1 is returned, and errno is set to indicate the 
+>  error.
 
 现在根据上述步骤创建一个守护进程：
 
@@ -191,98 +319,7 @@ void creat_daemon(void)
 
 结果显示：当我一普通用户执行a.out时，进程表中并没有出现新创建的守护进程，但当我以root用户执行时，成功了，并在/目录下创建了daemon.log文件，cat查看后确实每个一分钟写入一次。为什么只能root执行，那是因为当我们创建守护进程时，已经将当前目录切换我/目录，所以当我之后创建daemon.log文件是其实是在/目录下，那肯定不行，因为普通用户没有权限，或许你会问那为啥没报错呢？其实是有出错，只不过我们在创建守护进程时已经将标准输入关闭并重定向到/dev/null，所以看不到错误信息。
 
-### Unix 文件系统：
-
-当然，Mac有自己的文件系统，2020年为APFS；Linux也更新了自己的文件系统，2020年为ZFS。但同为Unix内核，很多文件的逻辑依然保持一致，这里只谈一致的问题，不谈具体的文件系统特性。
-
-#### 磁盘分区
-
-> windows是先有硬盘分区，再有分区上的目录。
-> linux是先有目录，再有每个目录对应的分区，进入一个分区的目录入口就叫挂载点。
-> linux中不是每个目录都是挂载点，通常只要求根目录/是挂载点。其他的目录可以用户自己决定要不要挂载单独的分区，如果不挂载，这个目录实际的存储位置和它的父目录相同。
->
-> win和linux的区别主要是文件结构(目录)和物理结构(存储)的侧重不同。目录在linux里是更基础的概念，在目录的基础上安排磁盘分区。win则是相反。
-
-
-
-#### 子目录
-
-根据上述理论，所以磁盘是挂载在目录底下的。
-
- **[Linux文件系统](http://cn.linux.vbird.org/linux_basic/0210filepermission_3.php)**、 [FHS](https://www.pathname.com/fhs/)、[文件系统层次结构标准维基百科](https://zh.wikipedia.org/zh-cn/文件系统层次结构标准)、
-
-
-
-* /(root, 根目录)：与开机系统有关；
-* /usr (unix software resource)：与软件安装/执行有关；
-* /var (variable)：与系统运作过程有关。
-* /etc：配置文件
-* /bin：重要执行档
-* /dev：所需要的装置文件
-* /lib：执行档所需的函式库与核心所需的模块
-* /sbin：重要的系统执行文件
-* /mnt：
-* /swap：虚拟内存（硬盘作为内存）
-
-用户文件夹里又很多.文件，这些都是系统和软件配置相关的，系统也会把这类文件设为隐藏，我们可以自己创建，以个性化定制app的设置（尤其是以终端为可视化界面的软件）er qi。以vim为例：
-
-* /Users/zxll/.vimrc   #vim用户配置文件
-* /Users/zxll/.vim/    #vim用户配置文件夹
-
-##### 永久关闭swap分区
-
-在/ etc / fstab中找到有关swap的行，并对其进行注释。是这样的：
-
-```shell
-UUID=6880a28d-a9dc-4bfb-ba47-0876b50e96b3 /               ext4    errors=remount-ro 0       1
-UUID=7350e6f2-e3a7-4d80-9a95-8741c7db118f /home           ext4    defaults        0       2
-UUID=E2E26AD1E26AAA0D /media/windows  ntfs    defaults,umask=007,gid=46 0       0
-
-# Swap a usb extern (3.7 GB):
-#/dev/sdb1 none swap sw 0 0
-```
-
-您可以使用gedit编辑该文件。首先备份它，以防万一：
-
-```shell
-sudo cp /etc/fstab /etc/fstab_backup
-gksu gedit /etc/fstab
-```
-
-只需在交换所在行的开头添加＃，然后重新启动计算机即可。
-
-
-#### 文件链接(非编译链接)
-
-硬链接是指针，所有的硬链接都是指向同一个磁盘块。 删除一个指针不会真正删除文件，只有把所有的指针都删除才会真正删除文件。 软连接是另外一种类型的文件，保存的是它指向文件的全路径， 访问时会替换成绝对路径。具体应用见`mac`中的`链接动态库`一节。
-
-```shell
-man ln
-#得到下面描述 ========
-  指令名称 : ln
-  使用权限 : 所有使用者
-  使用方式 : ln [options] source dist，其中 option 的格式为 :
-  [-bdfinsvF] [-S backup-suffix] [-V {numbered,existing,simple}]
-  [--help] [--version] [--]
-  说明 : Linux/Unix 档案系统中，有所谓的连结(link)，我们可以将其视为档案的别名，而连结又可分为两种 : 硬连结(hard link)与软连结(symbolic link)，硬连结的意思是一个档案可以有多个名称，而软连结的方式则是产生一个特殊的档案，该档案的内容是指向另一个档案的位置。硬连结是存在同一个档 案系统中，而软连结却可以跨越不同的档案系统。
-  ln source dist 是产生一个连结(dist)到 source，至于使用硬连结或软链结则由参数决定。
-  不论是硬连结或软链结都不会将原本的档案复制一份，只会占用非常少量的磁碟空间。
-  -f : 链结时先将与 dist 同档名的档案删除
-  -d : 允许系统管理者硬链结自己的目录
-  -i : 在删除与 dist 同档名的档案时先进行询问
-  -n : 在进行软连结时，将 dist 视为一般的档案
-  -s : 进行软链结(symbolic link)
-  -v : 在连结之前显示其档名
-  -b : 将在链结时会被覆写或删除的档案进行备份
-  -S SUFFIX : 将备份的档案都加上 SUFFIX 的字尾
-  -V METHOD : 指定备份的方式
-  --help : 显示辅助说明
-  --version : 显示版本
-```
-
-
-
-### shell命令
+### 三 shell命令
 
 #### 常用
 
