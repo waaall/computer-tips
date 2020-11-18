@@ -130,6 +130,12 @@ Install-Module oh-my-posh -Scope CurrentUser
 ### 常用指令
 
 ```powershell
+#找可执行文件的位置，类似Unix中的which或whereis
+where.exe atomsk
+C:\software\bin\atomsk
+C:\software\bin\atomsk.exe
+
+
 start . #用文件管理器打开当前文件夹（ii .也可以）
 Get-Alias #查看现在有的指令别名
 
