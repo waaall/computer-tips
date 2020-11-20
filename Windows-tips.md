@@ -177,6 +177,8 @@ mklink /D source_link source			#为文件夹创建符号链接
 cmd.exe /c mklink /H 'bin\atomsk' 'atomsk-win\atomsk.exe'	#为文件创建硬链接
 cmd.exe /c mklink /H 'bin\atomsk.exe' 'atomsk-win\atomsk.exe'
 cmd.exe /c mklink /H 'bin\cmake.exe' 'c-compiler\cmake\bin\cmake.exe'
+
+cmd.exe /c mklink /H 'bin\vim.exe' 'Vim\vim82\vim.exe'	#windows下使用vim，但实际上Windows下vim不需要加入环境变量，因为它在windows文件夹下创建了一个vim.bat，用来启动vim
 ```
 
 
