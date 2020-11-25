@@ -2,3 +2,7 @@
 ! See https://adblockplus.org/en/filter-cheatsheet
 ||stackoverflow.com^
 ||insights.stackoverflow.com^
+||eigen.tuxfamily.org^
+|https://wallhaven.cc^
+|http://libgen.lc^
+|https://doesitarm.com^
