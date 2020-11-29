@@ -576,14 +576,14 @@
 	<key>BackgroundAlphaInactive</key>
 	<real>0.70081240414110424</real>
 	<key>BackgroundBlur</key>
-	<real>0.80357553979004814</real>
+	<real>0.89806550533604534</real>
 	<key>BackgroundBlurInactive</key>
 	<real>1</real>
 	<key>BackgroundColor</key>
 	<data>
 	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
 	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGjCwwTVSRudWxs0w0ODxAREldO
-	U1doaXRlXE5TQ29sb3JTcGFjZVYkY2xhc3NPEBEwLjggMC45MDA4MjE5OTAxABADgALS
+	U1doaXRlXE5TQ29sb3JTcGFjZVYkY2xhc3NPEBEwLjggMC44MDAyMjIxNjU0ABADgALS
 	FBUWF1okY2xhc3NuYW1lWCRjbGFzc2VzV05TQ29sb3KiFhhYTlNPYmplY3QIERokKTI3
 	SUxRU1ddZGx5gJSWmJ2osbm8AAAAAAAAAQEAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMU=
 	</data>
@@ -863,7 +863,7 @@
 	<key>UseBrightBold</key>
 	<false/>
 	<key>columnCount</key>
-	<integer>88</integer>
+	<integer>86</integer>
 	<key>name</key>
 	<string>zxll-colorful-change-for-torrowvim</string>
 	<key>rowCount</key>
