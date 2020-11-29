@@ -396,21 +396,25 @@ eval $(dircolors -b $HOME/.dircolors)
 
 [10个经验的国产软件](https://sspai.com/post/42153)、
 
-- [ ] [geek](https://geekuninstaller.com/download)                卸载软件
-- [ ] quicklook        空格预览
-- [ ] freefilesync    本地同步文件
-- [ ] [windows File Recovery](https://www.microsoft.com/store/r/9N26S50LN705) 文件恢复工具（官方）也成为`winfr`
-- [ ] Rufus              启动盘（2020直接[Windows官网](https://go.microsoft.com/fwlink/?LinkId=691209)自动下载制作启动盘）
-- [ ] potplayer        看视频
-- [ ] f.lux                 调色温
-- [ ] 华为管家        避免过充
-- [ ] [sublime](https://www.sublimetext.com)          文本编辑器
-- [ ] [Typora](https://typora.io)            Markdown
-- [ ] [Bandzip](https://cn.bandisoft.com/bandizip/)          解压缩软件
-- [ ] Wisedata Recovery 数据恢复
-- [ ] 火绒                杀毒软件
-- [ ] Listary/everything   搜索
-- [ ] [XMind](https://www.xmind.cn)             思维导图
-- [ ] Snipaste         截图
-- [ ] [FDM](https://www.freedownloadmanager.org/zh/)                下载
+UWP软件：
+
+- [ ] quicklook                        空格预览
+- [ ] Windows Terminal        官方终端
+- [ ] Ubuntu                            官方Linux虚拟机
+
+官网下载：
+
+- [ ] [geek](https://geekuninstaller.com/download)                                  卸载软件
+- [ ] [windows File Recovery](https://www.microsoft.com/store/r/9N26S50LN705) 文件恢复（官方）/`winfr`
+- [ ] [freefilesync](https://freefilesync.org/)                     本地同步文件
+- [ ] [Rufus](https://rufus.ie/)                                启动盘（2020直接[Windows官网](https://go.microsoft.com/fwlink/?LinkId=691209)自动下载制作启动盘）
+- [ ] [potplayer](https://potplayer.daum.net/)                         看视频
+- [ ] [f.lux](https://justgetflux.com/)                                  调色温
+- [ ] [sublime](https://www.sublimetext.com)                           文本编辑器
+- [ ] [Typora](https://typora.io)                             Markdown
+- [ ] [Bandzip](https://cn.bandisoft.com/bandizip/)                           解压缩软件
+- [ ] [火绒](https://www.huorong.cn/)                                 杀毒软件（防流氓）
+- [ ] [Listary](https://www.listary.com/)/everything         搜索
+- [ ] [XMind](https://www.xmind.cn)                             思维导图
+- [ ] [FDM](https://www.freedownloadmanager.org/zh/)                                下载
 
