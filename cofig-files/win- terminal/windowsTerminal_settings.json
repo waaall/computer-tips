@@ -11,7 +11,7 @@
     "initialRows": 35,
     "launchMode": "default",
     "alwaysOnTop": false,
-    "theme": "system",
+    "theme": "system",  //设置为dark|light，标题栏不随系统改变
 
     // Selection
     "copyOnSelect": false,
@@ -42,7 +42,7 @@
             "startingDirectory" : ".", //使用注册表在当前文件夹打开
 
             "fontSize": 11,
-            "acrylicOpacity" : 0.9,
+            "acrylicOpacity" : 0.9, //设置透明度，需要在“个性化-颜色”中打开透明效果
             "useAcrylic" : true,
 
             "colorScheme":"ZX Light",
