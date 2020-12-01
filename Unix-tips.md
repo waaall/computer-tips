@@ -1318,11 +1318,48 @@ sudo ubuntu-drivers autoinstall
 
 `Ctrl+H`  #显示隐藏文件
 
-### terminal：
-
-#### 自定义窗口名称
+### Terminal：
 
 
+
+#### dircolors
+
+
+
+```shell
+00 　　　 //默认
+01 　　 　//加粗
+04 　 　　//下划线
+05 　 　　//闪烁
+07 　 　　//反显
+08 　 　　//隐藏
+文字颜色 
+30 — Black   //黑色
+31 — Red     //红色
+32 — Green   //绿色
+33 — Yellow  //黄色
+34 — Blue    //蓝色
+35 — Magenta //洋红色
+36 — Cyan    //蓝绿色
+37 — White   //白色
+背景颜色 
+40 — Black 
+41 — Red 
+42 — Green 
+43 — Yellow 
+44 — Blue 
+45 — Magenta 
+46 — Cyan 
+47 – White
+```
+
+
+
+
+
+
+
+#### 自定义窗口名
 
 * 指令
 
