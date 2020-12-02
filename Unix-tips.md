@@ -1160,7 +1160,7 @@ mac上终端设置代理然后运行下面的install.sh（因为我用的是beta
 
 **文件改动见`/Users/zxll/Documents/zx-profiles/teminal/homebrew改.sh`**
 
-包一般安装在：**/Users/zxll/Library/Caches/Homebrew/downloads**
+包下载位置一般在：**/Users/zxll/Library/Caches/Homebrew/downloads**
 
 ---
 
