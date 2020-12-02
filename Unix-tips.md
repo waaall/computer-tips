@@ -1210,7 +1210,7 @@ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://gith
 
 [mac vim 配置](https://www.jianshu.com/p/923aec861af3)
 
-### Neovim
+#### Neovim
 
 ```shell
 #安装
