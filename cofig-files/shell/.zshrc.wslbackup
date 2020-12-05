@@ -36,9 +36,13 @@ alias la="ls -a"
 alias clr="clear"
 alias python="python3"
 alias pip="pip3"
-alias st="/mnt/c/'Program Files'/'Sublime Text 3'/sublime_text.exe"
-#alias vs="/mnt/c/'Program Files'/'Microsoft VS Code'/code.exe"
+
+# These aliases are for WSL only.
 alias mklink="cmd.exe /c mklink"
+alias st="/mnt/c/'Program Files'/'Sublime Text 3'/sublime_text.exe"
+# These two are for swift on windows can be used by WSL
+alias swift="swift.exe" 
+alias swiftc="swiftc.exe"
 
 # ================================= 设置wsl颜色问题 =====================================
 eval $(dircolors -b $HOME/.dircolors)
