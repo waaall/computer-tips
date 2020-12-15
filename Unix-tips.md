@@ -1355,10 +1355,6 @@ sudo ubuntu-drivers autoinstall
 
 
 
-
-
-
-
 #### 自定义窗口名
 
 * 指令
