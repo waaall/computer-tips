@@ -7,8 +7,8 @@
     "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
     
     // Launch Settings
-    "initialCols": 90,
-    "initialRows": 35,
+    "initialCols": 86, //这是窗口大小
+    "initialRows": 32,
     "launchMode": "default",
     "alwaysOnTop": false,
     "theme": "system",  //设置为dark|light，标题栏不随系统改变
@@ -42,11 +42,13 @@
             "startingDirectory" : ".", //使用注册表在当前文件夹打开
 
             "fontSize": 11,
-            "acrylicOpacity" : 0.9, //设置透明度，需要在“个性化-颜色”中打开透明效果
-            "useAcrylic" : true,
+            // "acrylicOpacity" : 0.8, //设置透明度，需要在“个性化-颜色”中打开透明效果
+            // "useAcrylic" : true, //设置背景图需要取消透明度，默认就是false
+            "backgroundImage" : "yourpath\\bg-blue.png",
+            "backgroundImageOpacity" : 0.5,
 
-            "colorScheme":"ZX Light",
-            //"colorScheme":"One Half Dark",
+            // "colorScheme":"ZX Light",
+            "colorScheme":"One Half Dark",
         },
         "list":
         [
