@@ -43,7 +43,19 @@ nnoremap <C-H> <C-W><C-H>   " 组合快捷键：- Ctrl-h 切换到左侧的分�
 "===================================主题设置===================================
 set t_Co=256                " 设置256位色彩，需terminal支持
 "set bg=dark
+"----------darkcolor----------"
 "colorscheme Tomorrow-Night " 不设置默认跟随terminal
+"colorscheme gruvbox
+"colorscheme jellybeans
+"colorscheme atom
+"colorscheme busybee
+"colorscheme darkblue
+"colorscheme Tomorrow
+
+"----------lightcolor----------"
+"colorscheme beauty256
+"colorscheme xcode-default
+"colorscheme Tomorrow
 
 "=================================一键运行代码==================================
 map <C-b> :call CompileRunGcc()<CR>
