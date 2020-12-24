@@ -11,6 +11,7 @@ set laststatus=1            " 启动显示状态行
 set ruler                   " 显示标尺，就是在右下角显示光标位置
 set showmatch               " 显示匹配
 set cindent                 " c文件自动缩进
+"let mapleader="#"          " leader快捷键更换
 
 "----------tab缩进----------"
 set tabstop=4               " 一个tab是多少个空格，默认8
