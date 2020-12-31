@@ -6,3 +6,5 @@
 |https://wallhaven.cc^
 |http://libgen.lc^
 |https://doesitarm.com^
+|https://feeds.pacific-content.com/commandlineheroes^
+|https://rickandmorty.com^
