@@ -715,7 +715,7 @@ pip install - -ignore-installed Name #重装最新版插件
 
 ---
 
-单独写了一个git的描述文档在learn code里。
+单独写了一个git的描述文档在`learn-code/learn-tools/learn-git.md`里。
 
 git 忽略mac中的`.DS_Store`文件方法见下：
 
@@ -977,7 +977,7 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 将下面几行代码加`.shellrc/.zshrc`。
 
-但要注意的是，若有`ohmyzsh`，它会重置语言环境，所以需要将其添加在`source oh-my-zsh.sh`后。主要是针对git中文乱码的情况。
+但要注意的是，若有`ohmyzsh`，它会重置语言环境，所以需要将其添加在`source oh-my-zsh.sh`后。针对git中文乱码的情况，则需要`git config --global core.quotepath false`,关于git再单独一个文件中——`learn-code/learn-tools/learn-git.md`。
 
 ```shell
 export LC_ALL=en_US.UTF-8  
