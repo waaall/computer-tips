@@ -26,6 +26,9 @@
 >
 > win和linux的区别主要是文件结构(目录)和物理结构(存储)的侧重不同。目录在linux里是更基础的概念，在目录的基础上安排磁盘分区。win则是相反。
 
+* [ubuntu磁盘分区](https://askubuntu.com/questions/343268/how-to-use-manual-partitioning-during-installation)
+* [鸟哥磁盘与文件系统](http://cn.linux.vbird.org/linux_basic/0230filesystem_1.php)
+
 
 
 #### 目录结构
@@ -974,7 +977,7 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 将下面几行代码加`.shellrc/.zshrc`。
 
-但要注意的是，若有`ohmyzsh`，它会重置语言环境，所以需要将其添加在`source oh-my-zsh.sh`后。
+但要注意的是，若有`ohmyzsh`，它会重置语言环境，所以需要将其添加在`source oh-my-zsh.sh`后。主要是针对git中文乱码的情况。
 
 ```shell
 export LC_ALL=en_US.UTF-8  
@@ -1107,6 +1110,17 @@ atomsk --create fcc 4.02 Al aluminium.xsf	#成功啦！
 \o/ Program terminated successfully!
 >>> Total time: 0.002 s.; CPU time: 0.002 s.
 ```
+
+##### mac .net core 安装位置
+
+```shell
+The following frameworks were found:
+      5.0.2 at [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]
+```
+
+
+
+
 
 #### 终端软件管理
 
