@@ -1,0 +1,65 @@
+{
+    //bracketHighlighter这个插件的设置
+    // 这个是在成对的括号左侧显示一条竖线，表明开闭括号的范围与位置，如果不需要把true改为false
+    "content_highlight_bar": true,
+    // 下面不同括号的显示方式，默认是下划线，这里改成了高亮
+    "bracket_styles": {
+        "default": {
+            "icon": "dot",
+            "color": "region.yellowish brackethighlighter.default",
+            "style": "highlight"
+        },
+        "unmatched": {
+            "icon": "question",
+            "color": "region.redish",
+            "style": "outline"
+        },
+        "curly": {
+            "icon": "curly_bracket",
+            "color": "region.purplish"
+            // "style": "underline"
+        },
+        "round": {
+            "icon": "round_bracket",
+            "color": "region.bluish"
+            // "style": "underline"
+        },
+        "square": {
+            "icon": "square_bracket",
+            "color": "region.yellowish"
+            // "style": "underline"
+        },
+        "angle": {
+            "icon": "angle_bracket",
+            "color": "region.orangish"
+            // "style": "underline"
+        },
+        "tag": {
+            "icon": "tag",
+            "color": "region.orangish"
+            // "style": "underline"
+        },
+        "c_define": {
+            "icon": "hash",
+            "color": "region.yellowish"
+            // "style": "underline"
+        },
+        "single_quote": {
+            "icon": "single_quote",
+            "color": "region.greenish"
+            // "style": "underline"
+        },
+        "double_quote": {
+            "icon": "double_quote",
+            "color": "region.greenish"
+            // "style": "underline"
+        },
+        "regex": {
+            "icon": "star",
+            "color": "region.greenish"
+            // "style": "underline"
+        }
+    },
+    // 忽视限制因素，但是当代码较多的时候可能会影响性能
+    "ignore_threshold": true,
+}
