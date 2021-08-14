@@ -1,6 +1,15 @@
 {
 	"auto_complete_selector": "source, text",
-	"color_scheme": "Packages/Color Scheme - Default/Breakers.sublime-color-scheme",
+	//
+	//sublime3 主题设置
+	// "color_scheme": "Packages/Color Scheme - Default/Breakers.sublime-color-scheme",
+	//
+	//sublime4 主题设置
+	"theme": "Adaptive.sublime-theme", 
+	"color_scheme": "auto",
+	"dark_color_scheme": "Packages/User/zx_Mariana.sublime-color-scheme",
+	"light_color_scheme": "Packages/User/zx-Breakers.sublime-color-scheme",
+
 	"font_size": 13,
 	"ignored_packages":
 	[
