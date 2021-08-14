@@ -919,6 +919,18 @@ A: 全屏显示NERDTree，或者关闭全屏
 * NewFileMenu    ---右键新建文件
 * Cleaner Onelite  ---垃圾清理
 
+
+
+#### Edge卸载（大多Mac App完全卸载方式）
+
+首先就是在Application文件夹中把Edge拖进Trash，然后删除其缓存、配置文件：
+
+* ~/Library/Application Support/ 文件夹中找到并删除其中的 Microsoft Edge 文件夹
+* ~/Library/Caches/ 文件夹中找到并删除其中的 Microsoft Edge 文件夹
+* ~/Library/Saved Application State/ 文件夹中找到并删除其中的 com.microsoft.edgemac.savedState 文件夹
+* ~/Library/WebKit/ 文件夹中找到并删除其中的 com.microsoft.edgemac 文件夹
+* ~/Library/Preferences/ 文件夹中找到并删除其中的 com.microsoft.edgemac.plist 文件
+
 - - - -
 
 
