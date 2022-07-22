@@ -614,6 +614,10 @@ git config --global --unset https.proxy
 export ALL_PROXY=socks5://127.0.0.1:1086   #terminal使用sock5代理
 unset ALL_PROXY	#取消代理
 
+netstat -nr // 显示路由表 
+
+## https://wsgzao.github.io/post/tcpdump/
+tcpdump -i eth0 -vnn host 172.16.1.122
 
 ```
 
@@ -985,6 +989,20 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 `ctrl+r`    # fzf 终端命令历史搜索
 
+#### mac系统环境变量
+> Mac系统的环境变量，加载顺序为：
+> /etc/profile
+> /etc/paths 
+> ~/.bash_profile 
+> ~/.bash_login 
+> ~/.profile 
+> ~/.bashrc
+> (etc目录下面的是系统级的配置，~目录下的是用户配置)
+> /etc/profile和/etc/paths是系统级别的，系统启动就会加载，后面几个是当用户级的环境变量。后面3个按照从前往后的顺序读取.如果/.bash_profile文件存在，则后面的几个文件就会被忽略不读了;
+
+
+
+
 #### 终端中文支持
 
 将下面几行代码加`.shellrc/.zshrc`。
@@ -1194,6 +1212,7 @@ mac上终端设置代理然后运行下面的install.sh（因为我用的是beta
 brew list #列出已安装的软件
 brew outdated #查看哪些需要更新
 brew update #更新brew
+brew update-reset #“重装homebrew”
 brew home #用浏览器打开brew的官方网站
 brew info #显示软件信息brew deps #显示包依赖
 brew upgrade #更新所有
@@ -1253,6 +1272,22 @@ print (os.path.abspath('.'))      #查看python读取路径
 
 pandas 多核运行 https://github.com/nalepae/pandarallel
 df.parallel_apply(func) #加上这个使得命令利用多核
+
+### “小飞机”
+
+* socket的pac文件
+
+
+* clashx的rule(yaml文件)
+![Screen Shot 2022-03-03 at 10.26.33](Unix-tips.assets/clash_rules.png)
+
+> 配置文件需要放置在 $HOME/.config/clash/*.yaml
+> 这份文件是clashX的基础配置文件，请尽量新建配置文件进行修改。
+> 只有这份文件的端口设置会随ClashX启动生效
+> 如果您不知道如何操作，请参阅[官方Github文档](https://github.com/Dreamacro/clash/blob/dev/README.md)
+
+
+
 
 ### sublime
 
