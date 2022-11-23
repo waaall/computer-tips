@@ -597,7 +597,7 @@ java test #运行java
 ####  网络相关
 
 ```shell
-sudo apt install net-tools #安装ifconfig等工具
+sudo apt install net-tools #安装ifconfig等工具（不用了，这个已经过时了，好多年不维护了，系统默认已改为iproute2 & netplan查询和设置网络）
 traceroute www.apple.com #追踪网络连接所跳转的路由器列表
 ssh username@ip     # Users/zxll/.ssh/known而且mei ssh 记录着已有信息
 scp run/friction.py zxll@192.168.11.15:/home/zxll/run/friction.py #用ssh把本地文件上传到目标服务器，反之亦反
