@@ -45,7 +45,13 @@ windir 变量：规定操作系统的系统目录的路径。
 >
 > HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\MenuExt
 
+### win11修改任务栏大小
 
+1. 打开运行，输入“regedit”来启动注册表编辑器；　
+2. 定位到“HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\”
+3. 新建一个DWORD值，将其命名为“TaskbarSi”；
+4. 修改这个值的数据，可以将它修改为0、1和2，分别对应小、中、大尺寸。
+5. 保存后关闭注册表编辑器，重启Windows资源管理器进程，即可看到变化了。
 
 ## Cmd
 
