@@ -1377,7 +1377,18 @@ ubuntu-drivers devices
 sudo ubuntu-drivers autoinstall
 #如果想安装特定项，就用apt install 
 ```
+### Ubuntu设置中文输入法
 
+> [引用博客](https://blog.csdn.net/weixin_44916154/article/details/124582379)
+> ### 安装 Chinese 语言包
+> 2. 单击桌面右上角图标，点击 Settings，在弹出的窗口中，点击 Region & Language，然后点击 Manage Installed Languages
+> 3. 在 Language Support 窗口中，单击 Install/Remove Languages...
+> 4. 在弹出的 Installed Languages 窗口中，找到 Chinese(simplified)，然后将其勾选，最后单击 Apply，如果进行了第4步的话，会发现 Chinese(simplified) 已经安装了
+> ### 安装输入法
+> 5. 终端输入`sudo apt-get install ibus-pinyin`
+> ### 设置输入法
+> 6. 安装好后，进入 Settings，点击 Keyboard，再点 Input Sources 下的 `+`，在 Add an Input Source 窗口中选择 Chinese，然后选择 Chinese(Intelligent Pinyin) 并单击 `Add`
+> 7. shift就可以切换中英文了，win+space也可以。
 
 ### 快捷键：
 
