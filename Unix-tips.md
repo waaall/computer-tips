@@ -897,6 +897,10 @@ f: 打开和关闭文件过滤器
 q: 关闭NERDTree
 A: 全屏显示NERDTree，或者关闭全屏
 
+### LINUX 小飞机（shadowsocks）
+
+> [shadowsocks-electron(ALL-platform)](https://github.com/nojsja/shadowsocks-electron)
+
 ## Mac
 
 ### 软件
