@@ -152,7 +152,19 @@ where.exe curl #类似which，查看命令的地址
 New-Alias #创建新别名“”（或者Set-Alias）
 Remove-Item alias:\curl #删除"curl"这个别名
 ```
+### windows 终端设置代理
 
+```shell
+# cmd
+set http_proxy=http://127.0.0.1:代理服务器本地端口号
+set https_proxy=http://127.0.0.1:代理服务器本地端口号
+
+#powershell
+$Env:http_proxy="http://127.0.0.1:代理服务器本地端口号"
+$Env:https_proxy="http://127.0.0.1:代理服务器本地端口号"
+
+$Env:ALL_proxy="http://127.0.0.1:代理服务器本地端口号"
+```
 
 
 ### mklink
