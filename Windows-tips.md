@@ -168,6 +168,10 @@ $Env:ALL_proxy="http://127.0.0.1:代理服务器本地端口号"
 #git代理 （因为大部分终端网络问题都是github的问题，所以这种情况可以只设置git代理）
 git config --global https.proxy http://127.0.0.1:代理服务器本地端口号
 git config --global https.proxy https://127.0.0.1:代理服务器本地端口号
+
+#git取消代理
+git config --global --unset http.proxy
+git config --global --unset https.proxy
 ```
 
 
