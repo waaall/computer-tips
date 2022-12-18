@@ -459,3 +459,11 @@ UWP软件：
 这里我要多说几句，首先就是亮度自适应调节，本不应该影响色域，使屏幕明显颜色失真，所以这个技术很不合格。再就是强调一下时效性，截止到2021年Windows普遍存在这个问题，往往也和电源管理挂钩。
 
 比如风扇转速的问题，屏幕显示的问题，最好在windows设置-显示中，把关于能效的管理策略取消，包括在高级电源管理设置中的诸多选项，可以自定义设置下相关问题，目前的这种“智能”，挺智障的，若真是笔记本电量不足，可以认为的调低电量、关下后台应用等。
+
+### 输入法无法改中文标点
+
+setting - time&language - Language&region - options - keyboard/Microsoft Pinyin - General ：关闭「Use English punctuations when in Chinese input mode」
+
+### 不同外接屏幕无法记住设置的缩放系数
+
+setting - System - Display - Scale 开启[自动scale，也就是关闭用户自己设置缩放系数]

@@ -616,9 +616,27 @@ unset ALL_PROXY	#取消代理
 
 netstat -nr // 显示路由表 
 
-## https://wsgzao.github.io/post/tcpdump/
-tcpdump -i eth0 -vnn host 172.16.1.122
-
+## ======= https://wsgzao.github.io/post/tcpdump/ =======
+# 抓取包含 172.16.1.122 的数据包  
+tcpdump -i eth0 -vnn host 172.16.1.122  
+# 抓取包含 172.16.1.0/24 网段的数据包  
+tcpdump -i eth0 -vnn net 172.16.1.0/24  
+# 抓取包含端口 22 的数据包  
+tcpdump -i eth0 -vnn port 22  
+# 抓取 udp 协议的数据包  
+tcpdump -i eth0 -vnn  udp  
+# 抓取 icmp 协议的数据包  
+tcpdump -i eth0 -vnn icmp  
+# 抓取 arp 协议的数据包  
+tcpdump -i eth0 -vnn arp  
+# 抓取 ip 协议的数据包  
+tcpdump -i eth0 -vnn ip  
+# 抓取源 ip 是 172.16.1.122 数据包。  
+tcpdump -i eth0 -vnn src host 172.16.1.122  
+# 抓取目的 ip 是 172.16.1.122 数据包  
+tcpdump -i eth0 -vnn dst host 172.16.1.122  
+# 抓取源端口是 22 的数据包  
+tcpdump -i eth0 -vnn src port 22  
 ```
 
 #### screen
