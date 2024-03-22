@@ -934,6 +934,12 @@ A: 全屏显示NERDTree，或者关闭全屏
 4. 设置-外观中，sidebar icon size选large
 上述几点基本上跟缩放差不多，又保证了清晰度。
 
+#### mac和windows自动切换键鼠
+
+> ![一套键鼠跨平台、跨设备使用，除了通用控制还有哪些软硬件方案？](https://sspai.com/post/72143)
+
+ShareMouse是一个不错的解决方案，尤其是mac和windows之间，可以使用mac的触控板，还不需要额外的设备（相比于logitech的Flow方案）
+
 ### 软件
 
 **官网**
