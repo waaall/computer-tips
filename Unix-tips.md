@@ -1,19 +1,9 @@
-# Unix tips
-
 任何代码他们的指令都是小写字母组成，为了避免歧义，我们自己定义量和函数时，最好是用大写字母来表示；
 
 每个指令之间都应该用空格隔来，类似代码应该对齐书写，注释要用tab键尽量对齐，不仅美观，且大大增加了易读性。
 
 [google开源代码书写规范](https://zh-google-styleguide.readthedocs.io/en/latest/contents/)
-
-[toc]
-
-
-
 ## 通用
-
-
-
 ### 一 Unix 文件系统：
 
 当然，Mac有自己的文件系统，2020年为APFS；Linux也更新了自己的文件系统，2020年为ZFS。但同为Unix内核，很多文件的逻辑依然保持一致，这里只谈一致的问题，不谈具体的文件系统特性。
@@ -35,9 +25,7 @@
 
 根据上述理论，所以磁盘是挂载在目录底下的。
 
- **[Linux文件系统](http://cn.linux.vbird.org/linux_basic/0210filepermission_3.php)**、 [FHS](https://www.pathname.com/fhs/)、[文件系统层次结构标准维基百科](https://zh.wikipedia.org/zh-cn/文件系统层次结构标准)、
-
-
+ **[Linux文件系统](http://cn.linux.vbird.org/linux_basic/0210filepermission_3.php)**、 [FHS](https://www.pathname.com/fhs/)、[文件系统层次结构标准维基百科](https://zh.wikipedia.org/zh-cn/文件系统层次结构标准)
 
 * /(root, 根目录)：与开机系统有关；
 * /usr (unix software resource)：与软件安装/执行有关；
@@ -49,8 +37,6 @@
 * /sbin：重要的系统执行文件
 * /mnt：
 * /swap：虚拟内存（硬盘作为内存）
-
-
 
 ##### 常见配置文件
 
@@ -100,8 +86,6 @@ gksu gedit /etc/fstab
 ```
 
 只需在交换所在行的开头添加＃，然后重新启动计算机即可。
-
-
 #### 文件链接(非编译链接)
 
 硬链接是指针，所有的硬链接都是指向同一个磁盘块。 删除一个指针不会真正删除文件，只有把所有的指针都删除才会真正删除文件。 软连接是另外一种类型的文件，保存的是它指向文件的全路径， 访问时会替换成绝对路径。具体应用见`mac`中的`链接动态库`一节。
@@ -174,15 +158,10 @@ setsid()函数可以建立一个对话期：
 现在我们来给出创建守护进程所需步骤：
 
 编写守护进程的一般步骤步骤：
-
 > （1）在父进程中执行fork并exit推出；
->
 > （2）在子进程中调用setsid函数创建新的会话；
->
 > （3）在子进程中调用chdir函数，让根目录 ”/” 成为子进程的工作目录；
->
 > （4）在子进程中调用umask函数，设置进程的umask为0；
->
 > （5）在子进程中关闭任何不需要的文件描述符
 
 说明：
