@@ -919,6 +919,26 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 ShareMouse是一个不错的解决方案，尤其是mac和windows之间，可以使用mac的触控板，还不需要额外的设备（相比于logitech的Flow方案）
 
+#### mac取消自动备份iPhone
+> [Disable automatic back up of your iOS devices](https://www.reddit.com/r/mac/?f=flair_name%3A%22Discussion%22)
+If you are synchronizing on a Mac:
+1. Close Music on your Mac.
+2. Launch Terminal
+3. Type 
+```bash
+defaults write com.apple.AMPDevicesAgent.plist AutomaticDeviceBackupsDisabled -bool true
+```
+and press Enter.
+4. If you want to re-enable automatic backups, type
+```bash 
+defaults write com.apple.AMPDevicesAgent.plist AutomaticDeviceBackupsDisabled -bool false
+```
+and press Enter.
+4. Reboot your Mac.
+In case you need to backup, you have to do it manually now: press the "Back Up Now" button of the iOS device in Finder.
+
+Enjoy.
+
 ### 软件
 
 **官网**
