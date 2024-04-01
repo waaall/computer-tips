@@ -1079,6 +1079,7 @@ top -l 1 | head -n 10 | grep PhysMem  #查看mac内存占用
 sudo purge          #mac清理RAM  
 
 pmset -g custom	#显示电源设置
+pmset -g log | egrep "\b(Sleep|Wake|DarkWake|Start)\s{2,}" # 查看睡眠唤醒log
 sudo pmset -a tcpkeepalive 0  #关闭所有情况下睡眠是保持TCP链接的设置
 man pmset		#查看电源设置的手册，比如下面这个：
 	proximitywake - On supported systems, this option controls 			system wake from sleep based on proximity of devices using same 	iCloud id. (value = 0/1)
