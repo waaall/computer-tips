@@ -3,7 +3,9 @@ mac 日常瞎搞
 
 [toc]
 
-
+## macbook 字小问题
+Mac上的字体选择：尽量不要改缩放比例，这样会导致不清楚（可能是非点对点渲染问题？）如果字太小，在辅助设置里选择大号字体，macbookpro14为例，我觉得15pt正好，14也OK。但是有些软件内不会改，比如sublime需要设置成15，上下行间距3；obsidian需要设置成16才不会太小。另外menubar size设成large；还可以在Apparence里把sidebar size设置成large。
+如果使用27寸4k外接显示器的设置，由于缩放比例不同则完全不同，可能默认13或14就ok。
 
 ## mac 终端标题显示问题
 
