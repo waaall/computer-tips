@@ -1,29 +1,20 @@
 {
-	"auto_complete_selector": "source, text",
-	//
-	//sublime3 主题设置
-	// "color_scheme": "Packages/Color Scheme - Default/Breakers.sublime-color-scheme",
-	//
-	//sublime4 主题设置
-	"theme": "Adaptive.sublime-theme", 
 	"color_scheme": "auto",
-	"dark_color_scheme": "Packages/User/zx_Mariana.sublime-color-scheme",
-	"light_color_scheme": "Packages/User/zx-Breakers.sublime-color-scheme",
-
-	"font_size": 13,
+	"dark_color_scheme": "Mariana.sublime-color-scheme",
+	"light_color_scheme": "zx-Breakers.sublime-color-scheme",
+	"theme": "Adaptive.sublime-theme",
+	// "dark_theme": "Adaptive.sublime-theme",
+	// "light_theme": "Adaptive.sublime-theme",
+	"font_size": 16,
+	"line_padding_top": 3,
+	"line_padding_bottom": 3,
 	"ignored_packages":
 	[
-		"Vintage"
+		"Vintage",
 	],
-	"indent_to_bracket": true,
-	"line_padding_bottom": 2,
-	"line_padding_top": 2,
-	"match_brackets": false,
-	"open_files_in_new_window": false,
-	"tab_completion": false,
-	"theme": "Adaptive.sublime-theme",
+	"index_files": true,
+	"word_wrap": "false",
 	"translate_tabs_to_spaces": true,
+	"open_files_in_new_window": false,
 	"hot_exit": false,
-	"remember_open_files": false,
-	"close_windows_when_empty": true,
 }
