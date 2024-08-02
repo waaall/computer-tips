@@ -943,7 +943,9 @@ Enjoy.
 
 **官网**
 
+
 * [Sublime](https://www.sublimetext.com)	        ---文本编辑器
+* [localsend](https://localsend.org/)	        ---跨平台局域网文件传输
 * [Itsycal](https://www.mowglii.com/itsycal/)               ---日期显示
 * [Rectangle](https://rectangleapp.com)         ---窗口管理
 * [FDM](https://www.freedownloadmanager.org)                  ---下载工具
