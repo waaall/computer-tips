@@ -897,6 +897,14 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 # Mac
 
+## remove rosetta2
+- [uninstall-rosetta-2](https://iboysoft.com/tips/uninstall-rosetta-2.html)
+1. Reboot your Mac into Recovery Mode by restarting your computer and holding down Command+R until the Apple logo appears on your screen.
+2. Click Utilities > Terminal.
+3. In the Terminal window, type in `csrutil disable` and press Enter.
+4. Restart your Mac.
+
+
 ## system data large
 一般30G以内是正常，超过的话，基本都是缓存或者其他系统未识别的文件太多。
 ### user library
@@ -953,6 +961,10 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 Enjoy.
 
 ## 软件
+### 共用键鼠
+#### deskflow
+[deskflow](https://github.com/deskflow/deskflow/)
+
 
 **官网**
 
@@ -1420,6 +1432,67 @@ In Sublime , we can create our own language highlight document named “.sublime
 
 # Linux
 
+## ubuntu 安装arm-none-eabi-gbd
+Apt库里有这个交叉编译的gcc，但是没有gdb，所以需要自己安装。（不排除未来加入gdb的可能性，那就可以用apt安装了）见文链接。
+1. 
+两个额外的库都需要安装，直接
+`sudo apt install libncurses-dev`和
+`sudo apt install libreadline-dev`就可以
+2. 链接库
+```
+#具体在下面第三步一起
+sudo ln -s /usr/lib/…..
+```
+
+3. 然后解压，链接
+```
+#gcc-arm-none-eabi解压安装
+sudo apt install libncurses-dev
+
+sudo cp gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 /usr/share/
+cd /usr/share/                                        
+sudo tar xvf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
+sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc 
+sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++
+sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb
+sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-size /usr/bin/arm-none-eabi-size
+sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-as /usr/bin/arm-none-eabi-as
+sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objcopy /usr/bin/arm-none-eabi-objcopy
+sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objdump /usr/bin/arm-none-eabi-objdump
+
+sudo ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
+sudo ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+```
+[ubuntu安装arm-none-eabi-gdb问题](https://askubuntu.com/questions/1243252/how-to-install-arm-none-eabi-gdb-on-ubuntu-20-04-lts-focal-fossa)
+
+## ubuntu 修改键盘映射
+[ubuntu交换alt和ctrl](https://www.cnblogs.com/liuzhch1/p/16047019.html)
+在 Ubuntu 下交换`Alt`和`Ctrl`键：
+
+```bash
+code /usr/share/X11/xkb/keycodes/evdev
+```
+
+或者用系统默认编辑器打开：
+
+```bash
+sudo xdg-open /usr/share/X11/xkb/keycodes/evdev
+```
+
+然后找到`LALT`和`LCTL`所在的行，它们的默认值应该为`<LALT>=64`, `<LCTL>=37`。把它们的值互换即可交换这两个键。
+
+其他的按键映射同理。
+
+最后重启使更改生效
+
+```undefined
+reboot
+```
+
+---
+
+此外还可以用 Ubuntu 自带的软件进行更改。按下`Super`键(也就是`Win`键)，输入`Tweaks`，一个开关图标的软件就会跳出来(中文名叫`优化`)。打开它，在左边栏选择`键盘和鼠标`，在`键盘`里最后`其他布局选项`。在`Alt/Win键行为`或`Ctrl键位置`里自行修改。  
+但是我自己使用`优化`进行更改有时候会失效，比如在挂起之后。更改keycodes暂时没有遇到失效的情况。
 
 ## Ubuntu安装驱动
 

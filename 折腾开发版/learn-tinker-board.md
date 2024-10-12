@@ -31,11 +31,17 @@ https://youyeetoo.cn/forum.php?mod=viewthread&tid=5645&page=1&authorid=8447
 
 4，板子重新跳线帽回到default/diable模式那里，如上图 重新给板子上电，就能进入EMMC的系统了。
 
+# 安装 Linux
+[官方介绍](https://www.asus.com/networking-iot-servers/aiot-industrial-solutions/tinker-series/tinker-board/)
 
 # 开发工具
 
 - [官方-GitHub-Developer_Guide](https://github.com/TinkerBoard/TinkerBoard/wiki/Developer-Guide)
 - [Tinker Board S R2.0 & R2.0, Tinker Board & S](https://github.com/TinkerBoard/TinkerBoard/wiki/Tinker-Board-S-R2.0-&-R2.0,-Tinker-Board-&-S)
+
+## GPIO API
+[官方介绍](https://www.asus.com/networking-iot-servers/aiot-industrial-solutions/tinker-series/tinker-board/)
+[gpio-python-lib-for-tinker-board](https://github.com/TinkerBoard/gpio_lib_python/tree/master)
 
 ## adb
 
