@@ -259,14 +259,6 @@ winfr source-drive: destination-drive: [/switches]
 ```
 
 
-The source and destination drives must be different. When recovering from the operating system drive (often C: ), use the /n <filter> and /y:<type<(s)> switches to specify the user files or folder.
-
-Microsoft automatically creates a recovery folder for you called, Recovery_<date and time> on the destination drive.
-
-There are three modes you can use to recover files: Default, Segment, and Signature.
-
-
-
 ##### Default mode examples
 
 Recover a specific file from your C: drive to the recovery folder on an E: drive：
@@ -290,8 +282,6 @@ winfr C: E: /n \Users\<username>\Documents\
 ```
 
 Don’t forget the backslash (\) at the end of the folder.
-
-
 
 ##### Segment mode examples (/r)
 
@@ -332,13 +322,9 @@ winfr C: E:\RecoveryTest /x /y:ZIP
 #### fsutil [指令](https://docs.microsoft.com/zh-cn/windows-server/administration/windows-commands/fsutil)：
 
 
-
-
-
 #### chkdsk [指令](https://docs.microsoft.com/zh-cn/windows-server/administration/windows-commands/chkdsk)：
 
 检查卷的文件系统和文件系统元数据，以查找逻辑错误和物理错误。 如果在没有参数的情况下使用， **chkdsk** 只显示卷的状态，并且不会修复任何错误。 如果与 **/f**、 **/r**、 **/x**或 **/b** 参数一起使用，则会修复卷上的错误。
-
 
 ## Linux on Win
 
@@ -347,8 +333,6 @@ winfr C: E:\RecoveryTest /x /y:ZIP
 1. 简单编译c++等c系语言、调试Windows下C系项目 均可以用mingw。
 
 2. 而中度使用Linux系统命令行、Linux非图形界面app调试、跨平台共享文件等，WSL是最佳选择。
-
-
 
 ### msys2与mingw64:
 
@@ -359,44 +343,50 @@ clang++ -O3 -target x86_64-pc-windows-gnu for.cpp -o for.exe
 ```
 
 
-
 #### [wget](https://eternallybored.org/misc/wget/) on Win
 
-
-
-
-
 #### [git](https://git-scm.com/downloads) on Win
-
 [安装git：](https://git-scm.com/download/win)、
-
 [git 原理及教程（官方）](https://git-scm.com/book/zh/v2)、
 
 #### [vim](https://www.vim.org/) on Win
-
 [配置vim：](https://segmentfault.com/a/1190000019360991)、
 
+### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/compare-versions)
 
+安装：
+1. 打开windows功能 --- 打开 WSL(Linux子系统) 和 虚拟化系统 功能。
 
-### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/compare-versions):
-
-
-
-windows 应用商店安装Ubuntu 
-
-* 需要在控制面板——程序
-
+2. 如果有小飞机就加上 `--web-download`,这会在github下载而不是微软商店。
 ```powershell
+wsl --update --web-download
 wsl --set-version Ubuntu 2 #将Ubuntu虚拟内核换成WSL2版本
 wsl -l -v #查看现有的wsl
+wsl --install -d Ubuntu-24.04 --web-download
+```
+
+3. wsl网络问题
+在用户目录 %USERPROFILE% 下面创建一个配置文件 .wslconfig，写入以下内容：
+```bash
+[experimental]
+networkingMode=mirrored
+dnsTunneling=true
+firewall=true
+autoProxy=true
+```
+然后就可以在wsl中输入以下指令可使用windows代理：(7890换成自己小飞机的端口号)
+```bash
+export ALL_PROXY=socks5://127.0.0.1:7890
+```
+
+4. 常用指令
+```powershell
 wslconfig /list #查看默认的wsl
 wsl #进入默认的wsl
 wslconfig /setdefault Ubuntu #修改"Ubuntu"为默认的wsl
 wsl —shutdown #关闭WSL中的Linux内核
 ```
-
 #### wsl 解决ls文件夹颜色
-
 ```powershell
 #修改wsl里面查看windows磁盘文件的颜色
 dircolors -p > $HOME/.dircolors
@@ -409,17 +399,13 @@ vim $HOME/.dircolors
 eval $(dircolors -b $HOME/.dircolors)
 ```
 
-
-
 ## 动态库
 
-[windows动态库位置](https://www.cnblogs.com/tocy/p/windows_dll_searth_path.html)、
-
-
+[windows动态库位置](https://www.cnblogs.com/tocy/p/windows_dll_searth_path.html)
 
 ## 软件
 
-[10个经验的国产软件](https://sspai.com/post/42153)、
+[10个经验的国产软件](https://sspai.com/post/42153)
 
 UWP软件：
 

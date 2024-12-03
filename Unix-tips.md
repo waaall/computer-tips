@@ -961,6 +961,19 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 Enjoy.
 
 ## 软件
+### 外接屏幕控制
+
+#### 亮度控制
+- [monitor control](https://github.com/MonitorControl/MonitorControl)
+
+#### 开启HiDPi
+- [M2 Macbook Pro外接2K显示器开启HiDPi](https://zhuanlan.zhihu.com/p/697043685)
+**Github社区现有的两种为Mac开启HiDPi的工具存在问题：**
+
+- [one-key-hidpi](https://link.zhihu.com/?target=https%3A//github.com/xzhih/one-key-hidpi) 提供的脚本不适用[M2芯片](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=M2%E8%8A%AF%E7%89%87&zhida_source=entity)，很多issue在讲这个问题
+- [BetterDisplay](https://link.zhihu.com/?target=https%3A//github.com/waydabber/BetterDisplay) 虽然适用于[M芯片](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=M%E8%8A%AF%E7%89%87&zhida_source=entity)，但是它的原理是创建一个高分辨率镜像[虚拟显示器](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=%E8%99%9A%E6%8B%9F%E6%98%BE%E7%A4%BA%E5%99%A8&zhida_source=entity)。在我的使用中，会出现以下问题：（1）鼠标经常消失，需要在显示器点一下鼠标才会出现；（2）输入延迟，无论是键盘输入还是窗口拖拽，会有延迟和拖影（我一开始以为是Magic keyboard延迟或是显示器刷新率没设置对，后来发现是该软件的问题）
+
+注意： [one-key-hidpi](https://link.zhihu.com/?target=https%3A//github.com/xzhih/one-key-hidpi) 现已解决此bug。
 ### 共用键鼠
 #### deskflow
 [deskflow](https://github.com/deskflow/deskflow/)
@@ -1431,6 +1444,16 @@ In Sublime , we can create our own language highlight document named “.sublime
 
 
 # Linux
+
+## linux 串口无法访问（权限低）
+- []()
+```bash
+# 临时处理
+sudo chmod 777 /dev/ttyUSB0
+
+# 永久处理(最后是自己的用户名)，然后重启
+sudo usermod -aG dialout zx
+```
 
 ## ubuntu 安装arm-none-eabi-gbd
 Apt库里有这个交叉编译的gcc，但是没有gdb，所以需要自己安装。（不排除未来加入gdb的可能性，那就可以用apt安装了）见文链接。
