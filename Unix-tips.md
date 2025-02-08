@@ -1445,6 +1445,9 @@ In Sublime , we can create our own language highlight document named “.sublime
 
 # Linux
 
+## 安装unbuntu-win双系统
+https://blog.csdn.net/NeoZng/article/details/122779035
+
 ## linux 串口无法访问（权限低）
 - []()
 ```bash
