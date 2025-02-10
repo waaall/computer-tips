@@ -1330,8 +1330,12 @@ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin https://github
 git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://github.com/Homebrew/homebrew-cask-drivers.git
 ```
 
+### yt-dlp
 
-
+```bash
+# https://github.com/yt-dlp/yt-dlp
+pip install yt-dlp
+```
 
 
 [mac vim 配置](https://www.jianshu.com/p/923aec861af3)
