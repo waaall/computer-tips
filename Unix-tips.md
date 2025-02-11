@@ -1335,6 +1335,18 @@ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://gith
 ```bash
 # https://github.com/yt-dlp/yt-dlp
 pip install yt-dlp
+
+# yt-dlp下载视频
+yt-dlp youtube_url
+
+# 下载的视频转换为h264编码(一般为vp9)，音频转换为aac(一般为opus), 封装为mp4(一般为mkv)
+ffmpeg -i input.mkv -c:v libx264 -c:a aac output.mp4
+
+# 只下载翻译的英文字幕，并转换为srt格式
+yt-dlp --skip-download --write-auto-subs --sub-langs en --convert-sub srt https://www.youtube.com/watch?v=6vnU02PKkEs&t=2732s
+
+# 只下载翻译的中文字幕，并转换为srt格式
+yt-dlp --skip-download --write-auto-subs --sub-langs zh-Hans-en --convert-sub srt https://www.youtube.com/watch?v=6vnU02PKkEs&t=2732s
 ```
 
 
