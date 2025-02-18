@@ -1556,14 +1556,110 @@ sudo ubuntu-drivers autoinstall
 > 6. 安装好后，进入 Settings，点击 Keyboard，再点 Input Sources 下的 `+`，在 Add an Input Source 窗口中选择 Chinese，然后选择 Chinese(Intelligent Pinyin) 并单击 `Add`
 > 7. shift就可以切换中英文了，win+space也可以。
 
-## 快捷键：
 
-`Ctrl+H`  #显示隐藏文件
+## linux 磁盘分区及调整
+- lsblk
+- parted 
+- fdisk
+- resize2fs
+- df
+- gparted
+这些 Linux 磁盘工具各有不同的用途和功能，但它们有一定的关联，主要用于管理磁盘分区和文件系统。下面是它们的区别和关系：
+
+**1. lsblk（列出块设备信息）**
+
+• **用途**：显示系统中的块设备（磁盘、分区、LVM 逻辑卷等）。
+• **特点**：
+	• 只读工具，不会修改磁盘。
+	• 直观展示磁盘结构及其挂载点。
+	• 不会显示 CD-ROM 或者网络存储设备（区别于 fdisk -l）。
+• **示例**：
+```
+lsblk
+```
+
+**2. parted（高级分区管理工具）**
+
+• **用途**：创建、调整、删除和管理磁盘分区。
+• **特点**：
+	• 支持 GPT（GUID 分区表）和 MBR（主引导记录）。
+	• 可以调整分区大小（GPT和大于2T的MBR下不能用fdisk，要用parted或者gparted）。
+	• 交互式和非交互式模式均可用。
+
+• **示例**：
+```bash
+parted /dev/sda
+(parted) print
+(parted) mkpart primary ext4 1MiB 10GiB
+```
+
+**3. fdisk（传统 MBR 分区管理工具）**
+
+• **用途**：用于查看和管理 MBR 分区表的磁盘分区（不推荐用于 GPT）。
+• **特点**：
+	• 仅支持 MBR（不支持 GPT，GPT 需要 gdisk）。
+	• 命令行交互式操作。
+• **示例**：
+```bash
+fdisk /dev/sda
+Command (m for help): p   # 打印分区表
+Command (m for help): n   # 创建新分区
+```
+
+**4. resize2fs（调整 ext 文件系统大小）**
+• **用途**：调整 ext2/ext3/ext4 文件系统的大小。
+• **特点**：
+	• **只能用于 ext 文件系统**，不支持 NTFS、XFS、Btrfs 等。
+	• 扩展时，目标分区必须已经扩展（如 parted 或 gparted 扩展分区后）。
+	• 收缩时，建议先卸载文件系统。
+• **示例**：
+```bash
+resize2fs /dev/sda1
+resize2fs /dev/sda1 20G   # 调整文件系统大小为 20GB
+```
+
+**5. df（显示磁盘使用情况）**
+• **用途**：查看文件系统的磁盘空间使用情况。
+• **特点**：
+	• 只显示已挂载的文件系统。
+	• 支持 -h 选项（人类可读格式）。
+• **示例**：
+```bash
+df -h
+```
+
+**6. gparted（GUI 分区管理工具）**
+• **用途**：图形化的磁盘分区管理工具（基于 parted）。
+• **特点**：
+	• 适合新手，提供可视化界面。
+	• 支持调整、删除、创建、格式化分区。
+	• 支持多种文件系统（ext4、NTFS、FAT32、XFS 等）。
+• **示例**：
+```
+gparted
+```
+
+**工具之间的关系**
+
+| **工具**    | **主要功能**      | **作用对象** | **关键区别**        |
+| --------- | ------------- | -------- | --------------- |
+| lsblk     | 显示块设备信息       | 磁盘 & 分区  | 只读，不修改          |
+| fdisk     | 分区管理（仅 MBR）   | 磁盘       | 传统工具，不支持 GPT    |
+| parted    | 分区管理（支持 GPT）  | 磁盘       | 现代工具，可调整大小      |
+| resize2fs | 调整 ext 文件系统大小 | 分区上的文件系统 | 仅支持 ext 系列      |
+| df        | 显示磁盘空间使用情况    | 挂载的文件系统  | 仅显示挂载的分区        |
+| gparted   | GUI 分区管理工具    | 磁盘 & 分区  | parted 的 GUI 版本 |
+
+**总结**：
+• 想 **查看磁盘信息** → lsblk
+• 想 **查看磁盘使用情况** → df
+• 想 **管理 MBR 分区** → fdisk
+• 想 **管理 GPT/MBR 分区** → parted 或 gparted
+• 想 **调整 ext 文件系统大小** → resize2fs
+
+如果你的磁盘是 GPT，建议用 parted 或 gparted 进行分区管理，而 fdisk 主要适用于 MBR。
 
 ## Terminal：
-
-
-
 ### dircolors
 
 
