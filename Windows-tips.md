@@ -3,7 +3,6 @@
 [toc]
 
 
-
 ## 环境变量
 
 重要系统变量含义和功能：
@@ -404,17 +403,71 @@ eval $(dircolors -b $HOME/.dircolors)
 [windows动态库位置](https://www.cnblogs.com/tocy/p/windows_dll_searth_path.html)
 
 ## 软件
+### 包管理器
+- [Windows 系统缺失的包管理器：Chocolatey、WinGet 和 Scoop](https://sspai.com/post/65933)
 
-[10个经验的国产软件](https://sspai.com/post/42153)
+如果c盘空间太少，且D盘也是固态硬盘，建议安装到D盘，否则默认安装。
+#### chocolatey/[choco](https://github.com/chocolatey/choco)
+```bash
+# 1. 安装到D盘，实际上就是加一个环境变量（独立与path的）制定其安装目录，自己搜索系统环境变量添加一个也可。自己改记得还要检查下path
+$env:ChocolateyInstall = 'D:\your_folder\Chocolatey'
+[Environment]::SetEnvironmentVariable('ChocolateyInstall', $env:ChocolateyInstall, 'User')
+# Machine意味着全局，一般不用
+[Environment]::SetEnvironmentVariable('ChocolateyInstall', $env:ChocolateyInstall, 'Machine')
 
-UWP软件：
+## 2. 安装
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+## 3. 使用
+choco upgrade chocolatey
+choco install pyenv-win
+```
+#### [scoop](https://github.com/ScoopInstaller/Scoop)
+
+```bash
+## 1. 安装到D盘，实际上就是加一个环境变量（独立与path的）制定其安装目录，自己搜索系统环境变量添加一个也可。自己改记得还要检查下path
+$env:SCOOP='D:\your_folder\scoop' [Environment]::SetEnvironmentVariable('SCOOP', $env:SCOOP, 'User')
+
+## 2. 安装
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
+## 3. 使用
+scoop install sudo
+scoop update
+sudo scoop install 7zip --global
+```
+#### [winget](https://learn.microsoft.com/zh-cn/windows/package-manager/winget/)
+安装，win新系统就有，无需安装。
+[WinGet CLI Settings](https://github.com/microsoft/winget-cli/blob/master/doc/Settings.md#winget-cli-settings)
+
+You can configure WinGet by editing the `settings.json` file. Running `winget settings` will open the file in the default json editor; if no editor is configured, Windows will prompt for you to select an editor, and Notepad is a sensible option if you have no other preference.
+
+[File Location](https://github.com/microsoft/winget-cli/blob/master/doc/Settings.md#file-location)
+Settings file is located in %LOCALAPPDATA%\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json
+
+If you are using the non-packaged WinGet version by building it from source code, the file will be located under %LOCALAPPDATA%\Microsoft\WinGet\Settings\settings.json
+
+[Source](https://github.com/microsoft/winget-cli/blob/master/doc/Settings.md#source)
+
+The `source` settings involve configuration to the WinGet source.
+
+```json
+    "source": {
+        "autoUpdateIntervalInMinutes": 3
+    },
+```
+
+
+### UWP软件
 
 - [ ] quicklook                        空格预览
 - [ ] Windows Terminal        官方终端
 - [ ] Ubuntu                            官方Linux虚拟机
+- [ ] twinkle Tray                    调外接显示器亮度
+- [ ] powertoy                         官方小工具（包括键盘映射等）
 
-官网下载：
-
+### 官网下载
 - [ ] [geek](https://geekuninstaller.com/download)                                  卸载软件
 - [ ] [windows File Recovery](https://www.microsoft.com/store/r/9N26S50LN705) 文件恢复（官方）/`winfr`
 - [ ] [freefilesync](https://freefilesync.org/)                     本地同步文件
@@ -423,13 +476,13 @@ UWP软件：
 - [ ] [f.lux](https://justgetflux.com/)                                  调色温
 - [ ] [sublime](https://www.sublimetext.com)                           文本编辑器
 - [ ] [Typora](https://typora.io)                             Markdown
-- [ ] [Bandzip](https://cn.bandisoft.com/bandizip/)                           解压缩软件
+- [ ] [Bandzip](https://cn.bandisoft.com/bandizip/)/ 7zip                 解压缩软件
 - [ ] [火绒](https://www.huorong.cn/)                                 杀毒软件（防流氓）
 - [ ] [Listary](https://www.listary.com/)/everything         搜索
 - [ ] [XMind](https://www.xmind.cn)                             思维导图
 - [ ] [FDM](https://www.freedownloadmanager.org/zh/)                                下载
 
-
+[10个经验的国产软件](https://sspai.com/post/42153)
 
 ## 一些小问题
 
