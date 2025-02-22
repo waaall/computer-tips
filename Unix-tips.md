@@ -618,7 +618,7 @@ tcpdump -i eth0 -vnn dst host 172.16.1.122
 tcpdump -i eth0 -vnn src port 22  
 ```
 
-### screen
+### screen/tmux/zellij
 
 ```shell
 screen -S yourname -> 新建一个叫yourname的session
@@ -1304,7 +1304,8 @@ brew cleanup -n #查看可清理的旧版本包，不执行实际操作
 brew deps --installed --tree #查看所有依赖关系
 ```
 
-[brew清华源](https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/)：
+[brew清华源](https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/)
+[brew阿里源](https://developer.aliyun.com/mirror/homebrew/)
 
 ```shell
 # brew 程序本身，Homebrew/Linuxbrew 相同
@@ -1461,10 +1462,12 @@ In Sublime , we can create our own language highlight document named “.sublime
 
 # Linux
 
-## 安装unbuntu-win双系统
+## 小问题
+
+### 安装unbuntu-win双系统
 https://blog.csdn.net/NeoZng/article/details/122779035
 
-## linux 串口无法访问（权限低）
+### linux 串口无法访问（权限低）
 - []()
 ```bash
 # 临时处理
@@ -1474,7 +1477,7 @@ sudo chmod 777 /dev/ttyUSB0
 sudo usermod -aG dialout zx
 ```
 
-## ubuntu 安装arm-none-eabi-gbd
+### ubuntu 安装arm-none-eabi-gbd
 Apt库里有这个交叉编译的gcc，但是没有gdb，所以需要自己安装。（不排除未来加入gdb的可能性，那就可以用apt安装了）见文链接。
 1. 
 两个额外的库都需要安装，直接
@@ -1507,7 +1510,7 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/lib
 ```
 [ubuntu安装arm-none-eabi-gdb问题](https://askubuntu.com/questions/1243252/how-to-install-arm-none-eabi-gdb-on-ubuntu-20-04-lts-focal-fossa)
 
-## ubuntu 修改键盘映射
+### ubuntu 修改键盘映射
 [ubuntu交换alt和ctrl](https://www.cnblogs.com/liuzhch1/p/16047019.html)
 在 Ubuntu 下交换`Alt`和`Ctrl`键：
 
@@ -1536,14 +1539,14 @@ reboot
 此外还可以用 Ubuntu 自带的软件进行更改。按下`Super`键(也就是`Win`键)，输入`Tweaks`，一个开关图标的软件就会跳出来(中文名叫`优化`)。打开它，在左边栏选择`键盘和鼠标`，在`键盘`里最后`其他布局选项`。在`Alt/Win键行为`或`Ctrl键位置`里自行修改。  
 但是我自己使用`优化`进行更改有时候会失效，比如在挂起之后。更改keycodes暂时没有遇到失效的情况。
 
-## Ubuntu安装驱动
+### Ubuntu安装驱动
 
 ```shell
 ubuntu-drivers devices
 sudo ubuntu-drivers autoinstall
 #如果想安装特定项，就用apt install 
 ```
-## Ubuntu设置中文输入法
+### Ubuntu设置中文输入法
 
 > [引用博客](https://blog.csdn.net/weixin_44916154/article/details/124582379)
 > ### 安装 Chinese 语言包
@@ -1557,7 +1560,7 @@ sudo ubuntu-drivers autoinstall
 > 7. shift就可以切换中英文了，win+space也可以。
 
 
-## linux 磁盘分区及调整
+### linux 磁盘分区及调整
 - lsblk
 - parted 
 - fdisk
@@ -1659,10 +1662,32 @@ gparted
 
 如果你的磁盘是 GPT，建议用 parted 或 gparted 进行分区管理，而 fdisk 主要适用于 MBR。
 
+### 安装whisper-cli问题
+[whisper.cpp](https://github.com/ggerganov/whisper.cpp)
+问题：当编译cuda版本时，即：
+```bash
+cmake -B build -DGGML_CUDA=1
+cmake --build build -j --config Release
+```
+错误如下：
+```bash
+nvcc warning : Cannot find valid GPU for '-arch=native', default arch is used
+```
+[解决](https://forums.developer.nvidia.com/t/cant-compile-with-cuda-support/284731)：
+```bash
+sudo apt install nvidia-cuda-toolkit
+# 然后删除build文件夹（make clean）
+cmake -B build -DGGML_CUDA=1
+export CUDA_ARCH_FLAG=sm_86
+cmake --build build -j --config Release
+```
+
+具体sm_86可以见[官网](https://developer.nvidia.com/cuda-gpus)。
+关于whipser详细信息见computer tips中的whisper部分。
+
+
 ## Terminal：
 ### dircolors
-
-
 
 ```shell
 00 　　　 //默认
@@ -1768,7 +1793,6 @@ sudo apt install gnome-shell-extensions
    mv .config/dconf/user .config/dconf/user.bak && sudo reboot
    ```
 
-
 # reference
 
 * **[mac 设置指南](https://github.com/macdao/ocds-guide-to-setting-up-mac)**
@@ -1777,3 +1801,64 @@ sudo apt install gnome-shell-extensions
 * **[oh my zsh配置](https://www.zrahh.com/archives/167.html)**
 * **[win-vim安装](https://segmentfault.com/a/1190000019360991)**
 
+# zx init shell cmd 
+## zx mac init shell cmd
+```bash
+# 安装xcode clt
+xcode-select --install
+
+# 安装brew（国内）
+# 从阿里云下载安装脚本并安装 Homebrew 
+git clone https://mirrors.aliyun.com/homebrew/install.git brew-install 
+sh brew-install/install.sh 
+rm -rf brew-install 
+# 也可从 GitHub 获取官方安装脚本安装 Homebrew 
+# /bin/bash -c "$(curl -fsSL https://github.com/Homebrew/install/raw/master/install.sh)"
+
+# 临时替换homebrew源
+export HOMEBREW_INSTALL_FROM_API=1 
+export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"
+
+brew update
+
+# 安装wget
+brew install zsh
+chsh -s $(which zsh)
+
+# 安装ohmyzsh
+sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
+
+# zshrc 加入homebrew的环境变量
+echo 'export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"' >> ~/.zshrc echo 'export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"' >> ~/.zshrc echo 'export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"' >> ~/.zshrc echo 'export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"' >> ~/.zshrc source ~/.zshrc
+
+brew install wget
+
+# 安装其他工具
+brew install make
+brew install cmake
+brew install node
+brew install pyenv
+brew install tmux
+brew install ffmpeg
+brew install tree
+brew install rust
+brew install qt
+brew install docker
+
+# 安装python虚拟环境
+# pyenv settings, 这些放到zshrc中
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc 
+echo 'export PATH="$PYENV_ROOT/bin:$PATH" ' >> ~/.zshrc 
+echo 'export PATH=$PYENV_ROOT/shims:$PATH' >> ~/.zshrc 
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc 
+source ~/.zshrc
+
+pyenv install -l
+pyenv install 3.12.6
+pyenv versions
+pyenv global 3.12.6
+
+```
