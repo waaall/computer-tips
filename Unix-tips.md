@@ -19,6 +19,7 @@
 * [ubuntu磁盘分区](https://askubuntu.com/questions/343268/how-to-use-manual-partitioning-during-installation)
 * [鸟哥磁盘与文件系统](http://cn.linux.vbird.org/linux_basic/0230filesystem_1.php)
 
+具体操作见下面章节《linux 磁盘分区及调整》
 
 
 ## 目录结构
@@ -644,8 +645,6 @@ C-a k -> #kill window，强行关闭当前的 window
 C-a [ -> #进入 copy mode，在 copy mode 下可以回滚、搜索、复制就像用使用 vi 一样
 ```
 
-
-
 ### curl
 
 ```shell
@@ -958,8 +957,6 @@ and press Enter.
 4. Reboot your Mac.
 In case you need to backup, you have to do it manually now: press the "Back Up Now" button of the iOS device in Finder.
 
-Enjoy.
-
 ## 软件
 ### 外接屏幕控制
 
@@ -981,18 +978,17 @@ Enjoy.
 
 **官网**
 
-
 * [Sublime](https://www.sublimetext.com)	        ---文本编辑器
 * [localsend](https://localsend.org/)	        ---跨平台局域网文件传输
 * [Itsycal](https://www.mowglii.com/itsycal/)               ---日期显示
-* [Rectangle](https://rectangleapp.com)         ---窗口管理
+* [Rectangle](https://rectangleapp.com)         ---窗口管理(现mac已集成)
 * [FDM](https://www.freedownloadmanager.org)                  ---下载工具
-* [Typaro](https://typora.io)               ---Markdown
+* [Typaro](https://typora.io)               ---Markdown（不免费了，换mweb/vscode）
 * [IINA](https://iina.io)                   ---视频播放器
 * [Appcleaner](https://freemacsoft.net/appcleaner/)        ---软件卸载
 * [f.lux](https://justgetflux.com)                    ---动态色温
-* [MacFanControll](https://crystalidea.com/macs-fan-control) ---风扇控制
-* [Shadowsocks](https://github.com/shadowsocks/ShadowsocksX-NG)    ---代理
+
+* [Shadowsocks](https://github.com/shadowsocks/ShadowsocksX-NG)    ---代理（换ios的小火箭或clash verge 具体见小飞机部分）
 * BackgroundMusic-调节声音
 
 **App Store**
@@ -1860,5 +1856,33 @@ pyenv install -l
 pyenv install 3.12.6
 pyenv versions
 pyenv global 3.12.6
+
+# 设置pip国内代理
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
+pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
+```
+
+上述pip源指令等同于---下面内容写入该文件：`~/.config/pip/pip.conf`
+```text
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple
+
+[install]
+trusted-host = mirrors.aliyun.com
+```
+
+## zx ubuntu init shell cmd
+```bash
+# 换源：https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/
+# 桌面版换源可以直接在update可视化工具中选择，也可按照上述连接操作
+sudo apt update
+sudo apt upgrade
+sudo apt install build-essential
+sudo apt install git
+sudo apt install zsh
+chsh -s $(which zsh)
+# 安装ohmyzsh
+sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
+
 
 ```
