@@ -1490,7 +1490,6 @@ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-
 解决：sudo apt install libffi-dev 
 No module named '_tkinter'解决：sudo apt install tk-dev
 
-
 ### linux 串口无法访问（权限低）
 - []()
 ```bash
@@ -1709,6 +1708,25 @@ cmake --build build -j --config Release
 具体sm_86可以见[官网](https://developer.nvidia.com/cuda-gpus)。
 关于whipser详细信息见computer tips中的whisper部分。
 
+### 安装腾讯会议问题
+1. wayland
+```bash
+# 有vscode或者sublime插件也可以把vi换成code/st
+sudo vi /opt/wemeet/wemeetapp.sh
+
+# 在if [ "$XDG_SESSION_TYPE" = "wayland" ]前面加上：
+# force x11 instead of Wayland
+export XDG_SESSION_TYPE=x11
+export EGL_PLATFORM=x11 
+export QT_QPA_PLATFORM=xcb
+unset WAYLAND_DISPLAY 
+unset WAYLAND_DISPLAYCOPY
+```
+2. 可以打开但是没法共享屏幕
+```bash
+sudo vi /etc/gdm3/custom.conf
+# 把 < #WaylandEnable=false > 的注释井号去掉,然后重启，就可以解决无法屏幕共享的问题
+```
 
 ## Terminal：
 ### dircolors
