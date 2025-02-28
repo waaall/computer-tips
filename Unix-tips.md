@@ -1461,7 +1461,35 @@ In Sublime , we can create our own language highlight document named “.sublime
 ## 小问题
 
 ### 安装unbuntu-win双系统
+有iCloud Books中的pdf 文件备份
 https://blog.csdn.net/NeoZng/article/details/122779035
+
+### 安装pyenv &本地标准python
+本地没法用apt 安装python，先安装系统python-pip
+```bash
+sudo apt install python3-pip
+sudo apt install python3-virtualenv
+```
+
+编译pthon 所需要的库：
+```bash
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
+```
+
+安装
+
+这些包有问题迟早要还（`sudo apt install --reinstall ？=？`来指定安装的版本），比如下面：
+
+错误 no module named zlib：
+解决：sudo apt install libffi-dev
+
+错误 No module named '_bz2'：
+解决：sudo apt install libbz2-dev，但是可能报错libbz2-1.0版本不对，这时候需要sudo apt install --reinstall libbz2-1.0=1.0.8-5.1（具体版本看报错信息）
+
+错误：No module named '_ctypes'：
+解决：sudo apt install libffi-dev 
+No module named '_tkinter'解决：sudo apt install tk-dev
+
 
 ### linux 串口无法访问（权限低）
 - []()
