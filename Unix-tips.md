@@ -1761,9 +1761,19 @@ sudo vi /etc/gdm3/custom.conf
 ```
 
 ### 安装openlane
-[OpenLane](https://github.com/The-OpenROAD-Project/OpenLane)
+- [openlane2](https://openlane2.readthedocs.io/en/latest/)
+```bash
+# 先安装docker（mac，ubuntu见上文）
+brew install --cask docker
+
+# 安装openlane2
+
+```
+
+[OpenLane1](https://github.com/The-OpenROAD-Project/OpenLane)
 
 ```bash
+# 这个是openlene1的安装，不如直接安装openlane2
 git clone https://github.com/The-OpenROAD-Project/OpenLane
 cd OpenLane
 make
