@@ -1708,6 +1708,23 @@ cmake --build build -j --config Release
 具体sm_86可以见[官网](https://developer.nvidia.com/cuda-gpus)。
 关于whipser详细信息见computer tips中的whisper部分。
 
+### 国内源安装docker
+```bash
+# 卸载docker
+sudo apt-get remove docker docker-engine docker.io containerd runc
+# 安装依赖
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release
+# 阿里云key
+curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+# 阿里云ppa
+sudo add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
+# 安装docker
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# 用户权限
+sudo usermod -aG docker $USER
+reboot
+```
 ### 安装腾讯会议问题
 1. wayland
 ```bash
