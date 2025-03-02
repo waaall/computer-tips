@@ -1709,6 +1709,7 @@ cmake --build build -j --config Release
 关于whipser详细信息见computer tips中的whisper部分。
 
 ### 国内源安装docker
+1. 安装
 ```bash
 # 卸载docker
 sudo apt-get remove docker docker-engine docker.io containerd runc
@@ -1725,6 +1726,20 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 sudo usermod -aG docker $USER
 reboot
 ```
+
+2. docker pull设置镜像
+国内大部分docker镜像都失效了，但是可以登陆[阿里云账号](https://cr.console.aliyun.com)[设置镜像](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)。
+```bash
+sudo vim /etc/docker/daemon.json
+# 然后添加如下内容
+{
+    "registry-mirrors": ["https://****.mirror.aliyuncs.com"] 
+}
+# 然后重启该服务
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
 ### 安装腾讯会议问题
 1. wayland
 ```bash
@@ -1743,6 +1758,25 @@ unset WAYLAND_DISPLAYCOPY
 ```bash
 sudo vi /etc/gdm3/custom.conf
 # 把 < #WaylandEnable=false > 的注释井号去掉,然后重启，就可以解决无法屏幕共享的问题
+```
+
+### 安装openlane
+[OpenLane](https://github.com/The-OpenROAD-Project/OpenLane)
+
+```bash
+git clone https://github.com/The-OpenROAD-Project/OpenLane
+cd OpenLane
+make
+
+# 如果错误时没有nix，则
+sudo apt install nix
+# 如果还有错误：没有启用Flakes，全局用/etc/nix/nix.conf
+sudo vi /etc/nix/nix.conf
+# 用户：vi ~/.config/nix/nix.conf
+# 文件中添加一行；experimental-features = nix-command flakes
+
+#如果有权限问题
+sudo make
 ```
 
 ## Terminal：
