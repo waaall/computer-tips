@@ -1696,11 +1696,12 @@ cmake --build build -j --config Release
 ```bash
 nvcc warning : Cannot find valid GPU for '-arch=native', default arch is used
 ```
-[解决](https://forums.developer.nvidia.com/t/cant-compile-with-cuda-support/284731)：
+[问题](https://github.com/ggerganov/whisper.cpp/issues/876)？[解决](https://forums.developer.nvidia.com/t/cant-compile-with-cuda-support/284731)：（之后好像又不行了）
 ```bash
 sudo apt install nvidia-cuda-toolkit
 # 然后删除build文件夹（make clean）
 cmake -B build -DGGML_CUDA=1
+# 下面这个得加入环境变量 
 export CUDA_ARCH_FLAG=sm_86
 cmake --build build -j --config Release
 ```
@@ -1767,7 +1768,7 @@ sudo vi /etc/gdm3/custom.conf
 brew install --cask docker
 
 # 安装openlane2
-
+pip install openlane
 ```
 
 [OpenLane1](https://github.com/The-OpenROAD-Project/OpenLane)
@@ -1821,9 +1822,7 @@ sudo make
 
 
 
-### 自定义窗口名
-
-* 指令
+### 指令
 
 ```shell
 systemctl start sshd.service   # 开启ssh服务
