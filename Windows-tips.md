@@ -425,7 +425,8 @@ choco upgrade chocolatey
 
 ```bash
 ## 1. 安装到D盘，实际上就是加一个环境变量（独立与path的）制定其安装目录，自己搜索系统环境变量添加一个也可。自己改记得还要检查下path
-$env:SCOOP='D:\your_folder\scoop' [Environment]::SetEnvironmentVariable('SCOOP', $env:SCOOP, 'User')
+$env:SCOOP='D:\your_folder\scoop' 
+[Environment]::SetEnvironmentVariable('SCOOP', $env:SCOOP, 'User')
 
 ## 2. 安装
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
