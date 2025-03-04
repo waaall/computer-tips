@@ -420,7 +420,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 ## 3. 使用
 choco upgrade chocolatey
-choco install pyenv-win
 ```
 #### [scoop](https://github.com/ScoopInstaller/Scoop)
 
@@ -435,6 +434,7 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ## 3. 使用
 scoop install sudo
 scoop update
+sudo choco install pyenv-win
 sudo scoop install 7zip --global
 ```
 #### [winget](https://learn.microsoft.com/zh-cn/windows/package-manager/winget/)
