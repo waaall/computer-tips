@@ -521,6 +521,9 @@ nvcc -V
 - [cudnn-archive](https://developer.nvidia.com/rdp/cudnn-archive)
 上述链接是官方下载的，cudnn是个压缩包，对应的文件放到cuda的同名的安装目录中即可。
 
+#### 无法调用？
+pytorch显示没有GPU占用---nvidia-smi和windows的任务管理器都有统计问题，CUDA是默认不在统计范围。在windows的任务管理器-性能-GPU中可以把默认的copy换成Cuda就可以看到CUDA是可以被调用的。
+
 
 ### 屏幕对比度、亮度、色域明显降低问题
 
