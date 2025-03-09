@@ -1685,7 +1685,33 @@ gparted
 
 如果你的磁盘是 GPT，建议用 parted 或 gparted 进行分区管理，而 fdisk 主要适用于 MBR。
 
+### 指纹解锁?
+https://github.com/Am0rphous/Shenzhen-Goodix-Fingerprint-Reader
+```bash
+#能看到fingerprint
+lsusb
+
+#设置uesrs密码那里如果没有，ke nengp可能是指纹解锁不是rem认证设备
+# 下面指令ab一下，看看有带tod的嘛，
+sudo apt install libfprint
+sudo apt install libfprint-2-tod1
+
+# 下载驱动：比如我的是gooddix fingerprint 找一找
+#http://dell.archive.canonical.com/updates/pool/public/libf/libfprint-2-tod1-goodix/
+sudo dpkg -i ****.deb
+
+#空格修改，enter确认
+sudo pam-auth-update
+fprintd-verify
+fwupdmgr update                            #Updates firmware
+sudo systemctl restart fprintd.service     #Restarts the fprintd service
+sudo systemctl status fprintd.service      #Lets check the status
+fprintd-enroll                             #Starts the enrolling process when setting up the figngerprint
+journalctl -f -u fprintd.service           #any error should show here
+```
+
 ### 安装whisper-cli问题
+- [hf-mirror大模型网站镜像](https://hf-mirror.com)
 [whisper.cpp](https://github.com/ggerganov/whisper.cpp)
 问题：当编译cuda版本时，即：
 ```bash
@@ -1933,6 +1959,11 @@ chsh -s $(which zsh)
 # 安装ohmyzsh
 sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
 
+#安装ohmyzsh插件
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+#然后再在zshrc的plug中写上这俩的名字
+
 # zshrc 加入homebrew的环境变量
 echo 'export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"' >> ~/.zshrc echo 'export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"' >> ~/.zshrc echo 'export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"' >> ~/.zshrc echo 'export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"' >> ~/.zshrc source ~/.zshrc
 
@@ -1983,12 +2014,44 @@ trusted-host = mirrors.aliyun.com
 # 桌面版换源可以直接在update可视化工具中选择，也可按照上述连接操作
 sudo apt update
 sudo apt upgrade
+
+#安装驱动
+sudo ubuntu-drivers autoinstall
+
+#官网下载vscode & Linuxqq
+sudo dpkg -i ****.deb
+
 sudo apt install build-essential
-sudo apt install git
-sudo apt install zsh
+sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools
 chsh -s $(which zsh)
 # 安装ohmyzsh
 sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
+
+#安装ohmyzsh插件
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+#然后再在zshrc的plug中写上这俩的名字
+
+#安装输入法（先根据上述章节确定安装了中文）
+sudo apt install -y ibus-pinyin
+
+#安装pyenv&python
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
+
+curl -fsSL https://pyenv.run | bash
+
+  echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+  echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+  echo 'eval "$(pyenv init - zsh)"' >> ~/.zshrc
+
+pyenv install -l
+pyenv install 3.11.11
+pyenv versions
+pyenv global 3.11.11
+
+# 设置pip国内代理
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
+pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
 
 
 ```
