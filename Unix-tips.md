@@ -1722,15 +1722,34 @@ cmake --build build -j --config Release
 ```bash
 nvcc warning : Cannot find valid GPU for '-arch=native', default arch is used
 ```
-[问题](https://github.com/ggerganov/whisper.cpp/issues/876)？[解决](https://forums.developer.nvidia.com/t/cant-compile-with-cuda-support/284731)：（之后好像又不行了）
+[问题](https://github.com/ggerganov/whisper.cpp/issues/876)？[解决？](https://forums.developer.nvidia.com/t/cant-compile-with-cuda-support/284731)：
+
+- [cuda-downloads](https://developer.nvidia.com/cuda-downloads)
+- [cudnn-archive](https://developer.nvidia.com/rdp/cudnn-archive)
 ```bash
-sudo apt install nvidia-cuda-toolkit
+# 之后又不行了，原因就是sudo apt install nvidia-cuda-toolkit来安装，但是版本太老，会有问题
+
+# 以ubuntu24.04为例，一下指令参考上述nvidia官网链接
+
+# 安装cuda-runfile方式
+wget https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda_12.6.3_560.35.05_linux.run
+sudo sh cuda_12.6.3_560.35.05_linux.run
+
+# 安装cudnn-Deb方式
+wget https://developer.download.nvidia.com/compute/cudnn/9.8.0/local_installers/cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb
+sudo dpkg -i cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb
+sudo cp /var/cudnn-local-repo-ubuntu2404-9.8.0/cudnn-*-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get -y install cudnn-cuda-12
+
 # 然后删除build文件夹（make clean）
 cmake -B build -DGGML_CUDA=1
 # 下面这个得加入环境变量 
 export CUDA_ARCH_FLAG=sm_86
 cmake --build build -j --config Release
 ```
+要强调一下：硬件型号-驱动版本−cuda版本−cudnn版本，是有依次的依赖关系的。哪个低了都要依着低的那个版本要求来。比如同样30系显卡要560驱动就可以安装cuda12.6，但是550驱动就最高安装cuda12.4。
+
 
 具体sm_86可以见[官网](https://developer.nvidia.com/cuda-gpus)。
 关于whipser详细信息见computer tips中的whisper部分。
