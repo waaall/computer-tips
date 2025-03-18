@@ -482,8 +482,12 @@ The `source` settings involve configuration to the WinGet source.
 - [ ] [Listary](https://www.listary.com/)/everything         搜索
 - [ ] [XMind](https://www.xmind.cn)                             思维导图
 - [ ] [FDM](https://www.freedownloadmanager.org/zh/)                                下载
-
 [10个经验的国产软件](https://sspai.com/post/42153)
+
+### github开源
+- [PDFMathTranslate](https://github.com/Byaidu/PDFMathTranslate)： 翻译PDF文档
+- [卡卡字幕助手](https://github.com/WEIFENG2333/VideoCaptioner)： 视频下载+字幕生成+翻译
+
 
 ## 一些小问题
 
