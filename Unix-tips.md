@@ -958,6 +958,10 @@ and press Enter.
 In case you need to backup, you have to do it manually now: press the "Back Up Now" button of the iOS device in Finder.
 
 ## 软件
+
+### 开源工具
+
+
 ### 外接屏幕控制
 
 #### 亮度控制
@@ -1327,6 +1331,12 @@ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin https://github
 git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://github.com/Homebrew/homebrew-cask-drivers.git
 ```
 
+### pdf2zh
+- [github-PDFMathTranslate](https://github.com/Byaidu/PDFMathTranslate)
+```bash
+pip install pdf2zh
+```
+
 ### yt-dlp
 
 ```bash
@@ -1368,6 +1378,7 @@ pandas 多核运行 https://github.com/nalepae/pandarallel
 df.parallel_apply(func) #加上这个使得命令利用多核
 
 ### “小飞机”
+具体见小飞机笔记。
 #### shadowsocks
 > [shadowsocks-electron(ALL-platform)](https://github.com/nojsja/shadowsocks-electron)
 * socket的pac文件
