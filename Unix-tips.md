@@ -1356,9 +1356,25 @@ yt-dlp --skip-download --write-auto-subs --sub-langs en --convert-sub srt https:
 yt-dlp --skip-download --write-auto-subs --sub-langs zh-Hans-en --convert-sub srt https://www.youtube.com/watch?v=6vnU02PKkEs&t=2732s
 ```
 
+### pandoc
+
+```bash
+# 查看字体
+fc-list :lang=zh
+
+# mac
+pandoc --pdf-engine=xelatex -V CJKmainfont="PingFang SC" input.md -o output.pdf
+
+#windows
+pandoc --pdf-engine=xelatex -V CJKmainfont="Microsoft YaHei" input.md -o output.pdf
+
+# linux
+
+```
+
+
 
 [mac vim 配置](https://www.jianshu.com/p/923aec861af3)
-
 ### Neovim
 
 ```shell
@@ -1989,10 +2005,10 @@ chsh -s $(which zsh)
 # 安装ohmyzsh
 sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
 
-#安装ohmyzsh插件
+# 安装ohmyzsh插件
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-#然后再在zshrc的plug中写上这俩的名字
+# 然后再在zshrc的plug中写上这俩的名字
 
 # zshrc 加入homebrew的环境变量
 echo 'export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"' >> ~/.zshrc echo 'export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"' >> ~/.zshrc echo 'export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"' >> ~/.zshrc echo 'export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"' >> ~/.zshrc source ~/.zshrc
@@ -2007,6 +2023,7 @@ brew install pyenv
 brew install tmux
 brew install ffmpeg
 brew install tree
+brew install pandoc
 brew install rust
 brew install qt
 brew install docker
@@ -2045,10 +2062,10 @@ trusted-host = mirrors.aliyun.com
 sudo apt update
 sudo apt upgrade
 
-#安装驱动
+# 安装驱动
 sudo ubuntu-drivers autoinstall
 
-#官网下载vscode & Linuxqq
+# 官网下载vscode & Linuxqq
 sudo dpkg -i ****.deb
 
 sudo apt install build-essential
@@ -2057,16 +2074,19 @@ chsh -s $(which zsh)
 # 安装ohmyzsh
 sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
 
-#安装ohmyzsh插件
+# 安装ohmyzsh插件
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-#然后再在zshrc的plug中写上这俩的名字
+# 然后再在zshrc的plug中写上这俩的名字
 
-#安装输入法（先根据上述章节确定安装了中文）
+# 安装输入法（先根据上述章节确定安装了中文）
 sudo apt install -y ibus-pinyin
 
-#安装pyenv&python
-sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
+# 安装一些其它工具
+sudo apt install -y pandoc
+
+# 安装pyenv&python
+sudo apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
 
 curl -fsSL https://pyenv.run | bash
 

@@ -94,7 +94,6 @@ wmic memorychip list brief #看内存
 ```
 
 
-
 ## powershell
 
 ### powershell配置指令
@@ -151,8 +150,8 @@ where.exe curl #类似which，查看命令的地址
 New-Alias #创建新别名“”（或者Set-Alias）
 Remove-Item alias:\curl #删除"curl"这个别名
 ```
-### windows 终端设置代理
 
+### windows 终端设置代理
 ```shell
 # cmd
 set http_proxy=http://127.0.0.1:代理服务器本地端口号
@@ -175,7 +174,6 @@ git config --global --unset https.proxy
 
 
 ### mklink
-
 mklink，有点像Unix中的ln指令，又有些不同，它和Windows下的快捷方式也有些不同
 
 |                  | 不带参数      | `/D` 参数              | `/H` 参数      | `J` 参数               |
@@ -207,9 +205,7 @@ cmd.exe /c mklink /H 'bin\vim.exe' 'Vim\vim82\vim.exe'	#windows下使用vim，�
 ```
 
 
-
 ### 网络指令
-
 ```powershell
 ssh：（用管理员打开powershell）
 net start sshd   #开启ssh
@@ -226,7 +222,7 @@ tasklist|findstr "9208"
 >>> TCP  [::1]:1575     [::1]:1080       ESTABLISHED     9208
 ```
 
-* [配置ssh：](https://www.cnblogs.com/sparkdev/p/10166061.html)、
+* [配置ssh：](https://www.cnblogs.com/sparkdev/p/10166061.html)
 
 ### 磁盘管理
 
