@@ -1862,6 +1862,13 @@ sudo vi /etc/nix/nix.conf
 sudo make
 ```
 
+### 安装vulkan
+```bash
+wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list https://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
+sudo apt update
+sudo apt install vulkan-sdk
+```
 ## Terminal：
 ### dircolors
 
@@ -2083,7 +2090,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 sudo apt install -y ibus-pinyin
 
 # 安装一些其它工具
-sudo apt install -y pandoc
+sudo apt install -y pandoc nodejs npm
 
 # 安装pyenv&python
 sudo apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
