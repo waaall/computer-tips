@@ -96,12 +96,12 @@ wmic memorychip list brief #看内存
 
 ## powershell
 
-### powershell配置指令
+### oh-my-posh
 
 ```powershell
-
 ##==================使用powershell模块===========================
 PS C:\Users\zxll> Import-Module PackageManagement
+
 Import-Module : 无法加载文件 C:\Program Files\WindowsPowerShell\Modules\PackageManagement
 \1.4.7\PackageManagement.psm1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go
 .microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies。
@@ -111,6 +111,7 @@ Import-Module : 无法加载文件 C:\Program Files\WindowsPowerShell\Modules\Pa
     + CategoryInfo          : SecurityError: (:) [Import-Module]，PSSecurityException
     + FullyQualifiedErrorId : UnauthorizedAccess,Microsoft.PowerShell.Commands.ImportMod
    uleCommand
+
 PS C:\Users\zxll> get-executionpolicy
 Restricted
 PS C:\Users\zxll> set-executionpolicy remotesigned
@@ -123,13 +124,52 @@ Install-Module -Name PowerShellGet -Force
 Update-Module
 Get-InstalledModule
 
-Install-Module -Name PSReadLine -AllowPrerelease -Force
-Install-Module posh-git -Scope CurrentUser 
+# install oh-my-posh
+winget install JanDeDobbeleer.OhMyPosh -s winget
+# Install-Module oh-my-posh -Scope CurrentUser 
 
-Install-Module oh-my-posh -Scope CurrentUser 
+Install-Module -Name PSReadLine -Force
+Install-Module posh-git -Scope CurrentUser
+
+# 编写PROFILE文件，见下
+code $PROFILE
 ```
 
+#### PROFILE
+```powershell
+# 引入 posh-git
+Import-Module posh-git
 
+# 引入 ps-read-line
+Import-Module PSReadLine
+
+# # 添加主题
+# oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\Pararussel.omp.json" | Invoke-Expression
+#------------------------------- Import Modules END   -------------------------------
+
+#-------------------------------  Set Hot-keys BEGIN  -------------------------------
+# 设置预测文本来源为历史记录
+Set-PSReadLineOption -PredictionSource History
+
+# 每次回溯输入历史，光标定位于输入内容末尾
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+
+# 设置 Tab 为菜单补全和 Intellisense
+Set-PSReadLineKeyHandler -Key "Tab" -Function MenuComplete
+
+# 设置 Ctrl+d 为退出 PowerShell
+Set-PSReadlineKeyHandler -Key "Ctrl+d" -Function ViExit
+
+# 设置 Ctrl+z 为撤销
+Set-PSReadLineKeyHandler -Key "Ctrl+z" -Function Undo
+
+# 设置向上键为后向搜索历史记录
+Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+
+# 设置向下键为前向搜索历史纪录
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+#-------------------------------  Set Hot-keys END    -------------------------------
+```
 
 ### 常用指令
 

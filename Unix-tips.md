@@ -671,10 +671,13 @@ curl ifconfig.me
 -#/--progress-bar                        进度条显示当前的传送状态
 ```
 
+### pyenv
+```bash
 
+ pyenv install --force $(pyenv global)
+```
 
 ### pip
-
 * pip修改镜像源
 
 镜像源：http://mirrors.aliyun.com/pypi/simple/
@@ -2043,6 +2046,8 @@ echo 'export PATH="$PYENV_ROOT/bin:$PATH" ' >> ~/.zshrc
 echo 'export PATH=$PYENV_ROOT/shims:$PATH' >> ~/.zshrc 
 echo 'eval "$(pyenv init -)"' >> ~/.zshrc 
 source ~/.zshrc
+
+brew install 
 
 pyenv install -l
 pyenv install 3.12.6
