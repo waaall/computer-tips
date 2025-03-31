@@ -671,12 +671,37 @@ curl ifconfig.me
 -#/--progress-bar                        进度条显示当前的传送状态
 ```
 
-### pyenv
-```bash
+### python 依赖
+- [python build requirements](https://docs.python.org/3/using/configure.html#build-requirements)
+#### linux python 依赖
+见《 Linux - 小问题 - 安装pyenv &本地标准python》
 
- pyenv install --force $(pyenv global)
+#### mac python 依赖
+```bash
+# python依赖
+# brew install tcl-tk # 有问题
+brew install readline
+brew install gdbm
+
+# 这几个是brew 安装 python就会安装的
+brew install mpdecimal
+brew install openssl@3
+brew install xz
+brew install sqlite
+
+pyenv install --force $(pyenv global)
 ```
 
+#### mac tcl-tk python问题
+- [python不兼容tcl-tk9](https://github.com/python/cpython/issues/112672)
+```bash
+# brew install tcl-tk # 有问题
+brew install tcl-tk@8
+# 因为@8不是默认，就需要加入环境变量（按照brew的指示）
+
+# 或者，本质上跟上述一样，还是要tcl-tk@8
+brew install python-tk@3.11
+```
 ### pip
 * pip修改镜像源
 
@@ -2014,7 +2039,7 @@ brew install zsh
 chsh -s $(which zsh)
 
 # 安装ohmyzsh
-sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
 
 # 安装ohmyzsh插件
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -2024,31 +2049,35 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # zshrc 加入homebrew的环境变量
 echo 'export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"' >> ~/.zshrc echo 'export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"' >> ~/.zshrc echo 'export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"' >> ~/.zshrc echo 'export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"' >> ~/.zshrc source ~/.zshrc
 
-brew install wget
-
 # 安装其他工具
+brew install wget
 brew install make
 brew install cmake
 brew install node
-brew install pyenv
-brew install tmux
 brew install ffmpeg
+brew install tmux
 brew install tree
 brew install pandoc
 brew install rust
 brew install qt
 brew install docker
+brew install pyenv
 
 # 安装python虚拟环境
 # pyenv settings, 这些放到zshrc中
 echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc 
 echo 'export PATH="$PYENV_ROOT/bin:$PATH" ' >> ~/.zshrc 
 echo 'export PATH=$PYENV_ROOT/shims:$PATH' >> ~/.zshrc 
-echo 'eval "$(pyenv init -)"' >> ~/.zshrc 
+echo 'eval "$(pyenv init - zsh)"' >> ~/.zshrc 
 source ~/.zshrc
 
-brew install 
+# 安装python依赖（tcl-tk问题）
+brew install gdbm
+brew install openssl@3
+brew install xz
+brew install sqlite
 
+# pyenv安装python
 pyenv install -l
 pyenv install 3.12.6
 pyenv versions
@@ -2082,7 +2111,7 @@ sudo ubuntu-drivers autoinstall
 sudo dpkg -i ****.deb
 
 sudo apt install build-essential
-sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools
+sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools pandoc nodejs npm
 chsh -s $(which zsh)
 # 安装ohmyzsh
 sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
@@ -2094,9 +2123,6 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 
 # 安装输入法（先根据上述章节确定安装了中文）
 sudo apt install -y ibus-pinyin
-
-# 安装一些其它工具
-sudo apt install -y pandoc nodejs npm
 
 # 安装pyenv&python
 sudo apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
@@ -2115,6 +2141,5 @@ pyenv global 3.11.11
 # 设置pip国内代理
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
-
 
 ```
