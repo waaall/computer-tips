@@ -1555,34 +1555,49 @@ sudo chmod 777 /dev/ttyUSB0
 sudo usermod -aG dialout zx
 ```
 
-### ubuntu 安装arm-none-eabi-gbd
-Apt库里有这个交叉编译的gcc，但是没有gdb，所以需要自己安装。（不排除未来加入gdb的可能性，那就可以用apt安装了）见文链接。
-1. 
-两个额外的库都需要安装，直接
-`sudo apt install libncurses-dev`和
-`sudo apt install libreadline-dev`就可以
-2. 链接库
-```
-#具体在下面第三步一起
-sudo ln -s /usr/lib/…..
+### ubuntu 安装arm-none-eabi-gcc
+Apt库里有这个交叉编译的gcc，但是没有gdb，所以需要自己安装。（不排除未来加入gdb的可能性，那就可以用apt安装了）见文链接。但是apt中的版本先用search看一下，如果版本太老（2025年还是10.3几年没更新了），就在下面两个网站下载：（建议官网，deb的需要额外库）
+
+- [aliyun-arm-gcc-deb](https://mirrors.aliyun.com/ubuntu/pool/universe/g/gcc-arm-none-eabi/)
+- [arm官方下载,不需要额外库but slow](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+```bash
+sudo apt search gcc-arm-none-eabi
+
+# 如果版本不老，就不需要下载，直接apt安装
+sudo apt install gcc-arm-none-eabi
 ```
 
-3. 然后解压，链接
+1. 需要安装的库
+```bash
+sudo apt install build-essential zlib1g-dev libexpat1-dev \
+libssl-dev libc6-dev libbz2-dev libffi-dev \
+libdb-dev liblzma-dev libncurses-dev \
+libncursesw5-dev libsqlite3-dev libreadline-dev \
+uuid-dev libgdbm-dev tk-dev libbluetooth-dev
 ```
-#gcc-arm-none-eabi解压安装
-sudo apt install libncurses-dev
 
-sudo cp gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 /usr/share/
-cd /usr/share/                                        
-sudo tar xvf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
-sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc 
-sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++
-sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb
-sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-size /usr/bin/arm-none-eabi-size
-sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-as /usr/bin/arm-none-eabi-as
-sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objcopy /usr/bin/arm-none-eabi-objcopy
-sudo ln -s /usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objdump /usr/bin/arm-none-eabi-objdump
+2. 分三种情况
+	1. 如果apt安装，无需操作
+	2. 如果下载的是deb包，则`sudo dpkg -i gcc-arm-none-eabi-*名字**.deb`
+	3. 如果是压缩包（建议），以`arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz`为例
+```bash
+# 解压可视化操作
+# sudo tar xvf arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz
 
+# 复制到/usr/share/
+sudo cp -r arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi /usr/share/
+
+sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc 
+sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++
+sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb
+sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-size /usr/bin/arm-none-eabi-size
+sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-as /usr/bin/arm-none-eabi-as
+sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-objcopy /usr/bin/arm-none-eabi-objcopy
+sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-objdump /usr/bin/arm-none-eabi-objdump
+```
+
+3. 如果执行`arm-none-eabi-gcc -v`报错没有libncurses.so.5，则链接如下两个库
+```
 sudo ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
 sudo ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
 ```
@@ -1898,6 +1913,24 @@ sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list https://packages.
 sudo apt update
 sudo apt install vulkan-sdk
 ```
+
+### 安装TI-CCS
+- [CCSTUDIO](https://www.ti.com/tool/CCSTUDIO#downloads)
+- [ccs_installation](https://software-dl.ti.com/ccs/esd/documents/users_guide_12.2.0/ccs_installation.html)
+- [CCS-linux-support](https://software-dl.ti.com/ccs/esd/documents/ccs_theia_linux_host_support.html)
+
+```bash
+# 缺少libusb
+sudo apt install libusb-dev
+
+# 缺少libtinfo5（ubuntu24版本是6）
+wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+sudo dpkg -i libtinfo5_6.3-2ubuntu0.1_amd64.deb
+
+# 缺少libpython3.9.so.1.0
+
+```
+
 ## Terminal：
 ### dircolors
 
