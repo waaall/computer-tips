@@ -1546,7 +1546,7 @@ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-
 No module named '_tkinter'解决：sudo apt install tk-dev
 
 ### linux 串口无法访问（权限低）
-- []()
+
 ```bash
 # 临时处理
 sudo chmod 777 /dev/ttyUSB0
@@ -1594,6 +1594,15 @@ sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-n
 sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-as /usr/bin/arm-none-eabi-as
 sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-objcopy /usr/bin/arm-none-eabi-objcopy
 sudo ln -s /usr/share/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-objdump /usr/bin/arm-none-eabi-objdump
+
+#如果报错显示 /usr/bin/arm-none-eabi-gcc already exists，则：
+sudo rm /usr/bin/arm-none-eabi-gcc 
+sudo rm /usr/bin/arm-none-eabi-g++
+sudo rm /usr/bin/arm-none-eabi-gdb
+sudo rm /usr/bin/arm-none-eabi-size
+sudo rm /usr/bin/arm-none-eabi-as
+sudo rm /usr/bin/arm-none-eabi-objcopy
+sudo rm /usr/bin/arm-none-eabi-objdump
 ```
 
 3. 如果执行`arm-none-eabi-gcc -v`报错没有libncurses.so.5，则链接如下两个库
