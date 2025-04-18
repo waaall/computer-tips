@@ -1963,7 +1963,7 @@ sudo make install
 
 # 3. make (二进制文件/指令 的地址可以按需指定)
 cd ..
-./configure --prefix=/home/zx/Develop/openocd-mspm0/bin/openocd
+./configure --prefix=/home/zx/Develop/openocd-mspm0
 make
 sudo make install
 
@@ -1972,6 +1972,14 @@ sudo make install
 
 # 5. debug 指定好cortex-debug插件的openocd地址就可以，或者在launch文件中指定
 ```
+
+### 代理
+v2rayA 应用商店就可以下载，github也可以。是linux中比较稳定和轻量的代理。
+![](Unix-tips.assets/Ubuntu-v2rayA-setting.png)1. ubuntu-setting-network-proxy is on, 
+1. and http port is 20172 by default,
+2. which means export http/s proxy = http://localhost:20172
+3. cursor setting: add http://localhost:20172 and turn off http2
+
 
 ## Terminal：
 ### dircolors

@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceFolder}/build/lis3dh.elf",
+            "name": "Debug STM32",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "armToolchainPath": "/opt/homebrew/bin/",
+            "configFiles":[
+                "stlink.cfg",
+                "stm32g4x.cfg"
+            ],
+        },
+    ]
+}
+// stlink-v2-1.cfg (在此使用stlink-v2，如果使用jlink将配置文件换成jlink的即可)
+// stm32f1x.cfg (在此我使用平台是基于GD32F103系列，与STM32F103系列相同操作)

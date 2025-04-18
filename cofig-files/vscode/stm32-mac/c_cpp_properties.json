@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "STM32",
+            // 注意下面这个指定好 gcc-arm 编译器后，c/c++ 插件会智能分析，不会按照桌面平台进行语义分析，一定要指明
+            "compilerPath": "/opt/homebrew/bin/arm-none-eabi-gcc",
+            //编译参数可以从 makefile 里抄
+            "defines": [
+                // makefile中的C_DEFS，去掉D
+                "USE_HAL_DRIVER",
+                "STM32G431xx"
+            ],
+            "includePath": [
+                // 工程代码的头文件
+                "${workspaceFolder}/**"
+            ],
+            "compilerArgs": [
+                // makefile中的CFLAGS
+                "-mcpu=cortex-m4",
+                "-mfpu=fpv4-sp-d16",
+                "-mfloat-abi=hard",
+                "-mthumb"
+            ]
+        }
+    ],
+    "version": 4
+}
