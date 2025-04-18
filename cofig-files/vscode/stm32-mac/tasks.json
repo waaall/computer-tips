@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        //下面为make
+        {
+            "label": "build",
+            "type": "shell",
+            // "options": {
+            //     "cwd": "${workspaceRoot}"
+            // },
+            "command": "make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        //下面为download
+        {
+            "label": "download",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f",
+                "stlink.cfg",
+                "-f",
+                "stm32g4x.cfg",
+                "-c init -c halt -c",
+                "flash write_image erase",
+                "'build/lis3dh.elf'",
+                "-c reset -c shutdown"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }    
+    ]
+}

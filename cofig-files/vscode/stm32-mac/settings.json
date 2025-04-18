@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "tim.h": "c",
+        "com_protocol.h": "c",
+        "type_traits": "c",
+        "com_driver.h": "c",
+        "usart.h": "c"
+    }
+}

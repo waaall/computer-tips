@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "MSPM0",
+            // 注意下面这个指定好TI编译器后，c/c++ 插件会智能分析，不会按照桌面平台进行语义分析，一定要指明
+            "compilerPath": "${env:HOME}/Develop/ti/ccs/tools/compiler/ti-cgt-armllvm_4.0.2.LTS/bin/tiarmclang",
+            //编译参数从makefile里获取
+            "defines": [
+                // 可根据需要添加宏定义
+                "CONFIG_MSPM0L1306"
+            ],
+            "includePath": [
+                // 工程代码的头文件（优先级从高到低排列）
+                "${workspaceFolder}/**",
+                "${env:HOME}/Develop/ti/mspm0_sdk_2_04_00_06/source/ti/driverlib/m0p/**",
+                "${env:HOME}/Develop/ti/mspm0_sdk_2_04_00_06/source/ti/driverlib/**",
+                "${env:HOME}/Develop/ti/mspm0_sdk_2_04_00_06/source/ti/devices/msp/peripherals/**",
+                "${env:HOME}/Develop/ti/mspm0_sdk_2_04_00_06/source/ti/devices/msp/**",
+                "${env:HOME}/Develop/ti/mspm0_sdk_2_04_00_06/source/ti/devices/**",
+                "${env:HOME}/Develop/ti/mspm0_sdk_2_04_00_06/source/**"
+            ],
+            "forcedInclude": [
+                "${env:HOME}/Develop/ti/mspm0_sdk_2_04_00_06/source/ti/devices/msp/m0p/mspm0l130x.h",
+                "${workspaceFolder}/Debug/syscfg/ti_msp_dl_config.h"
+            ],
+            "compilerArgs": [
+                // makefile中的CPU相关参数
+                "-march=thumbv6m",
+                "-mcpu=cortex-m0plus",
+                "-mfloat-abi=soft",
+                "-mlittle-endian",
+                "-mthumb"
+            ]
+        }
+    ],
+    "version": 4
+}
