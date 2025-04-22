@@ -1974,7 +1974,7 @@ sudo make install
 ```
 
 ### 代理
-v2rayA 应用商店就可以下载，github也可以。是linux中比较稳定和轻量的代理。
+v2rayA 应用商店就可以下载（但安装有些问题，具体见小飞机章节或者官网）github也可以（推荐）。是linux中比较稳定和轻量的代理。
 ![](Unix-tips.assets/Ubuntu-v2rayA-setting.png)1. ubuntu-setting-network-proxy is on, 
 1. and http port is 20172 by default,
 2. which means export http/s proxy = http://localhost:20172
