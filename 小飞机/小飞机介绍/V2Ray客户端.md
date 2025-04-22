@@ -19,13 +19,13 @@ tags:
 
 **V2ray Windows客户端**：
 
-| V2rayN | [v2rayN-v6.55.zip](https://itlanyan.com/download.php?filename=/v2/windows/v2rayN-v6.55.zip) | [官网下载](https://github.com/2dust/v2rayN/releases) | [V2rayN 4.12配置教程](https://itlanyan.com/go.php?key=v2rayn-config-new) |
-| --- | --- | --- | --- |
-| Clash for Windows | [Clash.for.Windows-0.20.36-win.7z](https://itlanyan.com/download.php?filename=/v2/windows/Clash.for.Windows-0.20.36-win.7z) |  | [Clash for Windows(CFW)配置教程](https://itlanyan.com/go.php?key=v2ray-clash-win-config) |
-| NekoRay | [NekoRay-3.26-win.zip](https://itlanyan.com/download.php?filename=/v2/windows/NekoRay-3.26-win.zip) | [官网下载](https://github.com/MatsuriDayo/nekoray/releases) | [NekoRay使用教程](https://v2xtls.org/nekoray%e4%bd%bf%e7%94%a8%e6%95%99%e7%a8%8b/) |
-| Clash Verge rev | [Clash.Verge\_1.7.7.exe](https://itlanyan.com/download.php?filename=/v2/windows/Clash.Verge_1.7.7_x64-setup.exe) | [官网下载](https://github.com/clash-verge-rev/clash-verge-rev/releases) |  |
-| Netch | [Netch-v1.9.7.7z](https://itlanyan.com/download.php?filename=/v2/windows/Netch-v1.9.7.7z) | [官网下载](https://github.com/NetchX/Netch/releases) |  |
-| Qv2ray | [Qv2ray.v2.7.0.exe](https://itlanyan.com/download.php?filename=/v2/windows/Qv2ray.v2.7.0.exe) | [官网下载](https://github.com/Qv2ray/Qv2ray/releases) | [Qv2ray配置教程](https://itlanyan.com/go.php?key=qv2ray-config) |
+| V2rayN            | [v2rayN-v6.55.zip](https://itlanyan.com/download.php?filename=/v2/windows/v2rayN-v6.55.zip)                                 | [官网下载](https://github.com/2dust/v2rayN/releases)                    | [V2rayN 4.12配置教程](https://itlanyan.com/go.php?key=v2rayn-config-new)                 |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Clash for Windows | [Clash.for.Windows-0.20.36-win.7z](https://itlanyan.com/download.php?filename=/v2/windows/Clash.for.Windows-0.20.36-win.7z) |                                                                     | [Clash for Windows(CFW)配置教程](https://itlanyan.com/go.php?key=v2ray-clash-win-config) |
+| NekoRay           | [NekoRay-3.26-win.zip](https://itlanyan.com/download.php?filename=/v2/windows/NekoRay-3.26-win.zip)                         | [官网下载](https://github.com/MatsuriDayo/nekoray/releases)             | [NekoRay使用教程](https://v2xtls.org/nekoray%e4%bd%bf%e7%94%a8%e6%95%99%e7%a8%8b/)       |
+| Clash Verge rev   | [Clash.Verge\_1.7.7.exe](https://itlanyan.com/download.php?filename=/v2/windows/Clash.Verge_1.7.7_x64-setup.exe)            | [官网下载](https://github.com/clash-verge-rev/clash-verge-rev/releases) |                                                                                      |
+| Netch             | [Netch-v1.9.7.7z](https://itlanyan.com/download.php?filename=/v2/windows/Netch-v1.9.7.7z)                                   | [官网下载](https://github.com/NetchX/Netch/releases)                    |                                                                                      |
+| Qv2ray            | [Qv2ray.v2.7.0.exe](https://itlanyan.com/download.php?filename=/v2/windows/Qv2ray.v2.7.0.exe)                               | [官网下载](https://github.com/Qv2ray/Qv2ray/releases)                   | [Qv2ray配置教程](https://itlanyan.com/go.php?key=qv2ray-config)                          |
 
 **本站提供的V2rayN即官网的V2rayN-Core.zip**，不需要单独下载V2ray-Core和.Net framework，并且支持[VLESS协议](https://itlanyan.com/introduce-v2ray-vless-protocol/)、[trojan协议](https://itlanyan.com/trojan-tutorial/)。注意：V2rayN 4.0版起抛弃PAC，改用路由模式，支持VLESS+XTLS，但**需手动切换Xray内核**，也支持 [reality协议](https://github.com/XTLS/REALITY)，详细设置请参考 [V2rayN 4.12配置教程](https://itlanyan.com/go.php?key=v2rayn-config-new)。
 
