@@ -1513,6 +1513,31 @@ In Sublime , we can create our own language highlight document named “.sublime
 
 # Linux
 
+## 可视化软件
+官网下载要注意最好搜一搜怎么添加apt源，否则更新比较麻烦，现在很多app都在ubuntu的应用商店中，优先选择这种安装方式。
+
+| 软件名称                                        | 类型                                                      | 安装方式                                                 |
+| ------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------- |
+| [Flathub](https://flathub.org/setup/Ubuntu) | 软件商店                                                    | 按照官网apt安装                                            |
+| QQ                                          | 聊天                                                      | 官网下载dpkg安装                                           |
+| Edge                                        | 浏览器                                                     | 官网dpkg&添加软件源                                         |
+| pdfarranger                                 | PDF编辑                                                   | apt install                                          |
+| VLC                                         |                                                         | Ubuntu 应用商店或官网                                       |
+| Blender                                     | 3D建模/动画                                                 | Ubuntu 应用商店或官网                                       |
+| GNU image                                   | 图片编辑                                                    | Ubuntu 应用商店或官网                                       |
+| VScode                                      | 代码编辑器                                                   | 官网（Ubuntu 应用商店安装的有bug)                               |
+| FreeCAD                                     | CAD工程图                                                  | Ubuntu 应用商店或官网                                       |
+| kicad                                       | 电路&PCB                                                  | Ubuntu 应用商店或官网                                       |
+| LocalSend                                   | 局域网传文件                                                  | Ubuntu 应用商店或官网                                       |
+| Inkscape                                    | 矢量图做图                                                   | Ubuntu 应用商店或官网                                       |
+| Krita                                       | 画画                                                      | Ubuntu 应用商店或官网                                       |
+| Kdenlive                                    | 视频编辑器                                                   | Ubuntu 应用商店或官网                                       |
+| Foliate                                     | 阅读器                                                     | Ubuntu 应用商店或Flathub商店                                |
+| zotero                                      | 文献管理                                                    | Ubuntu 应用商店或官网                                       |
+| goldendict                                  | [翻译](https://www.cnblogs.com/keatonlao/p/12702571.html) | [官网](https://github.com/goldendict/goldendict)或apt安装 |
+| 欧陆词典                                        | 翻译                                                      | 官网下载Deb安装                                            |
+
+
 ## 小问题
 
 ### 安装unbuntu-win双系统
@@ -1544,6 +1569,10 @@ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-
 错误：No module named '_ctypes'：
 解决：sudo apt install libffi-dev 
 No module named '_tkinter'解决：sudo apt install tk-dev
+
+#### pyenv cache
+pyenv 安装python需要代理，可以自己代理下载或者下载镜像文件放到pyenv的cache文件夹中，也就是`~/.pyenv/cache`。
+
 
 ### linux 串口无法访问（权限低）
 
@@ -1979,6 +2008,23 @@ v2rayA 应用商店就可以下载（但安装有些问题，具体见小飞机�
 1. and http port is 20172 by default,
 2. which means export http/s proxy = http://localhost:20172
 3. cursor setting: add http://localhost:20172 and turn off http2
+
+### ubuntu 无法使用cv2.imshow()
+安装contrib版本：pip install opencv-contrib-python
+
+### 开机卡在dev/sda1: clean,… files, …blocks
+有可能是[nvidia显卡驱动](https://askubuntu.com/questions/882385/dev-sda1-clean-this-message-appears-after-i-startup-my-laptop-then-it-w)问题。
+
+```bash
+#比如版本460，就把460相关的都删了，下面指令tab，自动补全找那个版本。
+#比如sudo apt purge nvidia-driver-460 nvidia-kernels-common-460
+sudo apt purge nvidia-
+
+#然后自动安装显卡驱动
+sudo ubuntu-drivers autoinstall
+
+#应该就成了
+```
 
 
 ## Terminal：

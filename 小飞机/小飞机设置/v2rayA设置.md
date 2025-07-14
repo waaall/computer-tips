@@ -57,3 +57,10 @@ https://github.com/Loyalsoldier/v2ray-rules-dat
 往往是网络问题导致下载不成功，所以需要另一个小飞机或者能上GitHub的网站下载了，放在指定的位置。
 有人说放在/usr/local/share/v2ray/；有人说/usr/share/v2ray/；（前两个如果是xray要改一下）还有人说是/etc/v2raya/，我查看了log发现都不对，应该是/root/.local/share/
 但是不用管，开始不设置GWF而是Except CN就行，然后更新GWF list。
+
+# 问题
+## 忘记密码  
+先关上服务：  
+`sudo systemctl stop v2raya.service  ` 
+然后再重置密码就可以了：apt 安装的用 
+`sudo v2raya --reset-password`

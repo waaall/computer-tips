@@ -590,5 +590,7 @@ pytorch显示没有GPU占用---nvidia-smi和windows的任务管理器都有统�
 setting - time&language - Language&region - options - keyboard/Microsoft Pinyin - General ：关闭「Use English punctuations when in Chinese input mode」
 
 ### 不同外接屏幕无法记住设置的缩放系数
-
 setting - System - Display - Scale 开启[自动scale，也就是关闭用户自己设置缩放系数]
+
+
+### 网线连接给ubuntu
