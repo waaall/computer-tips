@@ -373,8 +373,30 @@ winfr C: E:\RecoveryTest /x /y:ZIP
 
 [windows上msys2配置及填坑](https://hustlei.github.io/2018/11/msys2-for-win.html)
 
+使用 MSYS2 時，實際上我們有五種終端機環境：
+
+MinGW 32 bit：原生的 Windows 終端機環境，使用 32 bit 的 MinGW，搭配 msvcrt，用於編譯 32 位元的 Windows 原生軟體
+MinGW 64 bit：原生旳 Windows 終端機環境，使用 64 bit 的 MinGW，搭配 msvcrt，用於編譯 64 位元的 Windows 原生軟體
+UCRT 64 bit：原生的 Windows 終端機環境，使用 64 bit 的 MinGW，搭配 ucrt，用於編譯 64 位元的 Windows 10 原生軟體
+Clang 64 bit：原生的  Windows 終端機環境，使用 64 bit 的 Clang，搭配 ucrt，用於編譯 64 位元的 Windows 10 原生軟體
+MSYS：特殊的 POSIX 子系統，僅用於編譯和安裝套件
+我們要安裝套件時，會使用 MSYS 終端機環境，而要編譯 Windows 原生軟體時，就會回到其他終端機環境。現在 MSYS2 終端機環境的選擇比先前多了。不用感到慌亂，同一時間只會用到一種終端機環境。隨自己的需求來選擇即可。
+
+MSYS2 在不同子環境下，可用的套件相異。msys2 的套件有五種字首：
+
+mingw-w64-i686：用於 MinGW 32 bit 終端機環境中
+mingw-w64-x86_64：用於 MinGW 64 bit 終端機環境中
+mingw-w64-ucrt-x86_64：用於 UCRT 64 bit 終端機環境中
+mingw-w64-clang-x86_64：用於 Clang 64 bit 終端機環境中
+
+
+
 ```powershell
-clang++ -O3 -target x86_64-pc-windows-gnu for.cpp -o for.exe
+# 打开msys2命令行
+pacman -S mingw-w64-x86_64-toolchain
+# 再找到安装位置，加入环境变量
+
+# clang++ -O3 -target x86_64-pc-windows-gnu for.cpp -o for.exe
 ```
 
 
@@ -390,20 +412,40 @@ clang++ -O3 -target x86_64-pc-windows-gnu for.cpp -o for.exe
 ### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/compare-versions)
 
 安装：
-1. 打开windows功能 --- 打开 WSL(Linux子系统) 和 虚拟化系统 功能。
+1. 打开windows功能 --- 打开 WSL(Linux子系统) 和 虚拟化相关系统功能。
+
+如果家庭版没有HyperV功能：
+```bash
+@echo off
+Pushd "%~dp0"
+dir /b %SystemRoot%\servicing\Packages\*Hyper-V*.mum >hyper-v.txt
+for /f %%i in ('findstr /i . hyper-v.txt 2^>nul') do dism /online /norestart /add-package:"%SystemRoot%\servicing\Packages\%%i"
+del hyper-v.txt
+Dism /online /enable-feature /featurename:Microsoft-Hyper-V -All /LimitAccess /ALL
+```
+就把这个保存为`hyper-v-enable.bat`管理员执行一下，然后等着重启就好了。
 
 2. 如果有小飞机就加上 `--web-download`,这会在github下载而不是微软商店。
 ```powershell
 wsl --update --web-download
-wsl --set-version Ubuntu 2 #将Ubuntu虚拟内核换成WSL2版本
+# wsl --set-version Ubuntu 2 #将Ubuntu虚拟内核换成WSL2版本，但现在默认就是2
 wsl -l -v #查看现有的wsl
-wsl --install -d Ubuntu-24.04 --web-download
+# wsl --install -d Ubuntu-24.04 --web-download
 ```
 
-3. wsl网络问题
-在用户目录 %USERPROFILE% 下面创建一个配置文件 .wslconfig，写入以下内容：
+
+#### windows 访问wsl位置
+```bash
+# 在文件管理器地址栏输入：
+\\wsl$
+```
+
+
+-  wsl网络问题
+在windows用户目录下面创建一个配置文件 .wslconfig，写入以下内容：
 ```bash
 [experimental]
+autoMemoryReclaim=gradual
 networkingMode=mirrored
 dnsTunneling=true
 firewall=true
@@ -411,10 +453,12 @@ autoProxy=true
 ```
 然后就可以在wsl中输入以下指令可使用windows代理：(7890换成自己小飞机的端口号)
 ```bash
-export ALL_PROXY=socks5://127.0.0.1:7890
+# export ALL_PROXY=socks5://127.0.0.1:7890
+export ALL_PROXY=http://127.0.0.1:7897
+unset ALL_PROXY
 ```
 
-4. 常用指令
+- 常用指令
 ```powershell
 wslconfig /list #查看默认的wsl
 wsl #进入默认的wsl
@@ -499,10 +543,10 @@ The `source` settings involve configuration to the WinGet source.
 ### UWP软件
 
 - [ ] quicklook                        空格预览
-- [ ] Windows Terminal        官方终端
+- [ ] Windows Terminal         官方终端
 - [ ] Ubuntu                            官方Linux虚拟机
 - [ ] twinkle Tray                    调外接显示器亮度
-- [ ] powertoy                         官方小工具（包括键盘映射等）
+- [ ] powertoys                      官方小工具（包括键盘映射等）
 
 ### 官网下载
 - [ ] [geek](https://geekuninstaller.com/download)                                  卸载软件
@@ -512,13 +556,14 @@ The `source` settings involve configuration to the WinGet source.
 - [ ] [potplayer](https://potplayer.daum.net/)                         看视频
 - [ ] [f.lux](https://justgetflux.com/)                                  调色温
 - [ ] [sublime](https://www.sublimetext.com)                           文本编辑器
-- [ ] [Typora](https://typora.io)                             Markdown
+- [ ] [Typora](https://typora.io)                             Markdown（不行了）
 - [ ] [Bandzip](https://cn.bandisoft.com/bandizip/)/ 7zip                 解压缩软件
 - [ ] [火绒](https://www.huorong.cn/)                                 杀毒软件（防流氓）
 - [ ] [Listary](https://www.listary.com/)/everything         搜索
 - [ ] [XMind](https://www.xmind.cn)                             思维导图
 - [ ] [FDM](https://www.freedownloadmanager.org/zh/)                                下载
 [10个经验的国产软件](https://sspai.com/post/42153)
+
 
 ### github开源
 - [PDFMathTranslate](https://github.com/Byaidu/PDFMathTranslate)： 翻译PDF文档
@@ -594,3 +639,54 @@ setting - System - Display - Scale 开启[自动scale，也就是关闭用户自
 
 
 ### 网线连接给ubuntu
+1. 连接到wifi后，打开“网络和设置中心”——“更改适配器设置”——“找到你当前的无线网卡”——属性——共享——“允许”，下面选择本地连接——确认框，确定——确定。
+2. 将本地连接ip设置为 192.168.137.1，子网掩码自动生成 (一般是默认不用改)
+3. ubuntu一般不用设置，都自动就可以。
+
+
+## windows 新电脑设置流程
+
+### windows 开始不登录
+
+#### 新电脑
+**在联网之前这样操作：**
+1.  shift Fn F10
+2. OOBE\BypassNRO.cmd
+3. 重启后，计算机再次进入基本设置界面，按界面提示操作，当再次进入让我们为你连接到网络界面，将出现我没有 Internet 连接（或暂时跳过）选项，点击我没有 Internet 连接（或暂时跳过）。
+4. 点击继续执行受限设置或许可协议，将进入下一个操作界面，此时，您已跳过网络连接操作，请您按界面提示完成其他配置，进入到 Windows 系统中。
+
+**在联网之后这样操作：**
+1.  shift Fn F10
+2. OOBE\BypassNRO.cmd
+3. 重启后，点击
+
+#### 取消密码
+1. 按下Win + R （）组合键，输入 `netplwiz`，然后按回车键。﻿
+2. 在“用户帐户”窗口中，找到要取消密码的账户，取消勾选“要使用本计算机，用户必须输入用户名和密码”。﻿
+3. 点击“应用”，然后输入当前密码，点击“确定”。﻿
+4. 重启电脑，现在应该可以直接进入桌面，无需输入密码。
+
+## 安装可视化软件
+- 火绒
+- QQ
+- 微信
+- 腾讯会议
+- [potplayer](https://potplayer.tv)
+- vscode
+- [7zip](https://www.7-zip.org)
+- powertoys
+
+## 安装dev
+- [chatbox](https://chatboxai.app/en)
+- [git](https://git-scm.com/downloads/win)
+- python
+- Windows Terminal  （微软应用商店）
+
+- [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+- [arm-gnu-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+	- Windows (mingw-w64-x86_64) hosted cross toolchains 
+	- AArch32 bare-metal target (arm-none-eabi)
+
+
+- [clash-verge](https://github.com/clash-verge-rev/clash-verge-rev/releases/)
+- chocolate & scoop 见上
