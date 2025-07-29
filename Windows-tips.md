@@ -96,81 +96,6 @@ wmic memorychip list brief #看内存
 
 ## powershell
 
-### oh-my-posh
-
-```powershell
-##==================使用powershell模块===========================
-PS C:\Users\zxll> Import-Module PackageManagement
-
-Import-Module : 无法加载文件 C:\Program Files\WindowsPowerShell\Modules\PackageManagement
-\1.4.7\PackageManagement.psm1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go
-.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies。
-所在位置 行:1 字符: 1
-+ Import-Module PackageManagement
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : SecurityError: (:) [Import-Module]，PSSecurityException
-    + FullyQualifiedErrorId : UnauthorizedAccess,Microsoft.PowerShell.Commands.ImportMod
-   uleCommand
-
-PS C:\Users\zxll> get-executionpolicy
-Restricted
-PS C:\Users\zxll> set-executionpolicy remotesigned
-PS C:\Users\zxll> get-executionpolicy
-RemoteSigned
-
-###库操作
-Install-PackageProvider -Name NuGet -Force
-Install-Module -Name PowerShellGet -Force
-Update-Module
-Get-InstalledModule
-
-# install oh-my-posh
-winget install JanDeDobbeleer.OhMyPosh -s winget
-# Install-Module oh-my-posh -Scope CurrentUser 
-
-Install-Module -Name PSReadLine -Force
-Install-Module posh-git -Scope CurrentUser
-
-# 编写PROFILE文件，见下
-code $PROFILE
-```
-
-#### PROFILE
-```powershell
-# 引入 posh-git
-Import-Module posh-git
-
-# 引入 ps-read-line
-Import-Module PSReadLine
-
-# # 添加主题
-# oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\Pararussel.omp.json" | Invoke-Expression
-#------------------------------- Import Modules END   -------------------------------
-
-#-------------------------------  Set Hot-keys BEGIN  -------------------------------
-# 设置预测文本来源为历史记录
-Set-PSReadLineOption -PredictionSource History
-
-# 每次回溯输入历史，光标定位于输入内容末尾
-Set-PSReadLineOption -HistorySearchCursorMovesToEnd
-
-# 设置 Tab 为菜单补全和 Intellisense
-Set-PSReadLineKeyHandler -Key "Tab" -Function MenuComplete
-
-# 设置 Ctrl+d 为退出 PowerShell
-Set-PSReadlineKeyHandler -Key "Ctrl+d" -Function ViExit
-
-# 设置 Ctrl+z 为撤销
-Set-PSReadLineKeyHandler -Key "Ctrl+z" -Function Undo
-
-# 设置向上键为后向搜索历史记录
-Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
-
-# 设置向下键为前向搜索历史纪录
-Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
-#-------------------------------  Set Hot-keys END    -------------------------------
-```
-
 ### 常用指令
 
 ```powershell
@@ -490,7 +415,7 @@ eval $(dircolors -b $HOME/.dircolors)
 #### chocolatey/[choco](https://github.com/chocolatey/choco)
 ```bash
 # 1. 安装到D盘，实际上就是加一个环境变量（独立与path的）制定其安装目录，自己搜索系统环境变量添加一个也可。自己改记得还要检查下path
-$env:ChocolateyInstall = 'D:\your_folder\Chocolatey'
+$env:ChocolateyInstall = 'D:\Develop\Chocolatey'
 [Environment]::SetEnvironmentVariable('ChocolateyInstall', $env:ChocolateyInstall, 'User')
 # Machine意味着全局，一般不用
 [Environment]::SetEnvironmentVariable('ChocolateyInstall', $env:ChocolateyInstall, 'Machine')
@@ -505,7 +430,7 @@ choco upgrade chocolatey
 
 ```bash
 ## 1. 安装到D盘，实际上就是加一个环境变量（独立与path的）制定其安装目录，自己搜索系统环境变量添加一个也可。自己改记得还要检查下path
-$env:SCOOP='D:\your_folder\scoop' 
+$env:SCOOP='D:\Develop\scoop' 
 [Environment]::SetEnvironmentVariable('SCOOP', $env:SCOOP, 'User')
 
 ## 2. 安装
@@ -681,6 +606,84 @@ setting - System - Display - Scale 开启[自动scale，也就是关闭用户自
 - [git](https://git-scm.com/downloads/win)
 - python
 - Windows Terminal  （微软应用商店）
+### oh-my-posh
+
+1. 先安装包管理器
+```powershell
+##==================使用powershell模块===========================
+PS C:\Users\zxll> Import-Module PackageManagement
+
+Import-Module : 无法加载文件 C:\Program Files\WindowsPowerShell\Modules\PackageManagement
+\1.4.7\PackageManagement.psm1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go
+.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies。
+所在位置 行:1 字符: 1
++ Import-Module PackageManagement
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) [Import-Module]，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess,Microsoft.PowerShell.Commands.ImportMod
+   uleCommand
+
+
+PS C:\Users\zxll> set-executionpolicy remotesigned
+
+###库操作
+Import-Module PackageManagement
+Install-PackageProvider -Name NuGet -Force
+Install-Module -Name PowerShellGet -Force
+Update-Module
+Get-InstalledModule
+
+Install-Module -Name PSReadLine -Force
+Install-Module posh-git -Scope CurrentUser
+
+```
+2. 安装 oh my posh 在微软应用商店就可以安装
+
+#### PROFILE
+```powershell
+# 编写PROFILE文件，见下
+code $PROFILE
+```
+
+```powershell
+# 引入 posh-git
+Import-Module posh-git
+
+# 引入 ps-read-line
+Import-Module PSReadLine
+
+
+
+#### 下面这些不用。
+
+# # 添加主题
+# oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\Pararussel.omp.json" | Invoke-Expression
+#------------------------------- Import Modules END   -------------------------------
+
+#-------------------------------  Set Hot-keys BEGIN  -------------------------------
+# 设置预测文本来源为历史记录
+Set-PSReadLineOption -PredictionSource History
+
+# 每次回溯输入历史，光标定位于输入内容末尾
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+
+# 设置 Tab 为菜单补全和 Intellisense
+Set-PSReadLineKeyHandler -Key "Tab" -Function MenuComplete
+
+# 设置 Ctrl+d 为退出 PowerShell
+Set-PSReadlineKeyHandler -Key "Ctrl+d" -Function ViExit
+
+# 设置 Ctrl+z 为撤销
+Set-PSReadLineKeyHandler -Key "Ctrl+z" -Function Undo
+
+# 设置向上键为后向搜索历史记录
+Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+
+# 设置向下键为前向搜索历史纪录
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+#-------------------------------  Set Hot-keys END    -------------------------------
+```
+
 
 - [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 - [arm-gnu-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
