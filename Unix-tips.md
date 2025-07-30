@@ -2026,7 +2026,63 @@ sudo ubuntu-drivers autoinstall
 #应该就成了
 ```
 
+### 增加swap
+不能直接用 GParted 来调整 swap 文件的大小，因为：
+- GParted 操作的是分区（block device），而你用的是swap 文件；
+- swap 文件是位于某个分区中的普通文件，它的大小不受 GParted 控制。
+---
 
+你可以通过命令行方式，删除旧 swap 文件并创建新的更大的 swap 文件，步骤如下：
+（将 swap 文件从 2G 改为 8G）
+
+#### 1. 关闭并删除当前 swap
+```bash
+sudo swapoff /swapfile
+sudo rm /swapfile
+```
+
+#### 2. 创建新的 4G swap 文件
+```bash
+sudo fallocate -l 8G /swapfile
+# 或用 dd（速度慢一些）
+# sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+```
+
+#### 3. 设置权限
+```bash
+sudo chmod 600 /swapfile
+```
+
+#### 4. 格式化为 swap
+```bash
+sudo mkswap /swapfile
+```
+
+#### 5. 启用新的 swap
+```bash
+sudo swapon /swapfile
+```
+
+#### 6. 确保开机自动挂载（检查 /etc/fstab）
+```bash
+cat /etc/fstab
+```
+
+确认有以下一行（如果没有就加上）：
+```bash
+/swapfile none swap sw 0 0
+```
+
+---
+### 🔍 检查是否生效
+```bash
+free -h
+```
+
+应该能看到 swap 变成了 8G。
+
+---
+如果用 swap 分区（更适合内存压力大的环境），也可以用 GParted 添加 swap 分区并启用它。
 ## Terminal：
 ### dircolors
 
