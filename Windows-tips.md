@@ -366,8 +366,9 @@ wsl -l -v #查看现有的wsl
 ```
 
 
--  wsl网络问题
+#### wsl网络问题
 在windows用户目录下面创建一个配置文件 .wslconfig，写入以下内容：
+注：这个现在也有可视化操作，就是wsl settings这个软件。
 ```bash
 [experimental]
 autoMemoryReclaim=gradual
@@ -402,6 +403,22 @@ vim $HOME/.dircolors
 #然后在$HOME/.bashrc(如果用zsh, $HOME/.zshrc)后面添加:
 eval $(dircolors -b $HOME/.dircolors)
 ```
+
+
+#### wsl 安装错误
+
+```
+Could not write value to key \SOFTWARE\Classes\Directory\Background\shell\WSL.   
+Verify that you have sufficient access to that key, or contact your support personnel.wsl:  
+WSL 安装似乎已损坏 (错误代码： Wsl/CallMsi/Install/ERROR_INSTALL_FAILURE)。  
+按任意键修复 WSL，或 CTRL-C 取消。  
+此提示将在 60 秒后超时。
+```
+
+解决方案：
+1. 去[github wsl release](https://github.com/microsoft/WSL/releases)下载stable baoa版本手动安装。
+2. 再关上代理去微软应用shang d商店下载ubuntu或其他版本。
+
 
 ## 动态库
 
@@ -653,7 +670,6 @@ Import-Module posh-git
 Import-Module PSReadLine
 
 
-
 #### 下面这些不用。
 
 # # 添加主题
@@ -683,9 +699,82 @@ Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 #-------------------------------  Set Hot-keys END    -------------------------------
 ```
+ 
+ 
+ 
+### wsl
+ [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+ 更多具体细节看上面章节。
+#### wsl换源
+- [ubuntu清华源](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
+在 Ubuntu 24.04 之前，Ubuntu 的软件源配置文件使用传统的 One-Line-Style，路径为 `/etc/apt/sources.list`；从 Ubuntu 24.04 开始，Ubuntu 的软件源配置文件变更为 DEB822 格式，路径为 `/etc/apt/sources.list.d/ubuntu.sources`。
+```vim
+Types: deb
+URIs: https://mirrors.tuna.tsinghua.edu.cn/ubuntu
+Suites: noble noble-updates noble-backports
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
+# 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
+# Types: deb-src
+# URIs: https://mirrors.tuna.tsinghua.edu.cn/ubuntu
+# Suites: noble noble-updates noble-backports
+# Components: main restricted universe multiverse
+# Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-- [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+# 以下安全更新软件源包含了官方源与镜像站配置，如有需要可自行修改注释切换
+Types: deb
+URIs: http://security.ubuntu.com/ubuntu/
+Suites: noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+# Types: deb-src
+# URIs: http://security.ubuntu.com/ubuntu/
+# Suites: noble-security
+# Components: main restricted universe multiverse
+# Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+# 预发布软件源，不建议启用
+
+# Types: deb
+# URIs: https://mirrors.tuna.tsinghua.edu.cn/ubuntu
+# Suites: noble-proposed
+# Components: main restricted universe multiverse
+# Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+# # Types: deb-src
+# # URIs: https://mirrors.tuna.tsinghua.edu.cn/ubuntu
+# # Suites: noble-proposed
+# # Components: main restricted universe multiverse
+# # Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+```
+#### windows 访问wsl位置
+```bash
+# 在文件管理器地址栏输入：
+\\wsl$
+```
+
+#### wsl网络问题
+在windows用户目录下面创建一个配置文件 .wslconfig，写入以下内容：
+注：这个现在也有可视化操作，就是wsl settings这个软件。
+```bash
+[experimental]
+autoMemoryReclaim=gradual
+networkingMode=mirrored
+dnsTunneling=true
+firewall=true
+autoProxy=true
+```
+然后就可以在wsl中输入以下指令可使用windows代理：(7890换成自己小飞机的端口号)
+```bash
+# export ALL_PROXY=socks5://127.0.0.1:7890
+export ALL_PROXY=http://127.0.0.1:7897
+unset ALL_PROXY
+```
+
+ 
+
 - [arm-gnu-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 	- Windows (mingw-w64-x86_64) hosted cross toolchains 
 	- AArch32 bare-metal target (arm-none-eabi)
