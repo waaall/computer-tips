@@ -1510,6 +1510,18 @@ In Sublime , we can create our own language highlight document named “.sublime
 * **`cmd+Arrow` #去最上或最下**
 * **`cmd+E`/`cmd+opt+Arrow down`       #跳转定义**
 
+## mac小问题
+
+### [Mds_Stores 进程高占用](https://www.easeus.com/computer-instruction/mds-store.html#temporarily_stop_and_restart_spotlight)
+Are you wondering what Mds_Stores is? If you are not too tech-savvy, seeing such a massive CPU utilization on one process can be jarring. Let's know more about this software problem. 
+
+The Mds_Stores is an in-built indexing process integrated into the Mac Spotlight Search. Here, the MDS stands for metadata server. The MDS tracks and maintains the data present on the Mac and is used by the macOS [Spotlight](https://en.wikipedia.org/wiki/Spotlight_\(software\)). It is the responsibility of Mds_Stores to maintain and compile the data that MDS collects to make Spotlight more efficient. 
+
+Mds_Stores facilitates quick Spotlight search results. The recommendations you get when you type something into the Spotlight are due to the Mds_Stores. That makes it easier for you to complete the task.
+
+1. [Reboot Your Mac](https://www.easeus.com/computer-instruction/mds-store.html#reboot_your_mac)
+2. [Disable Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#disable_spotlight)
+3. [Temporarily Stop and Restart Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#temporarily_stop_and_restart_spotlight)
 
 # Linux
 
