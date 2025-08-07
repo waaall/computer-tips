@@ -1023,7 +1023,9 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 - [BetterDisplay](https://link.zhihu.com/?target=https%3A//github.com/waydabber/BetterDisplay) 虽然适用于[M芯片](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=M%E8%8A%AF%E7%89%87&zhida_source=entity)，但是它的原理是创建一个高分辨率镜像[虚拟显示器](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=%E8%99%9A%E6%8B%9F%E6%98%BE%E7%A4%BA%E5%99%A8&zhida_source=entity)。在我的使用中，会出现以下问题：（1）鼠标经常消失，需要在显示器点一下鼠标才会出现；（2）输入延迟，无论是键盘输入还是窗口拖拽，会有延迟和拖影（我一开始以为是Magic keyboard延迟或是显示器刷新率没设置对，后来发现是该软件的问题）
 
 注意： [one-key-hidpi](https://link.zhihu.com/?target=https%3A//github.com/xzhih/one-key-hidpi) 现已解决此bug。
-
+### 共用键鼠
+#### deskflow
+[deskflow](https://github.com/deskflow/deskflow/)
 
 
 **官网**
@@ -1653,7 +1655,7 @@ pyenv 安装python需要代理，可以自己代理下载或者下载镜像文�
 
 
 ### linux 串口无法访问（权限低）
-
+- []()
 ```bash
 # 临时处理
 sudo chmod 777 /dev/ttyUSB0
@@ -2275,19 +2277,52 @@ sudo apt install gnome-shell-extensions
 * **[oh my zsh配置](https://www.zrahh.com/archives/167.html)**
 * **[win-vim安装](https://segmentfault.com/a/1190000019360991)**
 
-# zx init shell cmd 
-## zx mac init shell cmd
+# zx mac 新机设置流程
+
+## system settings
+
+- 字体大小
+ - accessbility - display - text size 设为15pt（14寸）
+
+- 三指拖移
+ - system settings - accessbility - point control - tracpad options
+
+
+## iCloud
+
+- 登陆iCloud
+- system settings - general - storage - store in iCloud （select all）
+- App Store 安装所需
+- 登陆美区appstore，安装小飞机
+- 小飞机改端口、改规则(conf)为黑名单，然后重新开关&更新一下。
+- safari换成google
+
+
+## 安装第三方非命令行软件
+
+- vscode
+- obisidian
+- chatbox
+- [AlDente](https://apphousekitchen.com/aldente-overview/pricing/): 按照设置关闭电池相关，并关上电池供电时屏幕亮度降低。
+
+
+
+## init shell cmd
+
+terminal settings 加载 iCloud/github中的zxlldynamic.terminal文件，并设置为default
+
+
 ```bash
 # 安装xcode clt
 xcode-select --install
 
 # 安装brew（国内）
 # 从阿里云下载安装脚本并安装 Homebrew 
-git clone https://mirrors.aliyun.com/homebrew/install.git brew-install 
+git clone https://mirrors.aliyun.com/homebrew/install.git brew-install
 sh brew-install/install.sh 
 rm -rf brew-install 
 # 也可从 GitHub 获取官方安装脚本安装 Homebrew 
-# /bin/bash -c "$(curl -fsSL https://github.com/Homebrew/install/raw/master/install.sh)"
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # 临时替换homebrew源
 export HOMEBREW_INSTALL_FROM_API=1 
@@ -2298,36 +2333,63 @@ export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bott
 
 brew update
 
-# 安装wget
-brew install zsh
-chsh -s $(which zsh)
+# macOS 现在默认是zsh了
+# brew install zsh
+# chsh -s $(which zsh)
 
 # 安装ohmyzsh
 sh -c "$(curl -fsSL https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
 
+export ALL_PROXY=socks5://127.0.0.1:7897
 # 安装ohmyzsh插件
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 # 然后再在zshrc的plug中写上这俩的名字
+unset ALL_PROXY
+
 
 # zshrc 加入homebrew的环境变量
-echo 'export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"' >> ~/.zshrc echo 'export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"' >> ~/.zshrc echo 'export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"' >> ~/.zshrc echo 'export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"' >> ~/.zshrc source ~/.zshrc
+
+echo 'export PATH=/opt/homebrew/bin:$PATH' >> ~/.zshrc
+
+echo 'export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"' >> ~/.zshrc
+
+echo 'export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"' >> ~/.zshrc
+
+echo 'export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"' >> ~/.zshrc
+
+echo 'export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"' >> ~/.zshrc
+
+source ~/.zshrc
 
 # 安装其他工具
 brew install wget
-brew install make
 brew install cmake
-brew install node
-brew install ffmpeg
 brew install tmux
 brew install tree
 brew install pandoc
-brew install rust
-brew install qt
-brew install docker
-brew install pyenv
+
+brew install --cask docker
+brew install --cask gcc-arm-embedded
+brew install --cask monitorcontrol
+
+# brew install ffmpeg # 依赖太多，后期用可安装
+# brew install qt # 依赖太多，后期用可安装
+# brew install rust
+# brew install node # 依赖太多，后期用可安装
+# brew install docker # 这个不是见learn-docker.md
+
+
+# 安装python依赖（tcl-tk问题@8?）
+brew install gdbm
+brew install openssl@3
+brew install xz
+brew install sqlite
+brew install tcl-tk
 
 # 安装python虚拟环境
+brew install pyenv
+
 # pyenv settings, 这些放到zshrc中
 echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc 
 echo 'export PATH="$PYENV_ROOT/bin:$PATH" ' >> ~/.zshrc 
@@ -2335,21 +2397,19 @@ echo 'export PATH=$PYENV_ROOT/shims:$PATH' >> ~/.zshrc
 echo 'eval "$(pyenv init - zsh)"' >> ~/.zshrc 
 source ~/.zshrc
 
-# 安装python依赖（tcl-tk问题）
-brew install gdbm
-brew install openssl@3
-brew install xz
-brew install sqlite
 
 # pyenv安装python
 pyenv install -l
-pyenv install 3.12.6
+pyenv install 3.12.11
 pyenv versions
-pyenv global 3.12.6
+pyenv global 3.12.11
 
 # 设置pip国内代理
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
+
+# 设置git账号密码https://docs.github.com/en/account-and-profile/how-tos/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address#setting-your-commit-email-address-on-github
+
 ```
 
 上述pip源指令等同于---下面内容写入该文件：`~/.config/pip/pip.conf`
@@ -2361,7 +2421,10 @@ index-url = https://mirrors.aliyun.com/pypi/simple
 trusted-host = mirrors.aliyun.com
 ```
 
-## zx ubuntu init shell cmd
+# zx ubuntu 新机设置流程
+
+## init shell cmd
+
 ```bash
 # 换源：https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/
 # 桌面版换源可以直接在update可视化工具中选择，也可按照上述连接操作
