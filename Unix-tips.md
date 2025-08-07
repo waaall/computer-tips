@@ -1929,11 +1929,12 @@ reboot
 
 2. docker pull设置镜像
 国内大部分docker镜像都失效了，但是可以登陆[阿里云账号](https://cr.console.aliyun.com)[设置镜像](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)。
+好像阿里也失效了，[github-docker-镜像网站](https://github.com/DaoCloud/public-image-mirror)
 ```bash
 sudo vim /etc/docker/daemon.json
 # 然后添加如下内容
 {
-    "registry-mirrors": ["https://****.mirror.aliyuncs.com"] 
+    "registry-mirrors": ["https://docker.m.daocloud.io"] 
 }
 # 然后重启该服务
 sudo systemctl daemon-reload
