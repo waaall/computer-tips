@@ -1523,6 +1523,20 @@ Mds_Stores facilitates quick Spotlight search results. The recommendations you g
 2. [Disable Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#disable_spotlight)
 3. [Temporarily Stop and Restart Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#temporarily_stop_and_restart_spotlight)
 
+
+### deskflow无法连接
+```bash
+# deskflow-server 权限，就在app的contents里，对应的就是mac设置-network-firewall-options界面中的权限表。
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Deskflow.app/Contents/MacOS/deskflow-server
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /Applications/Deskflow.app/Contents/MacOS/deskflow-server
+
+# deskflow-client 权限
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Deskflow.app/Contents/MacOS/deskflow-client
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /Applications/Deskflow.app/Contents/MacOS/deskflow-client
+
+```
+
+
 # Linux
 
 ## 可视化软件
@@ -1905,7 +1919,7 @@ sudo vim /etc/docker/daemon.json
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
-
+具体其他问题比如设置代理等，参考`learn-code`仓库中的`learn-docker.md`笔记文件。
 ### 安装腾讯会议问题
 1. wayland
 ```bash
