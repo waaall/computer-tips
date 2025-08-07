@@ -1023,9 +1023,7 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 - [BetterDisplay](https://link.zhihu.com/?target=https%3A//github.com/waydabber/BetterDisplay) 虽然适用于[M芯片](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=M%E8%8A%AF%E7%89%87&zhida_source=entity)，但是它的原理是创建一个高分辨率镜像[虚拟显示器](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=%E8%99%9A%E6%8B%9F%E6%98%BE%E7%A4%BA%E5%99%A8&zhida_source=entity)。在我的使用中，会出现以下问题：（1）鼠标经常消失，需要在显示器点一下鼠标才会出现；（2）输入延迟，无论是键盘输入还是窗口拖拽，会有延迟和拖影（我一开始以为是Magic keyboard延迟或是显示器刷新率没设置对，后来发现是该软件的问题）
 
 注意： [one-key-hidpi](https://link.zhihu.com/?target=https%3A//github.com/xzhih/one-key-hidpi) 现已解决此bug。
-### 共用键鼠
-#### deskflow
-[deskflow](https://github.com/deskflow/deskflow/)
+
 
 
 **官网**
@@ -1543,6 +1541,9 @@ Mds_Stores facilitates quick Spotlight search results. The recommendations you g
 2. [Disable Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#disable_spotlight)
 3. [Temporarily Stop and Restart Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#temporarily_stop_and_restart_spotlight)
 
+# 共用键鼠
+## deskflow
+[deskflow](https://github.com/deskflow/deskflow/)
 
 ### deskflow无法连接
 ```bash
@@ -1556,7 +1557,38 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /Applications/
 
 ```
 
+### deskflow 配置
+有时候可能会出现配置错误，比如mac端换了一个名字，就无法开启server了，是因为名称不一致，这时候找到两个配置文件：`~/Library/Deskflow/deskflow-server.conf`和`~/Library/Deskflow/Deskflow.conf`
+windows就是`C:\ProgramData\Deskflow\deskflow-server.conf`
 
+```yaml
+section: screens
+	zx-lls-MacBook-Pro.local:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		switchCorners = none
+		switchCornerSize = 0
+	zhengxu-work:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		switchCorners = none
+		switchCornerSize = 0
+end
+
+section: aliases
+end
+
+section: links
+	zx-lls-MacBook-Pro.local:
+		right = zhengxu-work
+	zhengxu-work:
+		left = zx-lls-MacBook-Pro.local
+end
+```
 # Linux
 
 ## 可视化软件
