@@ -8,7 +8,30 @@
 
 当然，Mac有自己的文件系统，2020年为APFS；Linux也更新了自己的文件系统，2020年为ZFS。但同为Unix内核，很多文件的逻辑依然保持一致，这里只谈一致的问题，不谈具体的文件系统特性。
 
-### 磁盘分区
+1. [认识 EXT2 文件系统](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk)  
+　　1.1 [硬盘组成与分割的复习](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-physical)  
+　　1.2 [文件系统特性](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-filesystem)： [索引式文件系统](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#indexed_allocation)  
+　　1.3 [Linux 的 EXT2 文件系统(inode)](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-inode): [data block](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#block), [inode table](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#inode), [superblock](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#super_block), [dumpe2fs](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#dumpe2fs)  
+　　1.4 [与目录树的关系](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-dir)  
+　　1.5 [EXT2/EXT3 文件的存取与日志式文件系统的功能](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-journal)  
+　　1.6 [Linux 文件系统的运行](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-filerun)  
+　　1.7 [挂载点的意义 (mount point)](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-mount)  
+　　1.8 [其他 Linux 支持的文件系统与 VFS](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#harddisk-other)2. [文件系统的简单操作](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#filesys)  
+　　2.1 [磁盘与目录的容量：](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#filesys_1) [df](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#df), [du](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#du)  
+　　2.2 [实体链接与符号链接：](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#link) [ln](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#ln)3. [磁盘的分割、格式化、检验与挂载](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#disk)  
+　　3.1 [磁盘分区： fdisk](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#fdisk), [partprobe](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#partprobe)  
+　　3.2 [磁盘格式化：](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#format) [mkfs](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#mkfs), [mke2fs](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#mke2fs)  
+　　3.3 [磁盘检验： fsck](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#fsck), [badblocks](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#badblocks)  
+　　3.4 [磁盘挂载与卸除： mount](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#mount), [umount](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#umount)  
+　　3.5 [磁盘参数修订](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#diskpara)： [mknod](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#mknod), [e2label](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#e2label), [tune2fs](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#tune2fs), [hdparm](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#hdparm)4. [配置启动挂载：](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#bootup)  
+　　4.1 [启动挂载 /etc/fstab 及 /etc/mtab](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#fstab)  
+　　4.2 [特殊装置 loop 挂载(映象档不刻录就挂载使用)](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#loop)5. [内存置换空间(swap)之建置：](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#swap)  
+　　5.1 [使用实体分割槽建置swap](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#swapdevice)  
+　　5.2 [使用文件建置swap](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#swapfile)  
+　　5.3 [swap使用上的限制](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#swapuse)6. [文件系统的特殊观察与操作](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#special)  
+　　6.1 [boot sector 与 superblock 的关系](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#special_boot_sector)  
+　　6.2 [磁盘空间之浪费问题](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#special_waste)  
+　　6.3 [利用 GNU 的 parted 进行分割行为](http://cn.linux.vbird.org/linux_basic/0230filesystem.php#parted)
 
 > windows是先有硬盘分区，再有分区上的目录。
 > linux是先有目录，再有每个目录对应的分区，进入一个分区的目录入口就叫挂载点。
@@ -16,10 +39,55 @@
 >
 > win和linux的区别主要是文件结构(目录)和物理结构(存储)的侧重不同。目录在linux里是更基础的概念，在目录的基础上安排磁盘分区。win则是相反。
 
-* [ubuntu磁盘分区](https://askubuntu.com/questions/343268/how-to-use-manual-partitioning-during-installation)
-* [鸟哥磁盘与文件系统](http://cn.linux.vbird.org/linux_basic/0230filesystem_1.php)
+### 硬盘设备/分区/文件系统/挂载
 
-具体操作见下面章节《linux 磁盘分区及调整》
+**(1) 磁盘设备（/dev/sdX）**
+- 物理磁盘（如 HDD、SSD）在 Linux 中表示为 `/dev/sdX`（如 `/dev/sda`, `/dev/sdb`）。
+- 可以通过 `lsblk` 或 `fdisk -l` 查看。
+
+ **(2) 分区（Partition）**
+- 磁盘可以划分成多个分区（如 `/dev/sdb1`, `/dev/sdb2`）。
+- 使用 `fdisk`/`gdisk`/`parted` 管理。
+
+ **(3) 逻辑卷管理（LVM，可选）**
+- 更灵活的存储管理方式，支持动态调整大小、快照等。
+- 涉及 **PV（Physical Volume）**、**VG（Volume Group）**、**LV（Logical Volume）**。
+
+ **(4) RAID（冗余磁盘阵列）**
+- 通过 `mdadm` 实现 **软件 RAID**，将多个磁盘组合成一个逻辑设备（如 `/dev/md0`）。
+- 提供数据冗余（RAID 1/5/6）或性能提升（RAID 0）。
+
+ **(5) 文件系统（File System）**
+- 数据存储的最终组织形式（如 `ext4`、`xfs`、`btrfs`）。
+- 必须 **格式化** 后才能存储文件。
+
+ **(6) 挂载（Mount）**
+- 将设备（如 `/dev/md0`）关联到目录（如 `/mnt/raid`），才能访问其中的文件。
+- 挂载点（Mount Point）是文件系统的访问入口。
+
+---
+ **2. 为什么需要 `/dev/md0` 和 `/mnt/raid` 两个步骤？**
+
+|名称|作用|类比|
+|---|---|---|
+|**`/dev/md0`**|RAID 设备文件（原始存储块）|相当于一个“未拆封的硬盘”|
+|**`/mnt/raid`**|挂载点（访问文件的入口）|相当于“插上硬盘后的盘符（如 D:）”|
+
+1. **`/dev/md0` 是 RAID 设备，但不是文件系统**
+    - 当你运行 `sudo mdadm --create /dev/md0 ...` 时，只是创建了一个 **逻辑磁盘设备**，它还没有：
+        - 文件系统（如 ext4）。
+        - 挂载点（无法直接访问文件）。
+    - 此时如果直接尝试访问 `/dev/md0`，系统会报错：
+        `cd /dev/md0  # 错误！这不是目录。`
+        
+2. **`mkfs` 格式化：让 `/dev/md0` 支持存储文件**
+    - `sudo mkfs.ext4 /dev/md0` 会在 `/dev/md0` 上创建 **ext4 文件系统**，使其能存储文件和目录。
+    
+3. **`mount` 挂载：关联设备到目录**
+    - Linux 没有“盘符”（如 Windows 的 `C:\`、`D:\`），而是通过 **挂载到目录** 访问文件。
+    - `sudo mount /dev/md0 /mnt/raid` 的作用：
+        - 将 `/dev/md0` 的文件系统挂载到 `/mnt/raid`。
+        - 之后所有对 `/mnt/raid` 的读写操作都会映射到 `/dev/md0`。
 
 
 ## 目录结构
@@ -206,11 +274,8 @@ setsid()函数可以建立一个对话期：
    > 这样，内核在子进程结束时不会产生僵尸进程。这一点与BSD4不同，BSD4下必须显式等待子进程结束才能释放僵尸进程。 
 
 
-
 ### 3. 创建守护进程
-
 在创建之前我们先了解setsid()使用：
-
 ```c
  #include <unistd.h>
 	pid_t setsid(void);
@@ -305,7 +370,6 @@ void creat_daemon(void)
 ## 三 shell命令
 
 ### 常用
-
 ```shell
 uname #查看计算机类型等系统信息
 
@@ -1023,9 +1087,6 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 - [BetterDisplay](https://link.zhihu.com/?target=https%3A//github.com/waydabber/BetterDisplay) 虽然适用于[M芯片](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=M%E8%8A%AF%E7%89%87&zhida_source=entity)，但是它的原理是创建一个高分辨率镜像[虚拟显示器](https://zhida.zhihu.com/search?content_id=243028881&content_type=Article&match_order=1&q=%E8%99%9A%E6%8B%9F%E6%98%BE%E7%A4%BA%E5%99%A8&zhida_source=entity)。在我的使用中，会出现以下问题：（1）鼠标经常消失，需要在显示器点一下鼠标才会出现；（2）输入延迟，无论是键盘输入还是窗口拖拽，会有延迟和拖影（我一开始以为是Magic keyboard延迟或是显示器刷新率没设置对，后来发现是该软件的问题）
 
 注意： [one-key-hidpi](https://link.zhihu.com/?target=https%3A//github.com/xzhih/one-key-hidpi) 现已解决此bug。
-### 共用键鼠
-#### deskflow
-[deskflow](https://github.com/deskflow/deskflow/)
 
 
 **官网**
@@ -1557,11 +1618,20 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /Applications/
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Deskflow.app/Contents/MacOS/deskflow-client
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /Applications/Deskflow.app/Contents/MacOS/deskflow-client
 
+# 重启下server和client就可以了
 ```
 
 ### deskflow 配置
 有时候可能会出现配置错误，比如mac端换了一个名字，就无法开启server了，是因为名称不一致，这时候找到两个配置文件：`~/Library/Deskflow/deskflow-server.conf`和`~/Library/Deskflow/Deskflow.conf`
 windows就是`C:\ProgramData\Deskflow\deskflow-server.conf`
+
+### deskflow 输入法语言bug
+```bash
+WARNING: current server language is not installed on client
+```
+目前只能是mac用英语的时候切过去可以。
+
+ 
 
 ```yaml
 section: screens
@@ -2155,7 +2225,7 @@ cat /etc/fstab
 ```
 
 ---
-### 🔍 检查是否生效
+#### 🔍 检查是否生效
 ```bash
 free -h
 ```
@@ -2164,6 +2234,153 @@ free -h
 
 ---
 如果用 swap 分区（更适合内存压力大的环境），也可以用 GParted 添加 swap 分区并启用它。
+
+
+在 Linux 上配置 RAID（冗余磁盘阵列）可以通过 **软件 RAID（如 `mdadm`）** 或 **硬件 RAID（如主板/RAID 卡）** 实现。以下是详细步骤：
+
+---
+### linux 硬盘raid
+#### **1. 确认硬盘设备**
+首先，列出所有磁盘，确认要用于 RAID 的硬盘（如 `/dev/sdb`、`/dev/sdc`）：
+```bash
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT   # 查看所有磁盘
+sudo fdisk -l                          # 查看详细信息
+```
+
+确保目标磁盘 **没有重要数据**（RAID 创建会清除数据）。
+
+#### **2. 安装 `mdadm`（软件 RAID 工具）**
+```bash
+# Debian/Ubuntu
+sudo apt update && sudo apt install mdadm
+
+# RHEL/CentOS
+sudo yum install mdadm
+
+# Arch Linux
+sudo pacman -S mdadm
+```
+
+#### **3. 创建 RAID 阵列**
+-  **3.1 常用 RAID 级别**
+
+| RAID 级别     | 最少磁盘数 | 容错能力      | 存储效率    | 适用场景    |
+| ----------- | ----- | --------- | ------- | ------- |
+| **RAID 0**  | 2+    | ❌ 无       | 100%    | 高性能，无冗余 |
+| **RAID 1**  | 2+    | ✔️（镜像）    | 50%     | 高可用性    |
+| **RAID 5**  | 3+    | ✔️（1块盘）   | (N-1)/N | 平衡性能与冗余 |
+| **RAID 6**  | 4+    | ✔️（2块盘）   | (N-2)/N | 更高容错    |
+| **RAID 10** | 4+    | ✔️（镜像+条带） | 50%     | 高性能+高可用 |
+
+-  **3.2 创建 RAID 示例**
+
+ **（1）创建 RAID 1（镜像）**
+```bash
+sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+```
+
+- `/dev/md0`：RAID 设备名  
+- `--level=1`：RAID 1（镜像）  
+- `--raid-devices=2`：使用 2 块磁盘  
+
+ **（2）创建 RAID 5（带奇偶校验）**
+```bash
+sudo mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/sdb /dev/sdc /dev/sdd
+```
+
+**（3）创建 RAID 10（条带+镜像）**
+```bash
+sudo mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+```
+
+#### **4. 检查 RAID 状态**
+```bash
+cat /proc/mdstat                  # 查看 RAID 构建进度
+sudo mdadm --detail /dev/md0      # 查看详细信息
+
+输出示例：
+
+Personalities : [raid1] 
+md0 : active raid1 sdc[1] sdb[0]
+      20971456 blocks [2/2] [UU]
+```
+
+- `[UU]`：所有磁盘正常（`[_U]` 表示一块盘故障）。
+
+#### **5. 格式化并挂载 RAID**
+ **（1）格式化（如 ext4）**
+```bash
+sudo mkfs.ext4 /dev/md0
+```
+
+ **（2）创建挂载点并挂载**
+```bash
+sudo mkdir /mnt/raid
+sudo mount /dev/md0 /mnt/raid
+```
+
+ **（3）开机自动挂载**
+```bash
+# 获取 RAID 的 UUID
+sudo blkid /dev/md0
+
+# 编辑 /etc/fstab
+echo "UUID=你的-UUID /mnt/raid ext4 defaults 0 0" | sudo tee -a /etc/fstab
+```
+
+#### **6. 保存 RAID 配置**
+```bash
+sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf  # Debian/Ubuntu
+sudo mdadm --detail --scan | sudo tee -a /etc/mdadm.conf        # RHEL/CentOS
+
+# 然后更新 initramfs：
+sudo update-initramfs -u        # Debian/Ubuntu
+sudo dracut -v -f               # RHEL/CentOS
+```
+
+#### **7. 故障处理**
+ **（1）模拟磁盘故障**
+```bash
+sudo mdadm /dev/md0 --fail /dev/sdb
+```
+
+**（2）移除故障盘**
+```bash
+sudo mdadm /dev/md0 --remove /dev/sdb
+```
+
+**（3）添加新盘**
+```bash
+sudo mdadm /dev/md0 --add /dev/sde
+```
+
+#### **8. 硬件 RAID 配置**
+如果使用 **硬件 RAID 卡（如 LSI MegaRAID）**：
+1. 开机进入 RAID 卡 BIOS（按提示键，如 `Ctrl+H`）。
+2. 在管理界面中创建虚拟磁盘（VD）。
+3. 在 Linux 中识别为单块磁盘（如 `/dev/sda`），无需 `mdadm`。
+
+#### 9. 总结
+
+| 操作 | 命令/步骤 |
+|------|----------|
+| **安装工具** | `sudo apt install mdadm` |
+| **创建 RAID** | `sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc` |
+| **查看状态** | `cat /proc/mdstat` |
+| **格式化** | `sudo mkfs.ext4 /dev/md0` |
+| **挂载** | `sudo mount /dev/md0 /mnt/raid` |
+| **自动挂载** | 编辑 `/etc/fstab` |
+| **故障恢复** | `mdadm --fail /dev/md0 /dev/sdb` |
+
+---
+
+1. **数据备份**：RAID 不是备份！重要数据仍需额外备份。
+2. **性能权衡**：RAID 0 快但无冗余，RAID 1/5/6 更安全但写入速度较慢。
+3. **硬件 RAID**：优先使用主板/RAID 卡配置，性能更稳定。
+
+通过以上步骤，你可以在 Linux 上轻松配置软件 RAID！ 🚀
+
+
 ## Terminal：
 ### dircolors
 
@@ -2281,11 +2498,15 @@ sudo apt install gnome-shell-extensions
 
 ## system settings
 
-- 字体大小
- - accessbility - display - text size 设为15pt（14寸）
+### 字体大小
+ - accessbility - display - text size 设为16pt（14寸）
 
-- 三指拖移
+### 三指拖移
  - system settings - accessbility - point control - tracpad options
+
+### firewall
+- system settings - network - firewall
+
 
 
 ## iCloud
@@ -2304,13 +2525,13 @@ sudo apt install gnome-shell-extensions
 - obisidian
 - chatbox
 - [AlDente](https://apphousekitchen.com/aldente-overview/pricing/): 按照设置关闭电池相关，并关上电池供电时屏幕亮度降低。
-
+- sublime: 找到备份设置更改 sublime settings & 添加更改的breaker主题
 
 
 ## init shell cmd
 
 terminal settings 加载 iCloud/github中的zxlldynamic.terminal文件，并设置为default
-
+备份的.vimrc拷贝到
 
 ```bash
 # 安装xcode clt
@@ -2372,8 +2593,10 @@ brew install pandoc
 brew install --cask docker
 brew install --cask gcc-arm-embedded
 brew install --cask monitorcontrol
+brew tap deskflow/homebrew-tap
+brew install deskflow
 
-# brew install ffmpeg # 依赖太多，后期用可安装
+brew install ffmpeg # 依赖太多，后期用可安装
 # brew install qt # 依赖太多，后期用可安装
 # brew install rust
 # brew install node # 依赖太多，后期用可安装
