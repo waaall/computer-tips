@@ -614,9 +614,8 @@ s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可
 ```
 
 ### 编译相关
-
 ```shell
-##============================ c系语言 =============================
+##===================== c系语言 ========================
 gcc -v				#查看gcc版本信息
 python3             # enter the python shell
 
@@ -633,13 +632,12 @@ g++ test.cpp
 #多文件直接生成可执行文件
 g++ test1.cpp test2.cpp
 
-##==============================其他============================
+##======================其他======================
 javac test.java #编译java
 java test #运行java
 ```
 
 ###  网络相关
-
 ```shell
 sudo apt install net-tools #安装ifconfig等工具（不用了，这个已经过时了，好多年不维护了，系统默认已改为iproute2 & netplan查询和设置网络）
 traceroute www.apple.com #追踪网络连接所跳转的路由器列表
@@ -1158,7 +1156,6 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 `Cmd+M` ##最小化，区别于隐藏，这个用application window就可以找到，而`Cmd+H`隐藏可以被`Cmd+tab`找到
 
 ## Terminal
-
 * 快捷键
 
 `Tab`  #自动补全或查看shell命令
@@ -1190,10 +1187,7 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 > /etc/profile和/etc/paths是系统级别的，系统启动就会加载，后面几个是当用户级的环境变量。后面3个按照从前往后的顺序读取.如果/.bash_profile文件存在，则后面的几个文件就会被忽略不读了;
 
 
-
-
 ### 终端中文支持
-
 将下面几行代码加`.shellrc/.zshrc`。
 
 但要注意的是，若有`ohmyzsh`，它会重置语言环境，所以需要将其添加在`source oh-my-zsh.sh`后。针对git中文乱码的情况，则需要`git config --global core.quotepath false`,关于git再单独一个文件中——`learn-code/learn-tools/learn-git.md`。
@@ -1204,7 +1198,6 @@ export LANG=en_US.UTF-8
 ```
 
 ### mac terminal 标题
-
 ```shell
 #加入.zshrc，取消ohmyzsh自动生成题目
 DISABLE_AUTO_TITLE="true"
@@ -1212,43 +1205,46 @@ DISABLE_AUTO_TITLE="true"
 ```
 
 ### mac terminal 取消login信息显示
-
 ```shell
 touch ~/.hushlogin
 ```
 
 
-
-### 指令
-
-#### 常用
-
+### mac-terminal 指令
+- [mac terminal command manual](https://www.dssw.co.uk/reference/)
+#### 内存
 ```shell
 top -l 1 | head -n 10 | grep PhysMem  #查看mac内存占用
 sudo purge          #mac清理RAM  
+```
 
+#### 电源管理pmset
+- `pmset -a`：调整任何条件下的睡眠计划
+- `pmset -c`：调整外部供电的睡眠计划
+- `pmset -b`：调整电池供电的睡眠计划
+- `pmset -g`：查看计划
+
+```bash
 pmset -g custom	#显示电源设置
 pmset -g log | egrep "\b(Sleep|Wake|DarkWake|Start)\s{2,}" # 查看睡眠唤醒log
 sudo pmset -a tcpkeepalive 0  #关闭所有情况下睡眠是保持TCP链接的设置
-man pmset		#查看电源设置的手册，比如下面这个：
-	proximitywake - On supported systems, this option controls 			system wake from sleep based on proximity of devices using same 	iCloud id. (value = 0/1)
+man pmset
 
+#查看电源设置的手册，比如下面这个：
+	proximitywake - On supported systems, this option controls system wake from sleep based on proximity of devices using same 	iCloud id. (value = 0/1)
+```
+![](Unix-tips.assets/pmset.png)
 
+#### 网络
+```bash
 netstat -an | grep 1080	 #查看端口号信息(lsof -i:80 也是看端口号)
 >>> tcp6       0      0  ::1.1080          *.*             LISTEN     
 >>> tcp4       0      0  127.0.0.1.1080    *.*             LISTEN 
 
 ```
 
-#### 杂
-
-```shell
-sudo tlmgr repository set http://mirror.hust.edu.cn/CTAN/systems/texlive/tlnet #latex包设置镜像
-
-tlmgr update --self #更新tlmgr
-
-
-
+#### mac defaults 指令
+```
 #finder显示隐藏文件
 defaults write com.apple.finder AppleShowAllFiles -bool true
 KillAll Finder
@@ -1271,8 +1267,14 @@ defaults write com.apple.Finder FXPreferredViewStyle Nlsv
 　　killall Finder
 ```
 
-#### 链接动态库！
+#### tlmgr
+```shell
+sudo tlmgr repository set http://mirror.hust.edu.cn/CTAN/systems/texlive/tlnet #latex包设置镜像
 
+tlmgr update --self #更新tlmgr
+```
+
+#### 链接动态库！
 ```shell
 man ln
 #得到下面描述 ========
@@ -1332,41 +1334,35 @@ atomsk --create fcc 4.02 Al aluminium.xsf	#成功啦！
 ```
 
 #### mac .net core 安装位置
-
 ```shell
 The following frameworks were found:
       5.0.2 at [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]
 ```
 
 
-
-
-
 ### 终端软件管理
-
-- - - -
-
 homebrew，curl，wget，pip，conda，yum，scoop……均是包管理器，也就是app store➕迅雷
 
-决定Mac使用Homebrew+wget+pip3来管理terminal的包下载。（pip已集成在python3里，叫pip3）
+决定Mac使用Homebrew+pip3来管理terminal的包下载。（pip已集成在python3里，叫pip3）
 
 ### Oh my zsh
 
 安装插件步骤
+```bash
+ # 1. 终端输入
+ vim ~/.zshrc
 
-（zsh和bash的区别…？）
+# 2. 找到 plugins=(zsh-syntax-highlighting)    #（）里增加要安装的插件
 
-1. 终端输入  vim ~/.zshrc
-2. 找到 plugins=(zsh-syntax-highlighting)    #（）里增加要安装的插件
+# 3. 终端输入: clone 与 $ 之间的网址就是安装文件GitHub网址，上述命令指：下载到~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 文件夹
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-3. 终端输入
-   `git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting`
+# 4. 终端输入 更新配置文件
+source ~/.zshrc
 
-clone 与 $ 之间的网址就是安装文件GitHub网址，上述命令指：下载到~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 文件夹
+# 5. 重启终端
+```
 
-4. 终端输入
-   `source ~/.zshrc`      # 更新配置文件
-5. 重启终端
 
 [**oh my zsh 有很多内置插件但默认不打开**](https://hufangyun.com/2017/zsh-plugin/)： `cd ~/.oh-my-zsh/plugins` 就可以看下，然后比如使用sublime，就在.zshrc中的plugins=（）中加入sublime，就可以在终端使用如下代码了：
 
@@ -1389,14 +1385,9 @@ z	# 首先你需要进入某个文件夹，然后z会记住，下次就不用cd�
 ```
 
 ### Homebrew
-
 mac上终端设置代理然后运行下面的install.sh（因为我用的是beta版系统，有时识别不出来就报错，所以把那个linux和mac的if语句删掉了，不判断直接执行）
-
 **文件改动见`/Users/zxll/Documents/zx-profiles/teminal/homebrew改.sh`**
-
 包下载位置一般在：**/Users/zxll/Library/Caches/Homebrew/downloads**
-
----
 
 ```shell
 brew list #列出已安装的软件
@@ -1415,7 +1406,6 @@ brew deps --installed --tree #查看所有依赖关系
 
 [brew清华源](https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/)
 [brew阿里源](https://developer.aliyun.com/mirror/homebrew/)
-
 ```shell
 # brew 程序本身，Homebrew/Linuxbrew 相同
 git -C "$(brew --repo)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
@@ -1466,8 +1456,9 @@ yt-dlp --skip-download --write-auto-subs --sub-langs zh-Hans-en --convert-sub sr
 ```
 
 ### pandoc
-
 ```bash
+brew install pandoc
+
 # 查看字体
 fc-list :lang=zh
 
@@ -1476,16 +1467,11 @@ pandoc --pdf-engine=xelatex -V CJKmainfont="PingFang SC" input.md -o output.pdf
 
 #windows
 pandoc --pdf-engine=xelatex -V CJKmainfont="Microsoft YaHei" input.md -o output.pdf
-
-# linux
-
 ```
 
 
-
-[mac vim 配置](https://www.jianshu.com/p/923aec861af3)
 ### Neovim
-
+[mac vim 配置](https://www.jianshu.com/p/923aec861af3)
 ```shell
 #安装
 brew install neovim
@@ -1493,21 +1479,21 @@ pip3 install neovim --upgrade
 ```
 
 ### ipython
-
+```bash
 import os
 print (os.path.abspath('.'))      #查看python读取路径
 
 ~/.ipython/profile_default/startup  #创建一个自启默认设置https://www.pypandas.cn/docs/user_guide/options.html#overview
 
-pandas 多核运行 https://github.com/nalepae/pandarallel
+# pandas 多核运行 https://github.com/nalepae/pandarallel
 df.parallel_apply(func) #加上这个使得命令利用多核
+```
 
 ### “小飞机”
 具体见小飞机笔记。
 #### shadowsocks
 > [shadowsocks-electron(ALL-platform)](https://github.com/nojsja/shadowsocks-electron)
 * socket的pac文件
-
 
 * clashx的rule(yaml文件)
 ![Screen Shot 2022-03-03 at 10.26.33](Unix-tips.assets/clash_rules.png)
@@ -1518,11 +1504,7 @@ df.parallel_apply(func) #加上这个使得命令利用多核
 > 如果您不知道如何操作，请参阅[官方Github文档](https://github.com/Dreamacro/clash/blob/dev/README.md)
 
 
-
-
 ### sublime
-
-
 
 sublime 快捷键：
 
@@ -1550,30 +1532,20 @@ sublime插件：
 * latextools
 
 [latextools](https://latextools.readthedocs.io/en/latest/install/)
-
 * [sublime 多重选择]((null))
-
 * [sublime anaconda 自动补全python库]((null))
-
 * [配置sublime-python1](https://www.jianshu.com/p/193d0f9a6190)
-
 * [配置sublime-python2](https://blog.csdn.net/DawnRanger/article/details/48575507)
-
 * [sublimelinter](http://www.sublimelinter.com/en/stable/)
-
 * [sublime自定义高亮](http://blog.lessfun.com/blog/2016/10/28/make-a-custom-syntax-highlighting-for-sublime-text/)
-
 * [sublime snippets and completions](https://blog.csdn.net/varalpha/article/details/105128139)
-
 * [sublime自定义语法官方文档](https://www.sublimetext.com/docs/3/scope_naming.html)
 
 In Sublime , we can create our own language highlight document named “.sublime-syntax”,which saved in package/user folder.
 **其中match语法为正则表达式**
 
 ### vscode
-
 快捷键：
-
 * **`cmd+c/v/x` #复制/粘贴/剪切 某行（不需要选中）**
 * **`cmd+d/u`   #选词/撤销上个选词（选中一个词后，多光标选同样word）**
 * **`cmd+/`     #注释本行**
@@ -2529,13 +2501,17 @@ sudo apt install gnome-shell-extensions
 
 
 ## init shell cmd
-
 terminal settings 加载 iCloud/github中的zxlldynamic.terminal文件，并设置为default
 备份的.vimrc拷贝到
 
 ```bash
 # 安装xcode clt
 xcode-select --install
+
+# 系统设置
+defaults write com.apple.AMPDevicesAgent.plist AutomaticDeviceBackupsDisabled -bool true
+sudo pmset -c tcpkeepalive 0
+sudo pmset -b powernap 0
 
 # 安装brew（国内）
 # 从阿里云下载安装脚本并安装 Homebrew 
@@ -2570,17 +2546,22 @@ unset ALL_PROXY
 
 
 # zshrc 加入homebrew的环境变量
-
 echo 'export PATH=/opt/homebrew/bin:$PATH' >> ~/.zshrc
 
-echo 'export HOMEBREW_API_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles/api"' >> ~/.zshrc
+## ============ 下面这些加入zshrc ============ ##
 
-echo 'export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"' >> ~/.zshrc
+# Set homebrew mirror
+# 自 brew 4.0.0 (2023 年 2 月 16 日) 起，HOMEBREW_INSTALL_FROM_API 会成为默认行为，无需设置。
+# 大部分用户无需再克隆 homebrew-core 仓库，故无需设置 HOMEBREW_CORE_GIT_REMOTE 环境变量；
+export HOMEBREW_INSTALL_FROM_API=1
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
 
-echo 'export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"' >> ~/.zshrc
+export HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/"
 
-echo 'export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew/homebrew-bottles"' >> ~/.zshrc
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
 
+## ============ 上面这些加入zshrc ============ ##
 source ~/.zshrc
 
 # 安装其他工具
@@ -2597,6 +2578,7 @@ brew tap deskflow/homebrew-tap
 brew install deskflow
 
 brew install ffmpeg # 依赖太多，后期用可安装
+brew install openocd
 # brew install qt # 依赖太多，后期用可安装
 # brew install rust
 # brew install node # 依赖太多，后期用可安装
