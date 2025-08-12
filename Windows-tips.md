@@ -1,12 +1,8 @@
 # Windows tips
 
-[toc]
-
-
 ## 环境变量
 
 重要系统变量含义和功能：
-
 ComSpec 变量：规定 http://CMD.COM 文件的位置。运行 http://cmd.com 可直接打开 “命令提示符” 窗口。
 NUMBER_OF_PROCESSORS 变量：代表用户电脑中处理器的数量。
 OS 变量：表明用户的操作系统。
