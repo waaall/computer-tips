@@ -527,7 +527,7 @@ chmod a=rwx file
 
 
 
-### 文件相关
+### 文件读写
 
 ```shell
 #磁盘管理
@@ -655,6 +655,107 @@ i ：插入， i 的后面可以接字串，而这些字串会在新的一行出
 p ：打印，亦即将某个选择的数据印出。通常 p 会与参数 sed -n 一起运行～
 s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可以搭配正规表示法！例如 1,20s/old/new/g 就是啦！
 ```
+
+### rsny
+`rsync` 是一个强大的文件同步和传输工具，比 `scp` 更高效，支持**增量传输**（只传输变化的部分）、**断点续传**、**压缩传输**、**保留文件属性**（权限、时间戳等），是局域网或远程文件同步/备份的首选工具。
+
+---
+
+#### **1. 基本语法**
+```bash
+rsync [选项] 源文件 目标路径
+```
+- **源文件**：可以是本地路径或远程路径（格式：`user@host:path`）
+- **目标路径**：可以是本地目录或远程服务器路径
+
+#### **2. 常用选项**
+| 选项 | 说明 |
+|------|------|
+| `-a` (archive) | 归档模式（保留权限、时间戳、递归目录等，相当于 `-rlptgoD`） |
+| `-v` (verbose) | 显示详细传输信息 |
+| `-z` (compress) | 压缩传输（节省带宽） |
+| `-P` | 显示进度 + 支持断点续传（`--partial --progress`） |
+| `-n` (dry run) | 模拟运行，不实际传输（测试用） |
+| `--delete` | 删除目标端多余的文件（保持严格同步） |
+| `-e ssh` | 使用 SSH 加密传输（默认支持，可省略） |
+| `--exclude="*.log"` | 排除某些文件（如日志） |
+
+#### **3. 常见用法示例**
+ **(1) 本地同步（类似 `cp`，但更智能）**
+```bash
+rsync -avz /path/to/source/ /path/to/destination/
+```
+- 注意 `/` 的区别：
+  - `source/` → 同步 `source` 目录下的**内容**到 `destination`
+  - `source` → 同步 `source` 目录**本身**到 `destination`
+
+ **(2) 同步到远程服务器（类似 `scp`，但更高效）**
+```bash
+rsync -avzP /local/path/ user@remote_host:/remote/path/
+```
+- `-P` 显示进度，支持断点续传
+- `-z` 压缩传输（适合慢速网络）
+
+ **(3) 从远程服务器同步到本地**
+```bash
+rsync -avzP user@remote_host:/remote/path/ /local/path/
+```
+
+ **(4) 排除某些文件（如 `node_modules` 或日志）**
+```bash
+rsync -avz --exclude="node_modules" --exclude="*.log" /source/ /dest/
+```
+或使用 `--exclude-from=FILE` 指定排除列表文件：
+```bash
+rsync -avz --exclude-from="exclude_list.txt" /source/ /dest/
+```
+`exclude_list.txt` 示例：
+```
+*.tmp
+cache/
+*.bak
+```
+
+ **(5) 删除目标端多余文件（严格同步）**
+```bash
+rsync -avz --delete /source/ /dest/
+```
+- 如果 `dest/` 中有 `source/` 没有的文件，`--delete` 会删除它们，确保两端完全一致。
+
+ **(6) 限速传输（避免占用全部带宽）**
+```bash
+rsync -avz --bwlimit=1000 /source/ user@remote:/dest/
+```
+- `--bwlimit=1000` 限制速度为 1000 KB/s（单位：KB/s）
+
+ **(7) 仅同步更新的文件（增量备份）**
+```bash
+rsync -avzu /source/ /dest/
+```
+- `-u` (update) 仅同步比目标端新的文件
+
+ **(8) 使用 SSH 自定义端口**
+```bash
+rsync -avz -e "ssh -p 2222" /source/ user@remote:/dest/
+```
+- `-e "ssh -p 2222"` 指定 SSH 端口（如 2222）
+
+#### **4. `rsync` vs `scp` 对比**
+| 特性         | `rsync`       | `scp`    |
+| ---------- | ------------- | -------- |
+| **增量传输**   | 只传变化部分        | ❌ 每次全量传输 |
+| **断点续传**   | 支持            | ❌ 不支持    |
+| **压缩传输**   | ✅ `-z` 节省带宽   | ❌ 无压缩    |
+| **目录同步**   | ✅ 递归同步目录      | ✅ 但效率低   |
+| **删除多余文件** | ✅ `--delete`  | ❌ 不支持    |
+| **带宽限制**   | ✅ `--bwlimit` | ❌ 不支持    |
+| **模拟运行**   | ✅ `-n` 测试     | ❌ 不支持    |
+| **速度**     | ⚡ 更快（增量+压缩）   | 🐢 较慢    |
+
+- **同步目录**：`rsync -avz --delete /source/ /dest/`（严格同步）
+- **排除文件**：`rsync -avz --exclude="*.log" /source/ /dest/`
+- **限速传输**：`rsync -avz --bwlimit=1000 /source/ user@host:/dest/`
+
 
 ### 编译相关
 ```shell
