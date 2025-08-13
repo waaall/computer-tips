@@ -373,6 +373,14 @@ void creat_daemon(void)
 ```shell
 uname #查看计算机类型等系统信息
 
+# 系统资源管理器
+top
+
+# 查看用户组
+groups
+# 查看用户组（更全）
+# cat /etc/group
+
 chsh -s /bin/zsh    #设置默认shell为zsh
 
 env  #查看系统全部环境变量
@@ -383,6 +391,41 @@ whereis zsh #返回二进制、man文件、src文件等路径
 which zsh #shell的path中的二进制文件路径
 
 man ln #查看ln这个指令的说明文档
+```
+
+### 系统时间
+
+- timedatectl
+- sntp
+- chrony
+
+| 特性/工具      | `timedatectl`            | `sntp`                   | `ntpq`                  | `ntpdate` (已弃用)         | `chrony` (`chronyd`/`chronyc`) |
+| ---------- | ------------------------ | ------------------------ | ----------------------- | ----------------------- | ------------------------------ |
+| **核心定位**   | 系统时间/日期/时区/NTP开关**管理前端** | 轻量级**一次性NTP客户端**         | **监控诊断工具** (针对 `ntpd`)  | **过时**的一次性NTP设置工具       | **现代NTP客户端/服务器实现套件**           |
+| **是否持续同步** | ❌ (控制背后的服务)              | ❌ (运行一次退出)               | ❌ (查询工具)                | ❌ (运行一次退出)              | ✅ (`chronyd` 是守护进程)            |
+| **主要功能**   | 查看/设置时间、时区、RTC、NTP开关     | 查询NTP服务器、一次性设置系统时间       | 查询/监控/诊断 `ntpd` 状态      | 强制一次性设置系统时间 (跳变)        | 持续NTP同步、时钟漂移补偿、NTP服务器          |
+| **时间调整方式** | N/A                      | 可配置步进(Step)或倾斜(Slew)     | N/A                     | **强制步进(Step) 跳变**       | **优先倾斜(Slew)**，减少跳变            |
+| **守护进程**   | ❌                        | ❌                        | ❌                       | ❌                       | ✅ (`chronyd`)                  |
+| **监控工具**   | 基本状态 (`status`)          | ❌                        | ✅ (自身就是工具)              | ❌                       | ✅ (`chronyc`)                  |
+| **网络中断处理** | N/A                      | N/A                      | N/A                     | N/A                     | ✅ (利用历史漂移率估算)                  |
+| **启动同步速度** | N/A                      | ✅ (快)                    | N/A                     | ✅ (快，但有跳变风险)            | ✅✅ (非常快，设计目标之一)                |
+| **资源占用**   | 很低                       | 很低                       | 低                       | 低                       | 低到中等                           |
+| **现代推荐度**  | ✅✅ (管理首选)                | ✅ (替代 `ntpdate`， 用于简单场景) | ⚠️ (主要用于遗留 `ntpd` 系统诊断) | ❌ (避免使用)                | ✅✅✅ (默认首选实现)                   |
+| **典型使用场景** | 日常时间/时区查看设置，启用NTP同步      | 脚本、嵌入式设备、快速一次性同步         | 诊断传统 `ntpd` 服务问题        | **无** (使用 `sntp` 或守护进程) | 服务器、桌面、笔记本、虚拟机等所有场景            |
+
+```bash
+# timedatectl
+timedatectl set-timezone Asia/Shanghai
+timedatectl set-ntp true
+timedatectl status
+
+# chronyd
+sudo apt install chronyd
+systemctl restart chronyd.service
+chronyc tracking
+chronyc sources
+
+timedatectl status
 ```
 
 ### 权限
@@ -1267,11 +1310,14 @@ defaults write com.apple.Finder FXPreferredViewStyle Nlsv
 　　killall Finder
 ```
 
-#### tlmgr
+#### latex
+- [Texlive 和 mactex-no-gui](https://www.reddit.com/r/LaTeX/comments/1e5nyrv/differences_between_texlive_and_mactexnogui/?tl=zh-hans)
 ```shell
-sudo tlmgr repository set http://mirror.hust.edu.cn/CTAN/systems/texlive/tlnet #latex包设置镜像
+brew install --cask mactex-no-gui
 
-tlmgr update --self #更新tlmgr
+## sudo tlmgr repository set http://mirror.hust.edu.cn/CTAN/systems/texlive/tlnet #latex包设置镜像
+
+## tlmgr update --self #更新tlmgr
 ```
 
 #### 链接动态库！
@@ -1508,17 +1554,17 @@ df.parallel_apply(func) #加上这个使得命令利用多核
 
 sublime 快捷键：
 
-* `cmd+c/v/x` #复制/粘贴/剪切 某行（不需要选中）
-* `cmd+d/u`   #选词/撤销上个选词（选中一个词后，多光标选同样word）
-* `cmd+/`     #注释本行
-* `cmd+[/]`   #缩进与取消缩进（选中多行可以同时）
-* `cmd+k`     #打开/关闭侧边文件栏
-* `cmd+F`     #搜索
-* `cmd+G`     #搜索中为搜索下一个
-* `opt+Enter` #搜索中搜索并选中全部
-* opt+'click'  #进入列选择模式
-* **`cmd+Arrow` #去最上或最下**
-* `F12`/`cmd+opt+Arrow down`       #跳转定义
+* `cmd+c/v/x` 复制/粘贴/剪切 某行（不需要选中）
+* `cmd+d/u`   选词/撤销上个选词（选中一个词后，多光标选同样word）
+* `cmd+/`     注释本行
+* `cmd+[/]`   缩进与取消缩进（选中多行可以同时）
+* `cmd+k`     打开/关闭侧边文件栏
+* `cmd+F`     搜索
+* `cmd+G`     搜索中为搜索下一个
+* `opt+Enter` 搜索中搜索并选中全部
+* opt+'click'  进入列选择模式
+* `cmd+Arrow` 去最上或最下
+* `F12`/`cmd+opt+Arrow down`     跳转定义
 
 sublime插件：
 
@@ -1545,23 +1591,27 @@ In Sublime , we can create our own language highlight document named “.sublime
 **其中match语法为正则表达式**
 
 ### vscode
-快捷键：
-* **`cmd+c/v/x` #复制/粘贴/剪切 某行（不需要选中）**
-* **`cmd+d/u`   #选词/撤销上个选词（选中一个词后，多光标选同样word）**
-* **`cmd+/`     #注释本行**
-* **`cmd+[/]`   #缩进与取消缩进（选中多行可以同时）**
-* **`cmd+B`     #打开/关闭侧边文件栏**
-* **`ctrl+B`     #运行脚本**
-* **`cmd+F`     #搜索**
-* **`cmd+R`     #打开最近**
-* **`cmd+T`     #打开下面分割的终端**
-* **`cmd+J`     #打开控制台**
-* **`cmd+P`     #打开文件**
-* **`cmd+G`     #搜索中为搜索下一个**
-* **`opt+Enter` #搜索中搜索并选中全部**
-* **opt+shift+'click'  #进入列选择模式**
-* **`cmd+Arrow` #去最上或最下**
-* **`cmd+E`/`cmd+opt+Arrow down`       #跳转定义**
+#### 主题随主题更改
+`setting` 搜索 `auto detect color scheme`
+再设置好`light color scheme` 和 `dark color scheme`
+
+#### vscode快捷键
+* **`cmd+c/v/x` 复制/粘贴/剪切 某行（不需要选中）**
+* **`cmd+d/u`   选词/撤销上个选词（选中一个词后，多光标选同样word）**
+* **`cmd+/`       注释本行**
+* **`cmd+[/]`   缩进与取消缩进（选中多行可以同时）**
+* **`cmd+B`      打开/关闭侧边文件栏**
+* **`ctrl+B`    运行脚本**
+* **`cmd+F`     搜索**
+* **`cmd+R`     打开最近**
+* **`cmd+T`     打开下面分割的终端**
+* **`cmd+J`     打开控制台**
+* **`cmd+P`     打开文件**
+* **`cmd+G`     搜索中为搜索下一个**
+* **`opt+Enter` 搜索中搜索并选中全部**
+* **opt+shift+'click'  进入列选择模式**
+* **`cmd+Arrow` 去最上或最下**
+* **`cmd+E`/`cmd+opt+Arrow down`  跳转定义**
 
 ## mac小问题
 
@@ -2574,6 +2624,7 @@ brew install pandoc
 brew install --cask docker
 brew install --cask gcc-arm-embedded
 brew install --cask monitorcontrol
+brew install --cask mactex-no-gui
 brew tap deskflow/homebrew-tap
 brew install deskflow
 
