@@ -45,23 +45,25 @@
 - 物理磁盘（如 HDD、SSD）在 Linux 中表示为 `/dev/sdX`（如 `/dev/sda`, `/dev/sdb`）。
 - 可以通过 `lsblk` 或 `fdisk -l` 查看。
 
- **(2) 分区（Partition）**
+**(2) 分区（Partition）**
 - 磁盘可以划分成多个分区（如 `/dev/sdb1`, `/dev/sdb2`）。
 - 使用 `fdisk`/`gdisk`/`parted` 管理。
 
- **(3) 逻辑卷管理（LVM，可选）**
+**(3) 逻辑卷管理（LVM，可选）**
 - 更灵活的存储管理方式，支持动态调整大小、快照等。
 - 涉及 **PV（Physical Volume）**、**VG（Volume Group）**、**LV（Logical Volume）**。
+- 具体见下面章节：《硬盘扩容》- 《LVM》
 
- **(4) RAID（冗余磁盘阵列）**
+**(4) RAID（冗余磁盘阵列）**
 - 通过 `mdadm` 实现 **软件 RAID**，将多个磁盘组合成一个逻辑设备（如 `/dev/md0`）。
 - 提供数据冗余（RAID 1/5/6）或性能提升（RAID 0）。
+- 具体见下面章节：《linux 硬盘raid》
 
- **(5) 文件系统（File System）**
+**(5) 文件系统（File System）**
 - 数据存储的最终组织形式（如 `ext4`、`xfs`、`btrfs`）。
 - 必须 **格式化** 后才能存储文件。
 
- **(6) 挂载（Mount）**
+**(6) 挂载（Mount）**
 - 将设备（如 `/dev/md0`）关联到目录（如 `/mnt/raid`），才能访问其中的文件。
 - 挂载点（Mount Point）是文件系统的访问入口。
 
@@ -89,8 +91,74 @@
         - 将 `/dev/md0` 的文件系统挂载到 `/mnt/raid`。
         - 之后所有对 `/mnt/raid` 的读写操作都会映射到 `/dev/md0`。
 
+#### Linux存储层次结构
+- **物理磁盘**：如 `/dev/sda`、`/dev/sdb`（原始存储设备）
+- **分区**：磁盘划分的逻辑单元（如 `/dev/sda1`）
+- **逻辑卷 (LVM)**：
+    - 物理卷 (PV)：分区或磁盘被初始化为PV（如 `sda2` 类型为 `LVM2_member`）
+    - 卷组 (VG)：多个PV组合成VG（未直接显示）
+    - 逻辑卷 (LV)：在VG上创建的虚拟分区（如 `/dev/mapper/centos-root`）
+- **文件系统**：在分区或LV上格式化（如 `xfs`、`swap`）
+- **挂载**：将文件系统链接到目录（如 `/`、`/home`）
 
-## 目录结构
+|命令|作用层级|关键信息|使用场景|
+|---|---|---|---|
+|**`fdisk -l`**|磁盘分区表|分区物理信息（起止扇区、大小）|查看磁盘分区结构|
+|**`lsblk -f`**|块设备拓扑关系|设备树、文件系统类型、挂载点|展示设备间逻辑关系|
+|**`df -hT`**|已挂载文件系统使用情况|空间使用率、挂载点、文件系统|监控磁盘空间消耗|
+
+#### 1. `fdisk -l`：磁盘分区信息
+```bash
+Disk /dev/sda: 53687.1 GB  # 物理磁盘sda（53.6TB）
+   /dev/sda1  *  2048  2099199  1GB  83 Linux     # 启动分区（/boot）
+   /dev/sda2     2099200 209715199  50GB 8e Linux LVM  # LVM物理卷
+   /dev/sda3     209715200 419430399  50GB 8e Linux LVM # LVM物理卷
+
+Disk /dev/sdb: 107.4 GB    # 第二块磁盘（107GB）
+   /dev/sdb1      2048 209715199  50GB 8e Linux LVM    # LVM物理卷
+```
+- **关键点**：
+    - `sda` 有3个分区，`sdb` 有1个分区，均加入LVM。
+    - 逻辑卷（如 `/dev/mapper/centos-root`）是LVM创建的虚拟设备，不在分区表中直接管理。
+
+####  2. `lsblk -f`：块设备拓扑与文件系统
+```bash
+sda
+├─sda1 xfs               /boot    # 独立分区（/boot）
+├─sda2 LVM2_member                 # 物理卷PV（sda2）
+│ ├─centos-root xfs      /        # 根逻辑卷（150GB）
+│ ├─centos-swap swap     [SWAP]   # 交换分区
+│ └─centos-home xfs      /home    # /home逻辑卷（142GB）
+└─sda3 LVM2_member                 # 物理卷PV（sda3）
+  └─centos-home xfs      /home    # 与sda2的home是同一LV（跨PV）
+
+sdb
+└─sdb1 LVM2_member                 # 物理卷PV（sdb）
+  └─centos-root xfs      /        # 与sda2的root是同一LV（跨PV）
+```
+
+- **关键点**：
+    - **LVM扩展性**：`centos-root` 同时使用 `sda2` 和 `sdb1` 的空间（跨磁盘扩展）。
+    - **跨PV存储**：`centos-home` 同时使用 `sda2` 和 `sda3` 的空间。
+    - **UUID唯一性**：相同UUID（如 `32ab20e6...`）表示同一逻辑卷。
+
+#### 3. `df -hT`：文件系统使用情况
+```bash
+/dev/mapper/centos-root xfs  150G  24G  127G  16% /     # 根分区使用率16%
+/dev/mapper/centos-home xfs  142G  87G   55G  62% /home # /home使用率62%
+/dev/sda1              xfs 1014M 151M  864M  15% /boot  # 启动分区
+192.168.50.103:/home/data nfs4 965G 216G 749G 23% /nfs-data  # NFS网络存储
+overlay               overlay 150G 24G 127G 16% /var/lib/docker/... # Docker容器
+```
+- **关键点**：
+    - **LVM空间分配**：根目录（`/`）150GB来自 `centos-root`（跨 `sda2+sdb1`）。
+    - **高使用率目录**：`/home` 占用87GB（62%），需关注清理。
+    - **特殊文件系统**：
+        - `nfs4`：网络存储
+        - `overlay`：Docker容器分层文件系统（共享宿主机的 `/` 空间）
+        - `tmpfs`：内存虚拟磁盘（重启消失）
+
+### 目录结构
 
 根据上述理论，所以磁盘是挂载在目录底下的。
 
@@ -2066,6 +2134,71 @@ gparted
 
 如果你的磁盘是 GPT，建议用 parted 或 gparted 进行分区管理，而 fdisk 主要适用于 MBR。
 
+### 磁盘扩容
+#### [LVM](http://cn.linux.vbird.org/linux_basic/0420quota.php#lvm)
+
+|序号|功能|PV 物理卷命令|VG 卷组命令|LV 逻辑卷命令|
+|---|---|---|---|---|
+|01|扫描功能|[pvscan](https://zhida.zhihu.com/search?content_id=217277193&content_type=Article&match_order=1&q=pvscan&zhida_source=entity)|[vgscan](https://zhida.zhihu.com/search?content_id=217277193&content_type=Article&match_order=1&q=vgscan&zhida_source=entity)|[lvscan](https://zhida.zhihu.com/search?content_id=217277193&content_type=Article&match_order=1&q=lvscan&zhida_source=entity)|
+|02|建⽴功能|[pvcreate](https://zhida.zhihu.com/search?content_id=217277193&content_type=Article&match_order=1&q=pvcreate&zhida_source=entity)|[vgcreate](https://zhida.zhihu.com/search?content_id=217277193&content_type=Article&match_order=1&q=vgcreate&zhida_source=entity)|[lvcreate](https://zhida.zhihu.com/search?content_id=217277193&content_type=Article&match_order=1&q=lvcreate&zhida_source=entity)|
+|03|查询功能|pvdisplay|vgdisplay|lvdisplay|
+|04|删除功能|pvremove|vgremove|lvremove|
+|05|扩容功能||vgextend|lvextend|
+|06|缩容功能||vgreduce|lvreduce|
+
+> 需要先使用 fdisk 命令进行一个分区设置。  
+
+- [给LVM添加磁盘扩容](https://blog.csdn.net/xieshaohu/article/details/129671846)
+已经在VMware中成功添加了一块100G的新磁盘（sdb），现在需要将这100G空间扩展到根目录（/）。你的根目录是LVM逻辑卷（centos-root），所以推荐的做法是将新磁盘加入LVM，并扩展根分区。操作步骤如下：
+
+1. 对新磁盘分区（sdb）  
+假设全部用于LVM：
+```bash
+fdisk /dev/sdb
+```
+- 输入 n 创建新分区
+- 输入 t 设置分区类型为 8e（LVM）
+- 输入 w 保存并退出
+
+2. 创建物理卷（PV）  
+```bash
+pvcreate /dev/sdb1
+```
+
+3. 将新PV加入现有卷组（VG）  
+你的卷组名是 centos（可用 vgs 或 vgdisplay 查看确认）：
+```sh
+vgextend centos /dev/sdb1
+```
+
+4. 扩展根逻辑卷（LV）  
+先确认根LV名称（一般为 centos-root）：
+```sh
+lvdisplay
+```
+扩展根LV（假设全部扩展到根）：
+```sh
+lvextend -l +100%FREE /dev/centos/root
+# 都可以，看lvdisplay显示的是啥
+# lvextend -l +100%FREE /dev/mapper/centos-root
+```
+
+5. 扩展文件系统  
+对于xfs（CentOS 7/8默认）：
+
+```sh
+xfs_growfs /
+```
+对于ext4：
+```sh
+resize2fs /dev/centos/root
+```
+
+6. 验证  
+```sh
+df -hT
+```
+
 ### 指纹解锁?
 https://github.com/Am0rphous/Shenzhen-Goodix-Fingerprint-Reader
 ```bash
@@ -2723,6 +2856,7 @@ brew install tree
 brew install pandoc
 
 brew install --cask docker
+brew install kubernetes-cli
 brew install --cask gcc-arm-embedded
 brew install --cask monitorcontrol
 brew install --cask mactex-no-gui
