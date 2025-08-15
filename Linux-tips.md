@@ -101,6 +101,24 @@
 - **文件系统**：在分区或LV上格式化（如 `xfs`、`swap`）
 - **挂载**：将文件系统链接到目录（如 `/`、`/home`）
 
+#### 挂载 (mount)
+1.  **指定关联关系：** 你告诉内核：
+    *   哪个**设备**（`/dev/sda1`, `/dev/nvme0n1p2`）或者哪个**存储资源**（如 NFS 共享 `server:/share`, Samba 共享 `//server/share`）。
+    *   使用哪种**文件系统类型**（ext4, xfs, ntfs, nfs, cifs 等，内核通常能自动检测）。
+    *   将其附加到目录树中的哪个**挂载点**（一个预先存在的**空目录**，如 `/mnt/mydrive`, `/home`）。
+    *   （可选）指定一些**挂载选项**，如只读(`ro`)、读写(`rw`)、用户权限(`uid=`, `gid=`)、禁止执行程序(`noexec`)等。
+
+2.  **内核执行操作：**
+    *   内核接收到 `mount` 命令后，会加载（或确认已加载）相应的**文件系统驱动**（用于理解 ext4, XFS, NTFS 等的结构）。
+    *   内核读取设备上的**文件系统元数据**（超级块等），验证其完整性和类型。
+    *   内核在内部建立数据结构，将这个文件系统的**根目录**与指定的**挂载点目录**关联起来。
+    *   内核更新其**虚拟文件系统**的管理结构，确保所有通过该挂载点的路径访问请求都会被正确路由到对应的物理设备上的文件系统。
+
+3.  **效果：**
+    *   访问挂载点目录（如 `/mnt/data`）及其子目录，就是在访问被挂载设备（如 `/dev/sdb1`）上的文件和目录。
+    *   该挂载点目录原有的内容（如果有）会被暂时“遮盖”，直到卸载该文件系统后才会重新可见。
+    *   系统工具如 `df`, `mount`, `lsblk` 会显示这个挂载关系。
+
 |命令|作用层级|关键信息|使用场景|
 |---|---|---|---|
 |**`fdisk -l`**|磁盘分区表|分区物理信息（起止扇区、大小）|查看磁盘分区结构|
@@ -160,6 +178,14 @@ overlay               overlay 150G 24G 127G 16% /var/lib/docker/... # Docker容�
 
 
 ### linux 磁盘分区及调整
+#### 磁盘空间调整注意
+- **ext4**文件系统：支持在线扩展和离线缩小
+- **xfs**文件系统：只支持在线扩展，不能缩小
+
+- LVM是逻辑卷的管理，属于比文件系统更“底层“，也就是LVM支持热调整大小，但是也需要其上的文件系统支持，比如在LVM分区的是xfs，那也不支持缩。
+- ext4 在线扩展（非LVM）的前提条件：分区后面有未分配空间或可缩小的相邻分区
+
+#### 非LVM实施方法 
 - lsblk
 - parted 
 - fdisk
@@ -236,7 +262,7 @@ df -h
 	• 支持调整、删除、创建、格式化分区。
 	• 支持多种文件系统（ext4、NTFS、FAT32、XFS 等）。
 • **示例**：
-```
+```bash
 gparted
 ```
 
@@ -278,7 +304,40 @@ fdisk /dev/sdb
 - 输入 n 创建新分区
 - 输入 t 设置分区类型为 8e（LVM）
 - 输入 w 保存并退出
+```bash
+[root@rcny-cicd ~]# fdisk /dev/sdb
 
+Welcome to fdisk (util-linux 2.23.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0x26908c57.
+
+Command (m for help): n
+Partition type:
+p primary (0 primary, 0 extended, 4 free)
+e extended
+
+Select (default p): p
+Partition number (1-4, default 1): 
+First sector (2048-209715199, default 2048): 
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-209715199, default 209715199): 
+Using default value 209715199
+Partition 1 of type Linux and of size 100 GiB is set
+
+Command (m for help): t
+
+Selected partition 1
+
+Hex code (type L to list all codes): 8e
+Changed type of partition 'Linux' to 'Linux LVM'
+
+Command (m for help): w
+The partition table has been altered!
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
 #### 2. 创建物理卷（PV）  
 ```bash
 pvdisplay
@@ -342,6 +401,11 @@ xfs_growfs（xfs）：
 - 它通过挂载点找到对应的文件系统进行扩展
 ```
 
+3. 为什么不需要挂载
+```text
+	因为挂载点 (`/mnt/data`) 关联的是文件系统的实例。只要文件系统的核心结构（能被内核识别并管理的）没有在操作中被破坏或需要重建（例如格式化 `mkfs` 就需要重新挂载），仅仅是元数据更新（如扩展可用空间），内核就能无缝处理。
+	重新挂载 (`umount` + `mount`) 相当于销毁当前的 VFS 实例并创建一个新的。对于 `resize2fs` 扩展这种元数据更新操作，内核有能力在现有挂载实例上应用这些更新，避免了服务中断。
+```
 
 ### linux 硬盘raid
 #### 1. 确认硬盘设备
@@ -766,6 +830,18 @@ void creat_daemon(void)
 ## 三 shell命令
 
 ### 常用
+
+| 信息类型     | 推荐命令                     | 示例输出关键字段                 |
+| -------- | ------------------------ | ------------------------ |
+| **系统版本** | `lsb_release -a`         | Ubuntu 22.04.3 LTS       |
+| **内核**   | `uname -a`               | 5.15.0-86-generic        |
+| **CPU**  | `lscpu`                  | Intel Xeon Gold 6248R    |
+| **内存**   | `free -h`                | Mem: 62G                 |
+| **磁盘容量** | `lsblk`                  | sda 3.6T                 |
+| **分区使用** | `df -hT`                 | /dev/sda1 ext4 1.8T 1.2T |
+| **温度**   | `sensors`                | CPU: 48°C                |
+| **BIOS** | `sudo dmidecode -t bios` | Version: 2.15            |
+
 ```shell
 uname #查看计算机类型等系统信息
 
