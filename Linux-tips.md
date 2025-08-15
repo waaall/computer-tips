@@ -1,8 +1,6 @@
-任何代码他们的指令都是小写字母组成，为了避免歧义，我们自己定义量和函数时，最好是用大写字母来表示；
 
-每个指令之间都应该用空格隔来，类似代码应该对齐书写，注释要用tab键尽量对齐，不仅美观，且大大增加了易读性。
-
-[google开源代码书写规范](https://zh-google-styleguide.readthedocs.io/en/latest/contents/)
+- [GNU software](https://www.gnu.org/software/software.html)
+- [google开源代码书写规范](https://zh-google-styleguide.readthedocs.io/en/latest/contents/)
 # 框架
 ## 一 Linux 文件系统：
 
@@ -184,14 +182,17 @@ overlay               overlay 150G 24G 127G 16% /var/lib/docker/... # Docker容�
 - LVM是逻辑卷的管理，属于比文件系统更“底层“，也就是LVM支持热调整大小，但是也需要其上的文件系统支持，比如在LVM分区的是xfs，那也不支持缩。
 - ext4 在线扩展（非LVM）的前提条件：分区后面有未分配空间或可缩小的相邻分区
 
-#### 非LVM实施方法 
+一定要先缩小文件系统
+
+#### [非LVM实施方法](https://developer.aliyun.com/article/637485)
+
 - lsblk
-- parted 
+- [parted](https://www.gnu.org/software/parted/) 
 - fdisk
 - resize2fs
 - df
-- gparted
-这些 Linux 磁盘工具各有不同的用途和功能，但它们有一定的关联，主要用于管理磁盘分区和文件系统。下面是它们的区别和关系：
+- [gparted](https://gitlab.gnome.org/GNOME/gparted/-/tree/master)：依赖上述工具写的GUI的自动化分区管理。
+
 
 **1. lsblk（列出块设备信息）**
 
@@ -205,7 +206,7 @@ overlay               overlay 150G 24G 127G 16% /var/lib/docker/... # Docker容�
 lsblk
 ```
 
-**2. parted（高级分区管理工具）**
+**2. [parted](https://www.gnu.org/software/parted/)（高级分区管理工具）**
 • **用途**：创建、调整、删除和管理磁盘分区。
 • **特点**：
 	• 支持 GPT（GUID 分区表）和 MBR（主引导记录）。
@@ -214,9 +215,40 @@ lsblk
 
 • **示例**：
 ```bash
-parted /dev/sda
-(parted) print
-(parted) mkpart primary ext4 1MiB 10GiB
+[root@rcny-cicd ~]# parted
+
+GNU Parted 3.1
+Using /dev/sda
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+
+(parted) print                                                  
+Model: VMware Virtual disk (scsi)
+Disk /dev/sda: 53.7TB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags: 
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  1075MB  1074MB  primary  xfs          boot
+ 2      1075MB  107GB   106GB   primary               lvm
+ 3      107GB   215GB   107GB   primary               lvm
+ 
+(parted) quit                                                   
+[root@rcny-cicd ~]# parted /dev/sdb
+
+GNU Parted 3.1
+Using /dev/sdb
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+
+(parted) print                                                  
+Model: VMware Virtual disk (scsi)
+Disk /dev/sdb: 107GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags: 
+Number  Start   End    Size   Type     File system  Flags
+ 1      1049kB  107GB  107GB  primary               lvm
+
+# (parted) mkpart primary ext4 1MiB 10GiB
 ```
 
 **3. fdisk（传统 MBR 分区管理工具）**
@@ -251,11 +283,22 @@ resize2fs /dev/sda1 20G   # 调整文件系统大小为 20GB
 	• 支持 -h 选项（人类可读格式）。
 • **示例**：
 ```bash
-df -h
+# 当然这个只是拿一个LVM的系统做演示
+df -hT
+
+Filesystem  Type      Size  Used Avail Use% Mounted on
+devtmpfs   devtmpfs   16G     0   16G   0% /dev
+tmpfs      tmpfs      16G     0   16G   0% /dev/shm
+tmpfs      tmpfs      16G   11M   16G   1% /run
+tmpfs      tmpfs      16G     0   16G   0% /sys/fs/cgroup
+/dev/mapper/centos-root  xfs   150G   34G  117G  23% /
+/dev/mapper/centos-home  xfs   142G   80G   62G  57% /home
+/dev/sda1                xfs   1014M  151M  864M  15% /boot
+192.168.50.103:/home/data nfs4 965G  216G  749G  23% /nfs-data
 ```
 
-**6. gparted（GUI 分区管理工具）**
-• **用途**：图形化的磁盘分区管理工具（基于 parted）。
+**6. [gparted](https://gitlab.gnome.org/GNOME/gparted/-/tree/master)（GUI 分区管理工具）**
+• **用途**：图形化的磁盘分区管理工具（基于 parted）。本质还是调用之前哪些工具
 • **特点**：
 	• 适合新手，提供可视化界面。
 	• 支持调整、删除、创建、格式化分区。
@@ -280,6 +323,10 @@ gparted
 如果你的磁盘是 GPT，建议用 parted 或 gparted 进行分区管理，而 fdisk 主要适用于 MBR。
 
 ### [LVM](http://cn.linux.vbird.org/linux_basic/0420quota.php#lvm)扩容
+- [lvm2](https://gitlab.com/lvmteam/lvm2)
+```bash
+sudo apt install lvm2
+```
 
 | 序号  | 功能   | PV 物理卷命令                                                                                                                          | VG 卷组命令                                                                                                                           | LV 逻辑卷命令                                                                                                                          |
 | --- | ---- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -827,7 +874,7 @@ void creat_daemon(void)
 结果显示：当我一普通用户执行a.out时，进程表中并没有出现新创建的守护进程，但当我以root用户执行时，成功了，并在/目录下创建了daemon.log文件，cat查看后确实每个一分钟写入一次。为什么只能root执行，那是因为当我们创建守护进程时，已经将当前目录切换我/目录，所以当我之后创建daemon.log文件是其实是在/目录下，那肯定不行，因为普通用户没有权限，或许你会问那为啥没报错呢？其实是有出错，只不过我们在创建守护进程时已经将标准输入关闭并重定向到/dev/null，所以看不到错误信息。
 
 ## 三 shell命令
-
+- [GNU software](https://www.gnu.org/software/software.html)
 ### 常用
 
 | 信息类型     | 推荐命令                     | 示例输出关键字段                 |
