@@ -12,6 +12,14 @@ Mds_Stores facilitates quick Spotlight search results. The recommendations you g
 2. [Disable Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#disable_spotlight)
 3. [Temporarily Stop and Restart Spotlight](https://www.easeus.com/computer-instruction/mds-store.html#temporarily_stop_and_restart_spotlight)
 
+## 输入法中英切换
+`ctrl + space`是切换输入法，而中文输入法本身就能输入英文。（这种在输入法界面能看到还是中文输入法）；而英文输入法是`ABC`。
+
+这个在windows上也是类似，shift是在中文输入法下切换中英文输入，而`ctrl + space`是切换输入法，也就是说，如果切换到英文输入法，一般是没法再通过shift来切换回中文输入，这样就造成了割裂。
+
+mac下的大写键就是类似windows的shift键，但是需要关上下图中的`use Caps Lock key to switch to and from ABC`，因为他坚固两个功能就会混乱，比如在中文输入法下，他是切中文输入法下的英文还是切换回`ABC`呢？
+![](Unix-tips.assets/mac-kerboard-input-source-settings.png)
+
 ## remove rosetta2
 - [uninstall-rosetta-2](https://iboysoft.com/tips/uninstall-rosetta-2.html)
 1. Reboot your Mac into Recovery Mode by restarting your computer and holding down Command+R until the Apple logo appears on your screen.
