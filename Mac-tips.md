@@ -19,7 +19,6 @@ Mds_Stores facilitates quick Spotlight search results. The recommendations you g
 
 mac下的大写键就是类似windows的shift键，但是需要关上下图中的`use Caps Lock key to switch to and from ABC`，因为他坚固两个功能就会混乱，比如在中文输入法下，他是切中文输入法下的英文还是切换回`ABC`呢？
 ![](Unix-tips.assets/mac-kerboard-input-source-settings.png)
-
 ## remove rosetta2
 - [uninstall-rosetta-2](https://iboysoft.com/tips/uninstall-rosetta-2.html)
 1. Reboot your Mac into Recovery Mode by restarting your computer and holding down Command+R until the Apple logo appears on your screen.
