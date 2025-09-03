@@ -164,8 +164,9 @@ end
 * [IINA](https://iina.io)                   ---视频播放器
 * [Appcleaner](https://freemacsoft.net/appcleaner/)        ---软件卸载
 * [f.lux](https://justgetflux.com)                    ---动态色温
+- [XLD](https://tmkk.undo.jp/xld/index_e.html)                    ---音乐格式转换
 
-* [Shadowsocks](https://github.com/shadowsocks/ShadowsocksX-NG)    ---代理（换ios的小火箭或clash verge 具体见小飞机部分）
+* [Shadowsocks](https://github.com/shadowsocks/ShadowsocksX-NG)   。---代理（换ios的小火箭或clash verge 具体见小飞机部分）
 * BackgroundMusic-调节声音
 
 **App Store**
