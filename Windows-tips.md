@@ -542,6 +542,7 @@ nvcc -V
 #### nvidia官方cuda工具包
 - [cuda-downloads](https://developer.nvidia.com/cuda-downloads)
 - [cudnn-archive](https://developer.nvidia.com/rdp/cudnn-archive)
+- [cudnn-support-matrix](https://docs.nvidia.com/deeplearning/cudnn/frontend/v1.14.0/reference/support-matrix.html#support-matrix)
 上述链接是官方下载的，cudnn是个压缩包，对应的文件放到cuda的同名的安装目录中即可。
 
 #### 无法调用？
@@ -580,6 +581,50 @@ setting - System - Display - Scale 开启[自动scale，也就是关闭用户自
 1. 连接到wifi后，打开“网络和设置中心”——“更改适配器设置”——“找到你当前的无线网卡”——属性——共享——“允许”，下面选择本地连接——确认框，确定——确定。
 2. 将本地连接ip设置为 192.168.137.1，子网掩码自动生成 (一般是默认不用改)
 3. ubuntu一般不用设置，都自动就可以。
+
+
+### wsl 和 vmware 网卡占用问题
+
+wsl2 会导致 vmware 找不到物理网卡，无法使用桥接模式。原因：Hyper-V 和 虚拟化冲突？
+
+#### 解决方案 1: 升级 VMware & Windows Hypervisor Platform
+
+原因: VMware Workstation/Player 16.x 及更高版本开始支持在启用了 Hyper-V 或 WSL 2 的 Windows 系统上运行（称为 “Hyper-V 兼容模式” 或 “Windows Hypervisor Platform” (WHP中文叫windows 虚拟机管理程序平台)。
+操作:
+检查你当前的 VMware Workstation 或 Player 版本（帮助 > 关于 VMware Workstation/Player）。
+如果版本低于 16.0，请访问 VMware 官网下载并安装最新版本（目前最新稳定版是 17.x）。
+安装并打开windows的Windows Hypervisor Platform功能后，重启电脑。
+优点: 一劳永逸地解决问题，WSL 2 和 VMware 虚拟机可以同时正常运行，性能影响相对较小。
+
+**缺点: **
+- 需要购买或升级许可证（Workstation Pro 是商业软件，Player 免费但功能有限）
+- **可能[无法使用虚拟机中的虚拟机](https://www.reddit.com/r/vmware/comments/1by1fa4/what_is_windows_hypervisor_platform_and_why_is/?tl=zh-hans)，这也可能会导致运行不了某些模拟器。**
+
+
+#### 解决方案 2: 将 WSL 默认版本设置为 WSL 1
+
+原因: WSL 1 不依赖 Hyper-V，它使用的是一个翻译层，因此不会与旧版 VMware 冲突。
+操作:
+打开 PowerShell 或命令提示符（管理员身份）。
+
+```bash
+# 设置 WSL 默认版本为 1：
+wsl --set-default-version 1
+
+# 重启电脑
+# 验证默认版本：
+wsl --status
+
+# 查看 Default Version 是否显示为 1。
+# 对于已安装的 Linux 发行版，如果你之前使用的是 WSL 2，需要将其转换回 WSL 1：
+wsl --list --verbose  # 查看发行版名称及其当前版本
+wsl --set-version <发行版名称> 1  # 将 <发行版名称> 替换为你的发行版名，如 Ubuntu-20.04
+```
+
+优点: 免费，无需升级 VMware。
+缺点:
+WSL 1 在文件系统性能（尤其是跨 Windows/Linux 文件操作）、完整的系统调用兼容性和 Docker 集成方面远不如 WSL 2。
+对于需要接近原生 Linux 性能或使用 Docker Desktop for WSL 2 的用户来说，这不是理想选择。
 
 
 ## windows 新电脑设置流程
