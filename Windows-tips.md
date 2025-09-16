@@ -627,6 +627,76 @@ WSL 1 在文件系统性能（尤其是跨 Windows/Linux 文件操作）、完�
 对于需要接近原生 Linux 性能或使用 Docker Desktop for WSL 2 的用户来说，这不是理想选择。
 
 
+### wsl & docker 移盘
+
+明白 ✅
+
+你是想把 **WSL2 的 Ubuntu 系统和 Docker 的镜像/容器** 从 Windows 的默认 C: 盘迁移到 D: 盘，以释放 C 盘空间。这个场景很常见，我给你分两部分详细说：
+
+#### 一、迁移 WSL2 Ubuntu 发行版
+
+
+默认 WSL 发行版都在 C:\Users\<用户名>\AppData\Local\Packages\ 下，可以通过 **导出 + 导入** 迁移到 D:。
+
+1. 查看现有发行版
+    
+
+```
+wsl --list --verbose
+```
+
+2. 导出发行版
+    假设发行版叫 Ubuntu-22.04：
+```
+wsl --export Ubuntu-22.04 D:\WSL\ubuntu22.04.tar
+```
+
+3. 注销旧发行版（会删除 C 盘原有数据）
+    确保已经导出成功！
+
+```
+wsl --unregister Ubuntu-22.04
+```
+
+4. 重新导入到 D 盘
+```
+wsl --import Ubuntu-22.04 D:\WSL\Ubuntu D:\WSL\ubuntu22.04.tar --version 2
+```
+
+之后，这个 WSL Ubuntu 就会运行在 D:\WSL\Ubuntu 下。
+
+
+#### 二、迁移 Docker Desktop 镜像存储位置
+
+Docker Desktop 默认也把镜像、容器等存在 C 盘的 WSL2 虚拟磁盘 (ext4.vhdx) 中。
+
+
+1. 打开 Docker Desktop → **Settings → Resources → Advanced**
+2. 找到 **Disk image location**
+3. 改成 D:\DockerData
+4. Docker 会提示迁移数据或重新初始化。
+
+  
+
+如果你不用 Docker Desktop，而是原生 WSL + Docker Engine）
+
+Docker 数据一般在：
+```
+\\wsl$\docker-desktop-data\var\lib\docker
+```
+
+你可以：
+1. 先停止 Docker Desktop
+2. 导出 docker-desktop-data 发行版
+```
+wsl --export docker-desktop-data D:\WSL\docker-data.tar
+wsl --unregister docker-desktop-data
+wsl --import docker-desktop-data D:\WSL\DockerData D:\WSL\docker-data.tar --version 2
+```
+
+这样 Docker 镜像/容器也会放到 D 盘。
+
+
 ## windows 新电脑设置流程
 
 ### windows 开始不登录
