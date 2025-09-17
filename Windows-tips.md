@@ -331,6 +331,7 @@ pacman -S mingw-w64-x86_64-toolchain
 [配置vim：](https://segmentfault.com/a/1190000019360991)、
 
 ### [WSL](https://docs.microsoft.com/zh-cn/windows/wsl/compare-versions)
+要注意的是：wsl2和里面的ubuntu发行版是不同的，wsl2是虚拟机(特殊的)，docker和ubuntu都可以运行在上面。
 
 安装：
 1. 打开windows功能 --- 打开 WSL(Linux子系统) 和 虚拟化相关系统功能。
@@ -629,7 +630,6 @@ WSL 1 在文件系统性能（尤其是跨 Windows/Linux 文件操作）、完�
 
 ### wsl & docker 移盘
 
-明白 ✅
 
 你是想把 **WSL2 的 Ubuntu 系统和 Docker 的镜像/容器** 从 Windows 的默认 C: 盘迁移到 D: 盘，以释放 C 盘空间。这个场景很常见，我给你分两部分详细说：
 
@@ -639,8 +639,6 @@ WSL 1 在文件系统性能（尤其是跨 Windows/Linux 文件操作）、完�
 默认 WSL 发行版都在 C:\Users\<用户名>\AppData\Local\Packages\ 下，可以通过 **导出 + 导入** 迁移到 D:。
 
 1. 查看现有发行版
-    
-
 ```
 wsl --list --verbose
 ```
@@ -653,7 +651,6 @@ wsl --export Ubuntu-22.04 D:\WSL\ubuntu22.04.tar
 
 3. 注销旧发行版（会删除 C 盘原有数据）
     确保已经导出成功！
-
 ```
 wsl --unregister Ubuntu-22.04
 ```
@@ -677,7 +674,6 @@ Docker Desktop 默认也把镜像、容器等存在 C 盘的 WSL2 虚拟磁盘 (
 4. Docker 会提示迁移数据或重新初始化。
 
   
-
 如果你不用 Docker Desktop，而是原生 WSL + Docker Engine）
 
 Docker 数据一般在：
