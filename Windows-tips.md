@@ -79,16 +79,46 @@ start cmd /k “cd folder1&&python run.py”
 taskkill /im notepad.exe #结束进程，按名称
 taskkill /pid 1234 #关闭 PID 为 1234 的进程
 
-#服务管理
-net start #显示当前正在运行的服务
-net start sshd   #开启ssh
-net stop 名字 #停止此服务
-netstat -aon|findstr "1080" #查看端口占用情况
+#查看端口占用情况
+netstat -aon|findstr "1080" 
 
 #查看系统信息
 wmic memorychip list brief #看内存
 ```
 
+### [openssh](https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_install_firstuse)
+- [Win11 启用 OpenSSH Server](https://www.cnblogs.com/eslzzyl/p/18516206)
+- [或者去github下载安装包安装](https://github.com/PowerShell/Win32-OpenSSH)
+```bash
+#服务管理
+net start #显示当前正在运行的服务
+net start sshd   #开启ssh
+net stop 名字 #停止此服务
+```
+
+#### ssh设置powershell
+
+
+1. 找到 Windows SSH 配置文件，一般路径：
+```
+C:\ProgramData\ssh\sshd_config
+```
+
+2. 用管理员权限编辑 sshd_config，增加或修改以下行：
+```
+# 指定登录后默认 shell
+ForceCommand powershell.exe
+```
+
+或者也可以指定完整路径：
+```
+ForceCommand C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+```
+
+3. 保存后重启 SSH 服务：
+```
+Restart-Service sshd
+```
 
 ## powershell
 

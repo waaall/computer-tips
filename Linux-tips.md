@@ -936,6 +936,9 @@ whereis zsh #返回二进制、man文件、src文件等路径
 which zsh #shell的path中的二进制文件路径
 
 man ln #查看ln这个指令的说明文档
+
+# 展示目录结构，只显示目录，且限制3层
+tree -d -L 3
 ```
 
 ### 系统时间

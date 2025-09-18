@@ -65,129 +65,18 @@
 ## Nvidia功耗墙
 当然可以。对于无界面的 Ubuntu 服务器，使用命令行工具是标准做法。为 NVIDIA RTX 4090 设置永久性功耗墙是解决噪音和散热问题的绝佳方案。
 
-第一部分：功耗限制设置为多少合适？
+### 功耗限制设置为多少合适？
 
 对于 NVIDIA GeForce RTX 4090，这是一个性能猛兽，但其默认的 450W（某些型号可达 600W）功耗也是噪音和热量的根源。
 
 · 默认值：标准 TDP (Total Design Power) 为 450W。
 · 建议值：通过大量测试，公认的“甜点”值在 320W 到 380W 之间。
   · 320W-350W：在这个范围内，性能损失通常极小（约 3-5%），但温度和噪音会显著下降。这是平衡效率与性能的最佳起点，非常适合需要长时间稳定运行的训练任务。
-  · 350W-380W：如果你对那百分之几的性能非常敏感，可以设置在这个范围。噪音和温度依然会比默认值好很多。
-· 建议操作：我推荐您先从 350W 开始尝试。运行您的训练任务，观察性能日志和噪音表现。如果无法满足要求，可以再适当提高；如果希望更安静、更凉爽，可以降低到 320W。
 
----
+如果电源不够，可以限制到270W，有峰值85%的性能。
 
-第二部分：如何使用非UI工具进行永久设置
-
-我们将通过以下步骤实现：1) 临时测试 -> 2) 创建系统服务 -> 3) 实现永久设置。
-
-步骤 1：使用 nvidia-smi 临时测试功耗墙
-
-在设置为永久之前，请先临时测试一个值，确保系统稳定。
-
-1. 查看GPU索引（通常是0）：
-   ```bash
-   nvidia-smi
-   ```
-   确认您的 4090 的索引号（如 0, 1...），以下命令以 0 为例。
-2. 临时设置功耗墙（例如，设置为 350W）：
-   ```bash
-   sudo nvidia-smi -i 0 -pl 350
-   ```
-   · -i 0：指定操作的是第 0 号 GPU。
-   · -pl 350：将功耗限制设置为 350 瓦特。
-3. 验证设置是否生效：
-   ```bash
-   nvidia-smi
-   ```
-   查看输出表格中的“Power Limit”那一列，确认它已经从 450W 变成了 350W。
-4. 进行测试：在此状态下运行您的模型训练任务一段时间（15-30分钟）。观察：
-   · 性能：任务完成时间是否有明显增加？（通常变化很小）
-   · 稳定性：训练是否会出现中断或错误？
-   · 噪音和温度：使用 nvidia-smi 或 watch -n 1 nvidia-smi 命令实时监控温度，感受风扇噪音是否降低。
-
-如果测试结果满意，我们就可以将其设置为永久。
-
-步骤 2：创建 Systemd 服务实现永久设置（推荐方法）
-
-这是最可靠、最标准的Linux方法。我们创建一个系统服务，在每次服务器启动时自动执行设置命令。
-
-1. 创建服务文件：
-   ```bash
-   sudo nano /etc/systemd/system/nvidia-power-limit.service
-   ```
-2. 将以下内容写入文件：
-  
-  
-```ini
-   [Unit]
-   Description=Set NVIDIA GPU Power Limit
-   After=syslog.target systemd-modules-load.service
-   # 等待图形目标结束，如果是无头服务器，这很安全
-   After=display-manager.service
-   # 确保在多用户系统之前运行
-   Before=multi-user.target
-   
-   [Service]
-   Type=oneshot
-   # 将以下命令中的 ‘0’ 替换为您的GPU索引，将 ‘350’ 替换为您想要的功耗值
-   ExecStart=/usr/bin/nvidia-smi -i 0 -pl 350
-   
-   [Install]
-   WantedBy=multi-user.target
-```
-
-
-3. 重新加载 systemd 配置并启用服务：
-   ```bash
-   # 重新加载 systemd，使其识别新服务
-   sudo systemctl daemon-reload
-   
-   # 启用服务，使其在每次启动时运行
-   sudo systemctl enable nvidia-power-limit.service
-   
-   # 立即启动该服务一次，无需重启
-   sudo systemctl start nvidia-power-limit.service
-   ```
-4. 验证服务状态：
-   ```bash
-   systemctl status nvidia-power-limit.service
-   ```
-   如果显示 active (exited) 并且没有错误信息，说明命令已成功执行。再次运行 nvidia-smi 确认功耗限制已设置。
-
-现在，每次服务器重启，功耗墙都会自动被设置为 350W（或您指定的值）
-
-替代方案：使用 rc.local（较老的方法）
-
-如果您的系统没有使用 systemd（虽然现代 Ubuntu 通常都使用），可以使用传统的 rc.local 方法。
-
-1. 编辑 /etc/rc.local 文件：
-   ```bash
-   sudo nano /etc/rc.local
-   ```
-2. 在 exit 0 这一行之前，添加您的命令：
-   
-   ```bash
-   #!/bin/bash
-   # 其他命令...
-   /usr/bin/nvidia-smi -i 0 -pl 350
-   exit 0
-   ```
-   
-1. 给 rc.local 文件添加执行权限：
-   ```bash
-   sudo chmod +x /etc/rc.local
-   ```
-
-### 总结
-
-1. 确定数值：为您服务器的 RTX 4090 选择一个 320W - 380W 之间的值，350W 是一个很好的起点。
-2. 临时测试：使用 sudo nvidia-smi -i 0 -pl 350 进行测试，确保稳定性和性能可接受。
-3. 永久设置：创建 Systemd 服务是实现永久、自动化设置最现代、最可靠的方法。按照上述步骤操作即可。
-4. 监控：设置完成后，在训练时偶尔使用 nvidia-smi 或 nvtop（一个更好的监控工具，可通过 sudo apt install nvtop 安装）来监控 GPU 温度和功耗，确认一切正常。
-
-通过这种方式，您可以在几乎不损失性能的情况下，大幅降低服务器的噪音和运行温度，使其更适合长时间高负载的模型训练任务。
-
+### 功耗限制方法(新)
+2025年，网上的方法全部过时！就下载最新的`nvidia app`，然后UI界面就有限制功率，点一下就永久生效。
 
 
 ## Nvidia Onnxruntime 
