@@ -1204,6 +1204,55 @@ p ：打印，亦即将某个选择的数据印出。通常 p 会与参数 sed -
 s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可以搭配正规表示法！例如 1,20s/old/new/g 就是啦！
 ```
 
+### 压缩与解压
+#### tar
+```bash
+# 打包并压缩成 tar.gz
+tar -czf myfile.tar.gz mydir
+
+# 解压
+tar -xzf myfile.tar.gz
+
+# 自动识别是否gzip压缩？
+tar -xf myfile.tar
+
+# -c → create 创建
+# -x → extract 解压 
+# -z → 处理 gzip 格式  
+# -f → 指定文件名
+```
+
+#### zip
+```bash
+# 压缩目录 mydir 为 myfile.zip
+zip -r myfile.zip mydir
+
+# 解压
+unzip myfile.zip
+```
+
+#### 拆分压缩与解压
+```bash
+# 会是machine-learning.00 .01
+split -b 300m -d -a 2 machine-learning.tar machine-learning.
+
+# mac 不支持--additional-suffix
+split -b 300m -d -a 2 --additional-suffix=.tar myfile.tar.gz myfile
+# -b 300m → 每份 300MB
+# -d → 用数字编号 (00, 01, 02 …)
+# -a 2 → 后缀长度是 2 位 (00, 01, 02)
+# --additional-suffix=.tar → 每个文件最后加 .tar
+# myfile → 输出文件名前缀
+
+
+# 还原
+cat machine-learning.* > machine-learning.tar
+cat myfile*.tar > myfile.tar.gz
+
+# 解压
+tar -xzf myfile.tar.gz
+```
+
 ### rsny
 `rsync` 是一个强大的文件同步和传输工具，比 `scp` 更高效，支持**增量传输**（只传输变化的部分）、**断点续传**、**压缩传输**、**保留文件属性**（权限、时间戳等），是局域网或远程文件同步/备份的首选工具。
 
