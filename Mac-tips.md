@@ -82,6 +82,28 @@ In case you need to backup, you have to do it manually now: press the "Back Up N
 
 # 软件
 
+## 常用UI软件
+
+* [Sublime](https://www.sublimetext.com)	        ---文本编辑器
+* [localsend](https://localsend.org/)	        ---跨平台局域网文件传输
+* [Itsycal](https://www.mowglii.com/itsycal/)               ---日期显示
+* [Rectangle](https://rectangleapp.com)         ---窗口管理(现mac已集成)
+* [FDM](https://www.freedownloadmanager.org)                  ---下载工具
+* [Typaro](https://typora.io)               ---Markdown（不免费了，换mweb/vscode）
+* [IINA](https://iina.io)                   ---视频播放器
+* [Appcleaner](https://freemacsoft.net/appcleaner/)        ---软件卸载
+* [f.lux](https://justgetflux.com)                    ---动态色温
+- [XLD](https://tmkk.undo.jp/xld/index_e.html)                    ---音乐格式转换（设置apple lossless 音乐拖进去自动转换）
+
+* [Shadowsocks](https://github.com/shadowsocks/ShadowsocksX-NG)   。---代理（换ios的小火箭或clash verge 具体见小飞机部分）
+* BackgroundMusic-调节声音
+
+**App Store**
+
+* Unarchiver         ---解压工具
+* BlackMagicDisk ---硬盘测速
+* NewFileMenu    ---右键新建文件
+
 ## deskflow
 [deskflow](https://github.com/deskflow/deskflow/)
 ### deskflow无法连接
@@ -138,12 +160,12 @@ section: links
 end
 ```
 
-### 外接屏幕控制
+## 外接屏幕控制
 
-#### 亮度控制
+### 亮度控制
 - [monitor control](https://github.com/MonitorControl/MonitorControl)
 
-#### 开启HiDPi
+### 开启HiDPi
 - [M2 Macbook Pro外接2K显示器开启HiDPi](https://zhuanlan.zhihu.com/p/697043685)
 **Github社区现有的两种为Mac开启HiDPi的工具存在问题：**
 
@@ -153,33 +175,7 @@ end
 注意： [one-key-hidpi](https://link.zhihu.com/?target=https%3A//github.com/xzhih/one-key-hidpi) 现已解决此bug。
 
 
-**官网**
-
-* [Sublime](https://www.sublimetext.com)	        ---文本编辑器
-* [localsend](https://localsend.org/)	        ---跨平台局域网文件传输
-* [Itsycal](https://www.mowglii.com/itsycal/)               ---日期显示
-* [Rectangle](https://rectangleapp.com)         ---窗口管理(现mac已集成)
-* [FDM](https://www.freedownloadmanager.org)                  ---下载工具
-* [Typaro](https://typora.io)               ---Markdown（不免费了，换mweb/vscode）
-* [IINA](https://iina.io)                   ---视频播放器
-* [Appcleaner](https://freemacsoft.net/appcleaner/)        ---软件卸载
-* [f.lux](https://justgetflux.com)                    ---动态色温
-- [XLD](https://tmkk.undo.jp/xld/index_e.html)                    ---音乐格式转换
-
-* [Shadowsocks](https://github.com/shadowsocks/ShadowsocksX-NG)   。---代理（换ios的小火箭或clash verge 具体见小飞机部分）
-* BackgroundMusic-调节声音
-
-**App Store**
-
-* HiddenBar         ---隐藏图标
-* Unarchiver         ---解压工具
-* BlackMagicDisk ---硬盘测速
-* NewFileMenu    ---右键新建文件
-* Cleaner Onelite  ---垃圾清理
-
-
-
-### Edge卸载（大多Mac App完全卸载方式）
+## Edge卸载（大多Mac App完全卸载方式）
 
 首先就是在Application文件夹中把Edge拖进Trash，然后删除其缓存、配置文件：
 
