@@ -280,6 +280,12 @@ touch ~/.hushlogin
 ```shell
 top -l 1 | head -n 10 | grep PhysMem  #查看mac内存占用
 sudo purge          #mac清理RAM  
+
+# mac 虚拟内存统计信息，1为每秒刷新一次
+vm_stat 1
+
+# 只显示 swapins 和 swapouts
+vm_stat 1 | awk '{print $21, $22}'
 ```
 
 ### 电源管理pmset
