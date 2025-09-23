@@ -514,6 +514,7 @@ sudo pacman -S mdadm
 | **RAID 6**  | 4+    | ✔️（2块盘）   | (N-2)/N | 更高容错    |
 | **RAID 10** | 4+    | ✔️（镜像+条带） | 50%     | 高性能+高可用 |
 
+
 -  **3.2 创建 RAID 示例**
 
  **（1）创建 RAID 1（镜像）**
@@ -1074,6 +1075,59 @@ chmod a=rwx file
 ```
 
 
+### 磁盘监控
+
+```bash
+# io统计数据; 1 表示每秒刷新一次
+iostat 1
+```
+- **KB/t**
+    - 每次 I/O 请求的平均数据大小（KB per transfer）
+    - 如果是 4K 随机读写，这个数值一般接近 4 KB；顺序大块读写则会比较大
+
+- **tps**
+    - 每秒的 I/O 请求次数（transactions per second，也就是 IOPS）
+    - 例如 393 tps 表示每秒大约有 393 次磁盘操作（读或写）
+
+- **MB/s**
+    - 每秒传输的数据量（吞吐率，MB per second）
+    - 例如 11.77 MB/s，说明该磁盘每秒处理的数据量约 11.77 MB
+
+
+#### load average
+
+- **load average** （1m, 5m, 15m）
+    - 系统平均负载（过去 1 分钟、5 分钟、15 分钟）
+    - 这个值表示平均运行队列的长度（等待 CPU 的进程数）
+    - 一般规则：如果 load average > CPU 核心数
+
+- **CPU 瓶颈**
+    - load average 高
+    - 同时 CPU 使用率也接近 100%（us+sy 很高，id 很低）
+    - 说明进程都在抢 CPU
+
+- **I/O 瓶颈**
+    - load average 高
+    - 但 CPU idle（id）依旧很高，说明 CPU 并不忙
+    - 用 iostat -x 能看到 %util 很高（磁盘被打满）
+    - 或者 vmstat 里 b 列（blocked）很高，说明有很多进程在等待 I/O
+
+```bash
+# 
+iotop -oP
+```
+
+#### vmstat
+```bash
+# 查看虚拟内存统计信息
+vmstat 1
+
+# 只显示第7、8列
+vm_stat 1 | awk '{print $7, $8}'
+
+# mac
+vm_stat 1
+```
 
 ### 文件读写
 
