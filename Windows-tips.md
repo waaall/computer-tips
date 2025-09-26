@@ -87,8 +87,19 @@ wmic memorychip list brief #看内存
 ```
 
 ### [openssh](https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_install_firstuse)
-- [Win11 启用 OpenSSH Server](https://www.cnblogs.com/eslzzyl/p/18516206)
+- [Win11 启用 OpenSSH Server](https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell&pivots=windows-11)
 - [或者去github下载安装包安装](https://github.com/PowerShell/Win32-OpenSSH)
+```bash
+Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
+
+# Install the OpenSSH Client
+Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+
+# Install the OpenSSH Server
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+```
+
+
 ```bash
 #服务管理
 net start #显示当前正在运行的服务
@@ -767,16 +778,8 @@ wsl --import docker-desktop-data D:\WSL\DockerData D:\WSL\docker-data.tar --vers
 ##==================使用powershell模块===========================
 PS C:\Users\zxll> Import-Module PackageManagement
 
-Import-Module : 无法加载文件 C:\Program Files\WindowsPowerShell\Modules\PackageManagement
-\1.4.7\PackageManagement.psm1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go
-.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies。
-所在位置 行:1 字符: 1
-+ Import-Module PackageManagement
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : SecurityError: (:) [Import-Module]，PSSecurityException
-    + FullyQualifiedErrorId : UnauthorizedAccess,Microsoft.PowerShell.Commands.ImportMod
-   uleCommand
-
+# Import-Module : 无法加载文件 C:\Program Files\WindowsPowerShell\Modules\PackageManagement\1.4.7\PackageManagement.psm1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies。所在位置 行:1 字符: 1
+# + Import-Module PackageManagement
 
 PS C:\Users\zxll> set-executionpolicy remotesigned
 
@@ -806,14 +809,15 @@ Import-Module posh-git
 # 引入 ps-read-line
 Import-Module PSReadLine
 
+# # 激活 oh-my-posh
+# oh-my-posh init pwsh | Invoke-Expression
 
-#### 下面这些不用。
+# 添加主题
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\zash.omp.json" | Invoke-Expression
 
-# # 添加主题
-# oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\Pararussel.omp.json" | Invoke-Expression
-#------------------------------- Import Modules END   -------------------------------
+# oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\1_shell.omp.json" | Invoke-Expression
 
-#-------------------------------  Set Hot-keys BEGIN  -------------------------------
+#---------------------- Set Hot-keys BEGIN ----------------------
 # 设置预测文本来源为历史记录
 Set-PSReadLineOption -PredictionSource History
 
@@ -834,11 +838,24 @@ Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 
 # 设置向下键为前向搜索历史纪录
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
-#-------------------------------  Set Hot-keys END    -------------------------------
+#---------------------- Set Hot-keys END ----------------------
 ```
- 
- 
- 
+
+
+### choco & scoop & winget
+choco 和 scoop 见上文
+
+```bash
+winget install ajeetdsouza.zoxide
+winget install vim.vim
+```
+
+#### zoxide
+- [zoxide初始化](https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#:~:text=Setup%20zoxide%20on%20your%20shell)
+vim $PROFILE
+```bash
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
+```
 ### wsl
  [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
  更多具体细节看上面章节。
@@ -910,12 +927,14 @@ export ALL_PROXY=http://127.0.0.1:7897
 unset ALL_PROXY
 ```
 
- 
-
 - [arm-gnu-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 	- Windows (mingw-w64-x86_64) hosted cross toolchains 
 	- AArch32 bare-metal target (arm-none-eabi)
 
-
 - [clash-verge](https://github.com/clash-verge-rev/clash-verge-rev/releases/)
 - chocolate & scoop 见上
+
+### [pyenv-win](https://github.com/pyenv-win/pyenv-win)
+```bash
+Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
+```
