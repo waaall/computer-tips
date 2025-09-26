@@ -505,7 +505,6 @@ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://mirr
 ```
 
 brew 设置原有源：
-
 ```shell
 # brew 程序本身，Homebrew/Linuxbrew 相同
 git -C "$(brew --repo)" remote set-url origin https://github.com/Homebrew/brew.git
@@ -524,133 +523,47 @@ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://gith
 brew install zoxide
 ```
 
-
+#### 初始化zoxide
+[Setup zoxide on your shell](https://github.com/ajeetdsouza/zoxide)
 在 ~/.zshrc 或 ~/.bashrc 里加上：
-
-```
-eval "$(zoxide init zsh)"   # 如果你用 zsh
+```bash
+eval "$(zoxide init zsh)"     # 如果用 zsh
 # eval "$(zoxide init bash)"  # 如果用 bash
+# zoxide init fish | source   # 如果用 fish
+# Invoke-Expression (& { (zoxide init powershell | Out-String) })
 ```
 
 然后 source ~/.zshrc 生效。
 
-## **3. 基本用法**
-
-- **跳转到目录**
-    
-
-```
-z project
-```
-
-- 会跳到最常访问的包含 “project” 的目录。
-    
-- **模糊匹配多个关键词**
-    
-
-```
+#### zoxide使用示例
+配置文件见本笔记最下面
+```bash
+# 会跳到路径里同时包含 “work” 和 “report” 的目录。
 z work report
-```
 
-- 会跳到路径里同时包含 “work” 和 “report” 的目录。
-    
-- **列出匹配结果（带权重排序）**
-    
-
-```
+# 列出匹配结果（带权重排序）
 zi project
-```
 
-- 类似 z，但会展示一个列表供选择。
-    
-- **添加当前目录到数据库**
-    
+# 调价文件夹
+zoxide add /path/to/folder
 
-```
-zoxide add .
-```
-
--   
-    
-- **回到上一个目录**（zoxide 提供 z -）
-    
-
-```
+# 回到上一个目录
 z -
-```
 
-  
-
----
-
-## **4. 高级用法**
-
-- **查看数据库**
-    
-
-```
+# 查看数据库
 zoxide query -l
-```
 
-- 会显示所有记录过的路径和权重。
-    
-- **删除某个路径**
-    
-
-```
+# 删除某个路径
 zoxide remove ~/tmp
-```
 
--   
-    
-- **限制搜索范围**
-    
-
-```
+# 限制搜索范围
 z ~/work report
-```
 
-- 只在 ~/work 下找包含 report 的目录。
-    
-- **结合 fzf 交互选择**（推荐）
-    
-
-```
+# 配合 fzf 交互选择
 alias zz='zoxide query -l | fzf | xargs z'
 ```
 
-- 输入 zz 后能模糊搜索所有路径并跳转。
-    
 
----
-
-## **5. 使用体验优化**
-
-  
-
-你可以给 z 设置更短的别名，比如：
-
-```
-alias j=z    # autojump 用户习惯
-alias cd=z   # 直接替换 cd
-```
-
-这样输入 cd proj 就会走 zoxide 的智能跳转。
-
----
-
-⚡总结：
-
-- **常用目录**：一次输入后，以后都能秒跳。
-    
-- **模糊匹配**：随便输几个关键字就能定位目录。
-    
-- **比 autojump 更快更准**，而且跨平台支持很好。
-    
-
----
-
-要不要我帮你写一份 **zoxide + fzf 的增强配置**（自动补全 + 搜索列表 + 智能跳转），直接贴进 ~/.zshrc 就能用？
 ### pdf2zh
 - [github-PDFMathTranslate](https://github.com/Byaidu/PDFMathTranslate)
 ```bash
