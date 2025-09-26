@@ -43,6 +43,19 @@ tmutil listlocalsnapshots /
 # 显示com.apple.TimeMachine.2018-03-01-002010.local，只需要下面这个指令加上这个日期
 sudo tmutil deletelocalsnapshots 2018-03-01-002010
 ```
+
+
+## 保存文件操作会卡
+可能的原因是我插入了SD卡，Spotlight（正在对插入的卷进行索引，会占用大量 I/O / CPU 并导致读写变慢；卡/读卡器的格式或驱动在 macOS 上性能差；
+### 解决方案
+把该 SD 卷加入 Spotlight 隐私（系统设置 → Siri 与 Spotlight → Spotlight 隐私），或用 `sudo mdutil -i off /Volumes/SDNAME` 关掉索引。
+
+检查效果：
+```bash
+mdutil -s /Volumes/zxmacsd
+# 显示Indexing and searching disabled.表示已经关了
+```
+
 ## 系统设置
 
 ### 默认字小
