@@ -940,6 +940,11 @@ man ln #查看ln这个指令的说明文档
 
 # 展示目录结构，只显示目录，且限制3层
 tree -d -L 3
+
+# 查看前 10 行
+head -n 10 file
+# 查看后 10 行
+tail -n 10 file
 ```
 
 ### 系统时间
@@ -975,6 +980,61 @@ chronyc tracking
 chronyc sources
 
 timedatectl status
+```
+
+### 命令行操作
+#### awk
+
+awk 是一个文本处理工具，擅长 **按列操作文本**，在 shell 脚本里经常用于：
+- 按字段分割文本
+- 打印特定列
+- 做简单计算或条件过滤
+
+```bash
+awk '条件 {动作}' 文件
+awk -F分隔符 '{动作}'
+```
+
+- -F分隔符：指定字段分隔符（默认空格或制表符）
+- $1, $2, ..., $NF：表示第 1 列、第 2 列、最后一列
+- {print $1}：打印第 1 列
+
+```bash
+echo "apple,banana,cherry" | awk -F, '{print $2}'
+banana
+
+echo -e "a/b/c\nd/e/f" | awk -F/ '{print $NF}'
+c
+f
+```
+
+
+```bash
+echo -e "a/b/c\nd/e/f" | awk -F/ '{n=NF; print $(n-1) "/" $NF}'
+```
+
+- n=NF → NF 是当前行的列数
+- $(n-1) → 倒数第二列
+- $NF → 倒数第一列
+
+输出：
+```
+b/c
+e/f
+```
+
+#### 重定向输出到文件
+```bash
+command > file.txt      # 覆盖写入
+command >> file.txt     # 追加写入
+command 2> error.txt    # stderr 重定向
+command &> all.txt      # stdout + stderr 都写入
+```
+
+#### 管道
+ | 把前一个命令的输出作为后一个命令的输入
+```bash
+command1 | command2
 ```
 
 ### 权限
@@ -2403,7 +2463,7 @@ sudo ubuntu-drivers autoinstall
 sudo dpkg -i ****.deb
 
 sudo apt install build-essential
-sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools pandoc nodejs npm
+sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools pandoc nodejs npm zoxide fzf
 chsh -s $(which zsh)
 # 安装ohmyzsh
 sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
@@ -2434,4 +2494,35 @@ pyenv global 3.11.11
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
 
+```
+
+### zoxide + fzf 的 zshrc 配置
+```bash
+# -----------------------------
+# zoxide + fzf 配置
+# -----------------------------
+
+# 初始化 zoxide
+eval "$(zoxide init zsh)"
+
+# 全局 fzf 样式配置
+export FZF_DEFAULT_OPTS='--height=50% --layout=reverse --border --ansi'
+
+# fzf 列表跳转
+zx() {
+    local dir
+    dir=$(zoxide query -l | \
+        awk -F/ '{n=NF; print $(n-1) "/" $NF " ::: " $0}' | \
+        fzf --delimiter=":::" --with-nth=1 \
+            --preview 'ls --color=always {2} | grep -vE "^\.$|^\.\.$|^\.git$"' \
+            --preview-window=right:50%:wrap --inline-info)
+    [[ -n "$dir" ]] && cd "$(echo "$dir" | awk -F' ::: ' '{print $2}')"
+}
+
+# 当前目录子目录搜索
+cdf() {
+    local dir
+    dir=$(find . -type d 2>/dev/null | fzf --inline-info)
+    [[ -n "$dir" ]] && cd "$dir"
+}
 ```
