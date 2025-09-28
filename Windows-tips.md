@@ -904,6 +904,17 @@ Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 ### choco & scoop & winget
 choco 和 scoop 见上文
 
+#### winget 设置镜像?
+winget几乎不会自己维护软件，第三方大都跳转，所以换了源也没什么用。
+```bash
+winget source remove winget
+winget source add winget https://mirrors.ustc.edu.cn/winget-source --trust-level trusted
+
+# winget source reset winget
+```
+
+#### winget 安装vim & zoxide
+
 ```bash
 winget install ajeetdsouza.zoxide
 winget install vim.vim
