@@ -6,7 +6,6 @@
 
 #===============================导入插件=====================================
 Import-Module PSReadLine
-Set-PSReadLineOption -PredictionSource History
 
 Import-Module posh-git
 
