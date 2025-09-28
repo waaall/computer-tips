@@ -733,7 +733,66 @@ wsl --import docker-desktop-data D:\WSL\DockerData D:\WSL\docker-data.tar --vers
 
 这样 Docker 镜像/容器也会放到 D 盘。
 
+### wsl git 换行符冲突问题
 
+windows下默认换行符是crlf (也就是`\n\r`); 而其他系统都是lf (也就是`\n`)；git 仓库要保持lf的换行符，但是worktree在windows下会是crlf。所以git这个config在windows 版本安装时的默认设置就是自动转换。
+```bash
+git config --get core.autocrlf
+
+git config --global core.autocrlf true
+git config --global core.eol lf
+```
+
+1. **true**（常见于 Windows）
+    - **checkout 时**：Git 会把仓库里的 **LF** → 转成 **CRLF**。
+    - **commit 时**：Git 会把本地的 **CRLF** → 转回 **LF** 保存到仓库。
+        这样仓库里统一是 LF，本地 Windows 看的是 CRLF，编辑器保存不出问题。
+
+2. **false**
+    - Git 不做任何换行符转换。
+    - 仓库里是什么，checkout 时就是什么。
+        如果仓库里混了 CRLF/LF，就可能越传越乱。
+
+3. **input**（推荐 WSL/Linux 开发者用）
+    - **checkout 时**：保持仓库里的样子（一般是 LF，不会转换）。
+    - **commit 时**：如果本地文件是 CRLF，会自动转成 LF 保存到仓库。
+        相当于 **只在写入仓库时纠正为 LF**，但不会强制你本地看到 CRLF。
+
+这时候wsl下的默认是false，这样就不行，如果设置成input (wsl下)就没有报错了。但是wsl下如果修改提交代码，就会有warning，如果只是在windows下看，那就wsl设置成input就ok：
+```bash
+......
+warning: in the working copy of 'tests/tester-logs/log-backup.txt', CRLF will be replaced by LF the next time Git touches it
+......
+```
+
+如果windows 设置为input，有些编辑器就会显示错误可能。
+
+#### 设置gitattributes
+```bash
+# 默认所有文本文件：按平台 checkout，仓库中始终存 LF
+* text=auto
+
+# 脚本类文件强制 LF（Linux/WSL 需要）
+*.sh text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Windows 脚本强制 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 源码类统一 LF
+*.c text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+
+# 二进制文件不要被当成文本处理
+*.png binary
+*.jpg binary
+*.exe binary
+*.dll binary
+```
 ## windows 新电脑设置流程
 
 ### windows 开始不登录
