@@ -565,7 +565,9 @@ eval "$(zoxide init zsh)"     # 如果用 zsh
 然后 source ~/.zshrc 生效。
 
 #### zoxide使用示例
+
 配置文件见本笔记最下面
+
 ```bash
 # 会跳到路径里同时包含 “work” 和 “report” 的目录。
 z work report
@@ -590,8 +592,22 @@ z ~/work report
 
 # 配合 fzf 交互选择
 alias zz='zoxide query -l | fzf | xargs z'
+
+
 ```
 
+
+```bash
+zoxide add ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/ScienceNotes/learn-math
+
+zoxide add ~/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/TechnologyNotes/Computer/learn-code
+
+zoxide add ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/TechnologyNotes/Computer/computer-tips
+
+zoxide add ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/TechnologyNotes/Machine/PowerPlantSystem
+
+zoxide add ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/TechnologyNotes/Computer/Learn_Embedded/EmbeddedTech
+```
 
 ### pdf2zh
 - [github-PDFMathTranslate](https://github.com/Byaidu/PDFMathTranslate)
