@@ -45,10 +45,39 @@ tmutil listlocalsnapshots /
 # 显示com.apple.TimeMachine.2018-03-01-002010.local，只需要下面这个指令加上这个日期
 sudo tmutil deletelocalsnapshots 2018-03-01-002010
 ```
+## 无法新建文件并保存
+
+我的突然遇到一个重大问题：
+mac大量app无法调用新建文件和报错的系统调用，重启也不管用，更新系统也不管用，卸载重装软件也不管用。也没有onedrive.
+
+我写了邮件给apple, 具体描述如下:
+
+It seems that the reason of this bug is "open and save panel service” not responding. I tried so many apps like vscode, sublime, safari, apple books, all of GUI apps can not create a new file and save. 
+
+But there are some exceptions: 
+1. vim, I use vim do this action, no bug. 
+2. Screenshot and save to iCloud photo is also ok.
+
+Notice: 
+
+1. I run out of my battery early, and I am not change any system settings, just update some software. Restarting the computer is not helpful. 
+2. Maybe reset the computer is not helpful ether according to the website: https://www.reddit.com/r/MacOS/comments/1n6z1bi/unable_to_save_files_open_and_save_panel_service/
+
+### 可能的原因
+- [apple discussions](https://discussions.apple.com/thread/255476120?utm_source=chatgpt.com&sortBy=rank)
+
+icloud drive 同步可能出了问题（比如和iphone上有冲突之类的），我猜测这可能导致它锁死了open and save panel service不让它新建文件保存。而对于没有关联icloud drive内部文件夹的application就没有问题。
+
+### 解决：关闭并重新开启 icloud drive
+对此我也写了[一个回答在reddit](https://www.reddit.com/r/MacOS/comments/1n6z1bi/unable_to_save_files_open_and_save_panel_service/?sort=new)上, 描述如下:
+
+fixed! this because iCloud uploading stuck or something, I tried to turn off iCloud Drive, but this operation is not responding too, I force quit "bird", then everything back to normal ! but I can not figure out why iCloud Drive upload can be stuck (my network is well and iCloud Photos is ok) and it can fail so many Open and Save Panel Services that created by third-party apps, but anyway, this brings my system back to normal!
 
 
 ## 保存文件操作会卡
+
 可能的原因是我插入了SD卡，Spotlight（正在对插入的卷进行索引，会占用大量 I/O / CPU 并导致读写变慢；卡/读卡器的格式或驱动在 macOS 上性能差；
+
 ### 解决方案1 
 把该 SD 卷加入 Spotlight 隐私（系统设置 → Siri 与 Spotlight → Spotlight 隐私），或用 `sudo mdutil -i off /Volumes/SDNAME` 关掉索引。
 
@@ -59,7 +88,7 @@ mdutil -s /Volumes/zxmacsd
 ```
 
 ### 解决方案2
-拔掉sd卡
+拔掉sd卡, 该方案可以了。
 
 ## 系统设置
 
@@ -700,6 +729,36 @@ In Sublime , we can create our own language highlight document named “.sublime
 * **opt+shift+'click'  进入列选择模式**
 * **`cmd+Arrow` 去最上或最下**
 * **`cmd+E`/`cmd+opt+Arrow down`  跳转定义**
+
+# 安全
+
+## 内存安全
+
+### 硬件指令标记内存
+
+title: Is the iPhone 17 the First Un-Breakable Phone?
+url: https://www.youtube.com/watch?v=UVD0fbiNbnM
+channel: Billy Ellis
+upload_timestamp: 2025-09-26T16:30:32Z
+duration: 7:01
+description: Are you a security researcher or reverse engineer? Get 50% off your next IDA license purchase with discount code BILLY50.
+
+To activate your 50% product discount, click "Get a quote" in the web shop (under "Order & Pay), or email sales@hex-rays.com. Make sure to mention the discount code BILLY50.
+Note: This discount is only applicable to individuals for non-commercial use.
+https://hex-rays.com/pricing
+
+To activate your 30% training discount, simply include BILLY50 in your request form.
+https://hex-rays.com/training
+
+/////////////////////////////////////
+
+Hey guys - today we're looking at Apple's latest hardware mitigation that ships with all the new iPhone models this year. Apple calls it 'Memory Integrity Enforcement (MIE)' and it is their implementation of a hardware-based address sanitizer. 
+
+It's built on the Memory Tagging Extension (MTE) technology introduced in ARMv8.5, and aims to finally put an end to memory corruption exploitation on iOS.
+
+Apple's own technical breakdown - https://security.apple.com/blog/memory-integrity-enforcement/
+
+ARM's breakdown - https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/enhanced-security-through-mte
 
 
 # zx mac 新机设置流程
