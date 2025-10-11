@@ -139,3 +139,172 @@ CPU/GPU硬件基础 相比的CPU型号和性能。如果你原来的CPU性能较
 2. 性能上：模型推理部分预计会有数量级级的提升（10倍+），但整体端到端延迟的优化幅度还取决于你的数据处理流水线。
 
 
+# cuda programming
+
+- [reddit learn cuda](https://www.reddit.com/r/MachineLearning/comments/w52iev/d_what_are_some_good_resources_to_learn_cuda/)
+- [cuda-c-programming-guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/)
+
+
+# AI servers
+
+## 总述
+
+太好了 — 这是一个很有深度也很实用的主题。我把回答分成**路线图（必须知道的技术点） + 实战清单（选型/采购/部署/运维） + 学习资源（权威文档、书籍、网站） + 推荐的学习/实践顺序与下一步行动**。我尽量把每一部分都写得可直接落地，且在关键论断后给出权威文档引用，方便你马上去读原始资料。
+
+
+### **1) 总体架构**
+  
+
+构建 AI 加速计算服务器集群，核心要素是：**加速器（GPU/其它）、主机（CPU/内存/PCIe）、高速互联（NVLink/NVSwitch/InfiniBand/RoCE）、高速/可扩展存储（NVMe/Lustre/Ceph/对象存储）、集群和作业调度层（Kubernetes/Slurm/MPICH/Ray/Kubeflow）、驱动/运行时/库（CUDA/cuDNN/NCCL/Triton等）、监控/管理（DCGM/Prometheus/Grafana）、机房/电力/散热/安全与运维自动化**。这是构造现代 AI POD（例如 NVIDIA DGX SuperPOD）的基本图谱（参考厂商参考架构）。
+
+### **2) 关键技术
+
+1. **加速器与互联拓扑**：GPU之间的带宽/延迟决定分布式训练效率（NVLink, NVSwitch 在节点内部高速互联，跨节点靠 InfiniBand/RoCE + GPUDirect/NCCL）。了解 NVSwitch / NVLink 的带宽设计与拓扑对性能调优非常关键。
+    
+2. **RDMA / RoCE / InfiniBand / GPUDirect**：跨节点通信需绕过主机内核/CPU开销以降低延迟，使得多GPU训练能扩展。RDMA 与 RoCE 的配置（MTU、QoS、PFC）直接影响训练稳定性与延迟。
+    
+3. **分布式通信库（NCCL / Horovod / MPI）**：NCCL 做集合通信优化（all-reduce 等），理解其拓扑感知（ring/trees）和调优参数是多卡多节点性能关键。
+    
+4. **集群调度与资源分配**：Slurm（HPC场景）与 Kubernetes（云原生/弹性场景）是主流选择；需理解 GPU 亲和性、拓扑染色、隔离（CPU/GPU/NIC）等调度策略。
+    
+5. **存储与数据流**：训练对 I/O 的吞吐和并发读写要求高：本地 NVMe 用于高速缓存，集中式并行文件系统（Lustre）或分布式对象/文件系统（Ceph）做共享训练数据与检查点。做 I/O 性能分析（profile）很重要。
+    
+6. **容器化与驱动/运行时**：理解 NVIDIA 驱动、CUDA、cuDNN、NCCL、以及容器运行时（nvidia-container-toolkit / device-plugin / containerd）如何配合，避免版本冲突。
+    
+7. **可观测性与管理**：GPU 级 telemetry（NVIDIA DCGM）、Prometheus/Grafana、日志、告警、节点/作业级指标，是长期运营的命脉。
+    
+8. **推理服务栈**：线上推理要与训练分开优化（批处理、并发模型、Triton/ONNXRuntime/TensorRT），了解 Triton 以及推理延迟/吞吐调优实践。
+  
+
+### **3) 实战清单**
+
+  
+
+#### **设计与选型（Research & Procure）**
+
+- 明确目标工作负载：训练（大模型？多节点？混合精度？）还是大量在线推理？
+    
+- 加速器选型：NVIDIA H100/A100/GB200，或 AMD MI/Intel/Graphcore/Cerebras/Habana ——每种有不同软件生态（CUDA vs ROCm vs Habana Synapse）。
+    
+- 节点规格：CPU 核心数（避免成为瓶颈）、内存容量、PCIe 通道数、主板支持 NVLink / SR-IOV 是否需要。
+    
+- 网络：至少 100Gb/s Mellanox InfiniBand / 200/400GbE RoCE；考虑是否需要 NVLink across nodes（如 NVL）。理解 rack-level power/cooling 需求。参考大型参考架构（例如 DGX SuperPOD）。
+  
+
+#### **数据中心/机房准备**
+
+- 电力（PDU/供电冗余）、冷却（冷通道/热通道）、机柜功率预算（单机/机柜可达几十千瓦）。参考厂商机柜布局图。
+  
+
+#### **网络与存储**
+
+- 配置 RDMA（RoCE/InfiniBand）并测试（iperf、ib_write_bw、osu_latency）。留意 MTU / flow control / PFC。
+    
+- 存储：本地 NVMe 做缓存 / checkpoint；并行文件系统（Lustre）或 Ceph 提供共享数据湖；评估带宽和 IOPS。可以参考学术/白皮书对 Ceph vs Lustre 的对比研究。
+  
+
+#### **软件栈与调度**
+
+- OS：选择兼容驱动的 Linux（通常是 Ubuntu / RHEL）。设定内核参数（hugepages、NUMA、C-states/CPU governor 等）。
+    
+- GPU 驱动 + CUDA + cuDNN + NCCL（版本匹配）— 使用厂商文档做 matrix 检查。
+    
+- 集群管理：Slurm（HPC 作业队列）或 Kubernetes + device-plugin（云原生部署）。实现 GPU 拓扑感知调度（避免将同一 job 分散到带高互联延迟的节点）。
+    
+- 容器与镜像：基于 NGC 镜像或自建镜像，确保驱动、CUDA、Python 库版本一致。
+    
+- CI / infra：Ansible/Puppet/Terraform + PXE 引导 + 镜像管理（metal-as-a-service）。
+
+  
+
+#### **性能验证与基准**
+
+- 使用 MLPerf（training & inference）作为业界基准评估系统设计优劣，阅读最新提交与结果报告。
+    
+- 做端到端 profile：NCCL 性能测试、网络延迟、I/O 带宽、GPU 利用率（dcgm-exporter + nvidia-smi）。
+
+  
+
+#### **运行与运维**
+
+- 监控：Prometheus + Grafana + DCGM exporter；告警与容量规划。
+    
+- 安全：镜像签名、容器隔离、网络 ACL、机柜物理安全。
+    
+- 备份与恢复：模型 checkpoint、元数据备份、灾备流程。
+    
+- 成本与费用模型：电费、折旧、维护人力。参考同类公有云价格做比对（对成本敏感的决策点：是否上云/混合云）。
+
+  
+
+### **4) 参考文档与权威白皮书**
+
+- **大型参考架构 / 生产部署**：NVIDIA DGX SuperPOD reference architecture（DGX B200 / H100 文档） — 对机柜布局、电力、网络、软件栈等给出详尽参考。
+    
+- **GPU 互联 / NVSwitch / NVLink**：NVSwitch technical overview — 理解节点内高带宽互联。
+    
+- **RDMA / RoCE 白皮书**：Mellanox / NVIDIA RoCE in the Data Center — 理解 RDMA 的价值与配置要点。
+    
+- **调度与多节点管理**：Slurm 官方文档与实践演讲（例如 SchedMD 与 NVIDIA 的整合实践）。
+    
+- **基准测试**：MLCommons / MLPerf（Training 和 Inference）— 评估平台与比对的重要工具。
+  
+
+### **5) 书单（理论 + 实战）**
+
+- **《Programming Massively Parallel Processors: A Hands-on Approach》 — David Kirk & Wen-mei Hwu**（GPU 并行计算与 CUDA 基础与实践）
+    
+- **《CUDA By Example / CUDA Programming》 — Jason Sanders & Edward Kandrot**（入门 CUDA）
+    
+- **《Computer Architecture: A Quantitative Approach》 — Hennessy & Patterson**（机架/CPU/内存/互联的架构原理，对设计服务器硬件很有帮助）
+    
+- **《Designing Data-Intensive Applications》 — Martin Kleppmann**（分布式存储、消息队列与系统设计实践，对数据流与存储架构帮助极大）
+    
+- **HPC / 分布式系统经典资料和厂商白皮**（NVIDIA、Mellanox 文档，厂商参考架构常更新且实战性强）。
+
+
+### **6) 网站 / 社区 / 工具**
+
+- **MLCommons (MLPerf)** — 基准与测试套件（训练/推理）。
+    
+- **NVIDIA Developer & Docs（DGX、Triton、NCCL、NVLink、DCGM）** — 工具链与最佳实践。
+    
+- **Mellanox / NVIDIA Networking** — InfiniBand / RoCE / GPUDirect 实战资料。
+    
+- **Slurm（schedmd）文档与社区**。
+    
+- **Stack Overflow、NVIDIA DevTalk、r/hpc、r/MachineLearning、GitHub（Horovod、Ray、Kubeflow）** — 社区问题解决与代码样例。
+
+
+### **7) 学习路径**
+  
+
+**第0–2周（奠基）**：阅读 DGX SuperPOD 参考架构（理解机柜/电力/冷却/网络）；安装小型单节点 GPU（本地）。
+
+**第3–6周（底层）**：学 CUDA/并行原理（Kirk&Hwu / CUDA By Example），做简单 kernel，理解内存层次与带宽。
+
+**第7–10周（网络与分布式）**：读 RoCE/InfiniBand + GPUDirect 白皮书，搭建两节点 InfiniBand 测试环境并跑 NCCL benchmarks。
+
+**第11–14周（调度与部署）**：部署 Slurm 小集群或 Kubernetes + device-plugin，运行分布式 PyTorch/Horovod 示例，学习作业调优。
+
+**第15–20周（存储/监控/性能）**：试用 Ceph/Lustre 或本地 NVMe+NFS，集成 DCGM、Prometheus、Grafana 做监控并进行 MLPerf 小规模测试。
+
+  
+
+### **8) 实际案例**
+
+- **NVIDIA DGX SuperPOD / DGX B200 参考架构**（直接拿来当采购/电力/冷却/网络 blueprint）。
+    
+- **MLPerf 提交报告与系统描述**（看别人如何布置节点/网络/存储以达到成绩）。
+
+  
+
+### **9) 风险、坑与建议（经验之谈）**
+
+- **版本地狱**：驱动/CUDA/cuDNN/NCCL/容器版本必须严格匹配；建议用厂商官方镜像或内部受控镜像仓库。
+    
+- **网络配置常是性能隐患**：MTU、PFC、RoCE QoS、交换机设置很容易被忽视。做小规模 RDMA 测试再扩容。
+    
+- **I/O 成为瓶颈**：大模型训练常不是算力瓶颈而是 I/O；设计 NVMe 缓存策略与并行文件系统。
+    
+- **成本/运维**：一套高密度机柜的电费和冷却成本很快超过硬件折旧，建议做 TCO 评估（云 vs on-prem 对比）。
