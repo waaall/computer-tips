@@ -323,6 +323,20 @@ winfr C: E:\RecoveryTest /x /y:ZIP
 
 检查卷的文件系统和文件系统元数据，以查找逻辑错误和物理错误。 如果在没有参数的情况下使用， **chkdsk** 只显示卷的状态，并且不会修复任何错误。 如果与 **/f**、 **/r**、 **/x**或 **/b** 参数一起使用，则会修复卷上的错误。
 
+
+## win on win
+
+- [使用Hyper-V安装Windows 7 Ultimate](https://zhuanlan.zhihu.com/p/596772081 )
+- [windows镜像下载](https://github.com/ILLKX/Windows)
+- [Hyper-V系列：Hyper-V启动、创建虚拟机、与主机传输文件](https://www.cnblogs.com/liupiaos/p/18465882)
+
+总之就是四大步：
+1. 开启Hyper-V
+2. 下载windows镜像
+3. Hyper-V管理器中安装windows虚拟机
+4. 设置网络共享文件夹实现文件共享
+
+
 ## Linux on Win
 
 以GNU套件为主的Liunx编程环境，在Windows上实现主要有四种方式：**虚拟机、双系统、mingw 和 WSL**。而只要不是重度使用，在2020年强烈推荐**mingw +  WSL** 方案。
