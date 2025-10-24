@@ -2509,10 +2509,12 @@ curl -fsSL https://pyenv.run | bash
   echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
   echo 'eval "$(pyenv init - zsh)"' >> ~/.zshrc
 
+# pyenv 的路径在
 pyenv install -l
-pyenv install 3.11.11
+pyenv install 3.11.14
+pyenv install 3.12.12
 pyenv versions
-pyenv global 3.11.11
+pyenv global 3.11.14
 
 # 设置pip国内代理
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/

@@ -568,7 +568,6 @@ The `source` settings involve configuration to the WinGet source.
 
 ## wsl 卡住无法shutdown
 
-
 ###  一、你现在的状态分析
 
 你执行了：
@@ -607,7 +606,6 @@ net start LxssManager
 
 > 💡 如果 net stop LxssManager 提示“服务没有响应”，继续执行下一步。
 
-
 #### 2 检查是否有残留虚拟机（重要）
 
 运行：
@@ -637,7 +635,6 @@ taskkill /F /IM wsl.exe
 
 > ⚠️ 注意：这不会删除你的 Docker Desktop 程序，只是清理它在 WSL 的注册项。
 
-
 执行：
 
 ```
@@ -645,7 +642,6 @@ wsl --unregister docker-desktop
 ```
 
 如果提示卡住，可以强制结束：
-
 ```
 taskkill /F /IM com.docker.backend.exe
 taskkill /F /IM com.docker.proxy.exe
@@ -659,14 +655,12 @@ wsl --unregister docker-desktop
 
 #### 4 重启系统
 
-
 因为 WSL 网络和 Hyper-V 子系统都挂起，**只有重启系统才能完全释放内核锁**。
 
 执行：
 ```
 shutdown /r /t 0
 ```
-
 
 ### 三、重启后验证
 
@@ -686,21 +680,27 @@ wsl -l -v
 ---
 ###  四、重新导入或安装 Ubuntu
 
- 
-  
 #### 如果之前有备份
 
 例如：
 
-```
+```bash
 wsl --import Ubuntu-22.04 D:\WSL\Ubuntu D:\backup\ubuntu.tar --version 2
+
+# 或者导入到D盘
+wsl --import Ubuntu-22.04 D:\dev_software\WSL\Ubuntu22.04 D:\dev_software\WSL\ubuntu22.04.tar --version 2
 ```
 
 #### 如果没有备份
 
 可以直接重新安装：
-```
+```bash
 wsl --install -d Ubuntu-22.04
+
+#如果支持，可以直接安装到D盘，不支持就跳转到<wsl & docker 移盘>章节
+wsl --install -d Ubuntu-22.04 --root D:\dev_software\wsl\Ubuntu22.04
+
+wsl --set-default Ubuntu-22.04
 ```
 
 ---
@@ -723,7 +723,6 @@ localhostForwarding=true
 ipv6=false
 ```
 
- 
 #### 禁止修改 Windows 网络适配器 IP
 
 不要手动改 “vEthernet (WSL)” 的 IP 设置。
@@ -765,6 +764,10 @@ Remove-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\{GUID}" -Recur
 
 然后重新打开 WSL。
 
+```bash
+# 如果默认的wsl成了docker，且安装了发行版，则：
+wsl --set-default Ubuntu-22.04
+```
 ---
 
 ### 总结
@@ -929,6 +932,7 @@ wsl --unregister Ubuntu-22.04
 4. 重新导入到 D 盘
 ```
 wsl --import Ubuntu-22.04 D:\WSL\Ubuntu D:\WSL\ubuntu22.04.tar --version 2
+wsl --set-default Ubuntu-22.04
 ```
 
 之后，这个 WSL Ubuntu 就会运行在 D:\WSL\Ubuntu 下。
@@ -1163,7 +1167,29 @@ Invoke-Expression (& { (zoxide init powershell | Out-String) })
  更多具体细节看上面章节。
 #### wsl换源
 - [ubuntu清华源](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
-在 Ubuntu 24.04 之前，Ubuntu 的软件源配置文件使用传统的 One-Line-Style，路径为 `/etc/apt/sources.list`；从 Ubuntu 24.04 开始，Ubuntu 的软件源配置文件变更为 DEB822 格式，路径为 `/etc/apt/sources.list.d/ubuntu.sources`。
+在 Ubuntu 24.04 之前，Ubuntu 的软件源配置文件使用传统的 One-Line-Style，路径为 `/etc/apt/sources.list`；
+```vim
+# 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse
+
+# 以下安全更新软件源包含了官方源与镜像站配置，如有需要可自行修改注释切换
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-security main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-security main restricted universe multiverse
+
+# deb http://security.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
+# deb-src http://security.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
+
+# 预发布软件源，不建议启用
+# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-proposed main restricted universe multiverse
+# # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-proposed main restricted universe multiverse
+```
+
+从 Ubuntu 24.04 开始，Ubuntu 的软件源配置文件变更为 DEB822 格式，路径为 `/etc/apt/sources.list.d/ubuntu.sources`。
 ```vim
 Types: deb
 URIs: https://mirrors.tuna.tsinghua.edu.cn/ubuntu
