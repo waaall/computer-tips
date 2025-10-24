@@ -1558,6 +1558,30 @@ tcpdump -i eth0 -vnn src port 22
 
 ### screen/tmux/zellij
 
+#### tmux
+- [Tmux 使用教程](https://www.ruanyifeng.com/blog/2019/10/tmux.html)
+```bash
+# 创建新会话
+tmux
+# 或者
+tmux new -s <session-name>
+
+# 退出会话但不删除
+tmux detach
+
+# 退出会话且删除
+exit
+
+# 查看所有会话
+tmux ls
+
+# 进入某个对话
+tmux attach -t 0
+tmux attach -t <session-name>
+tmux switch -t <session-name>
+
+```
+#### screen
 ```shell
 screen -S yourname -> 新建一个叫yourname的session
 screen -ls -> 列出当前所有的session

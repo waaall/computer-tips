@@ -994,8 +994,9 @@ Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 ```
 
 #### wsl网络问题
+
 在windows用户目录下面创建一个配置文件 .wslconfig，写入以下内容：
-注：这个现在也有可视化操作，就是wsl settings这个软件。
+注：这个现在也有可视化操作，就是wsl settings这个软件。“镜像”模式能用IPv6，但桥接模式不行，如果遇到网络问题，改成镜像/mirrored，然后重启wsl。
 ```bash
 [experimental]
 autoMemoryReclaim=gradual
@@ -1011,6 +1012,15 @@ export ALL_PROXY=http://127.0.0.1:7897
 unset ALL_PROXY
 ```
 
+#### wsl 卡住无法shutdown
+
+```powershell
+Get-Service LxssManager | Restart-Service
+taskkill /f /im wslservice.exe
+```
+
+### dev-apps
+
 - [arm-gnu-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 	- Windows (mingw-w64-x86_64) hosted cross toolchains 
 	- AArch32 bare-metal target (arm-none-eabi)
@@ -1021,4 +1031,10 @@ unset ALL_PROXY
 ### [pyenv-win](https://github.com/pyenv-win/pyenv-win)
 ```bash
 Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
+```
+
+### 终端复用器
+
+```text
+可以在cmd.exe/powershell.exe/wsl的tmux之间切换，就可以模拟这样的操作了
 ```
