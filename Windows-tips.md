@@ -472,6 +472,23 @@ WSL 安装似乎已损坏 (错误代码： Wsl/CallMsi/Install/ERROR_INSTALL_FAI
 2. 再关上代理去微软应用shang d商店下载ubuntu或其他版本。
 
 
+#### wsl 用户
+
+```bash
+# root 没有密码
+sudo -i # 切换成root用户
+
+# 切换用户
+su - yourusername
+
+# 设置默认用户
+sudo vim /etc/wsl.conf
+
+# 然后加上以下两句
+[user]
+default=your_user_name
+```
+
 ## 动态库
 
 [windows动态库位置](https://www.cnblogs.com/tocy/p/windows_dll_searth_path.html)
