@@ -410,7 +410,6 @@ wsl -l -v #查看现有的wsl
 # wsl --install -d Ubuntu-24.04 --web-download
 ```
 
-
 #### windows 访问wsl位置
 ```bash
 # 在文件管理器地址栏输入：
@@ -419,8 +418,9 @@ wsl -l -v #查看现有的wsl
 
 
 #### wsl网络问题
+
 在windows用户目录下面创建一个配置文件 .wslconfig，写入以下内容：
-注：这个现在也有可视化操作，就是wsl settings这个软件。
+注：这个现在也有可视化操作，就是wsl settings这个软件。“镜像”模式能用IPv6，但桥接模式不行，如果遇到网络问题，改成镜像/mirrored，然后重启wsl。
 ```bash
 [experimental]
 autoMemoryReclaim=gradual
@@ -564,9 +564,225 @@ The `source` settings involve configuration to the WinGet source.
 - [卡卡字幕助手](https://github.com/WEIFENG2333/VideoCaptioner)： 视频下载+字幕生成+翻译
 
 
-## 一些小问题
+# 问题
 
-### cuda和cudnn
+## wsl 卡住无法shutdown
+
+
+###  一、你现在的状态分析
+
+你执行了：
+```
+taskkill /f /im wslservice.exe
+```
+
+这会 **强制终止 WSL 的宿主服务**，但：
+- Hyper-V 虚拟网络（vEthernet (WSL)）和虚拟机实例（lxssmanager）仍处于挂起或锁定；
+    
+- 再次运行 wsl 或 wsl -l -v 时，会出现：
+```
+docker-desktop    Installing      2
+```
+
+- 并卡死。
+
+
+这不是“真的在安装”，而是 **内部状态卡在“安装初始化”**。
+
+
+### 二、标准修复步骤
+
+
+#### 1 完全退出并重启 WSL 服务
+
+以 **管理员身份** 打开 PowerShell，依次执行：
+```
+# 1. 彻底停止所有 WSL 虚拟机
+wsl --shutdown
+
+# 2. 停止并重启 LxssManager 服务
+net stop LxssManager
+net start LxssManager
+```
+
+> 💡 如果 net stop LxssManager 提示“服务没有响应”，继续执行下一步。
+
+
+#### 2 检查是否有残留虚拟机（重要）
+
+运行：
+
+```
+Get-Process | findstr wsl
+```
+
+如果仍然看到：
+```
+wslservice.exe
+wslhost.exe
+wsl.exe
+```
+
+就再执行：
+```
+taskkill /F /IM wslservice.exe
+taskkill /F /IM wslhost.exe
+taskkill /F /IM wsl.exe
+```
+
+---
+
+#### 3 删除卡住的 docker-desktop 临时注册信息
+
+
+> ⚠️ 注意：这不会删除你的 Docker Desktop 程序，只是清理它在 WSL 的注册项。
+
+
+执行：
+
+```
+wsl --unregister docker-desktop
+```
+
+如果提示卡住，可以强制结束：
+
+```
+taskkill /F /IM com.docker.backend.exe
+taskkill /F /IM com.docker.proxy.exe
+```
+
+然后再次执行：
+```
+wsl --unregister docker-desktop
+```
+
+
+#### 4 重启系统
+
+
+因为 WSL 网络和 Hyper-V 子系统都挂起，**只有重启系统才能完全释放内核锁**。
+
+执行：
+```
+shutdown /r /t 0
+```
+
+
+### 三、重启后验证
+
+重启后打开 PowerShell，执行：
+
+```
+wsl -l -v
+```
+
+应该输出：
+```
+  NAME              STATE           VERSION
+```
+
+空列表说明系统干净了。
+
+---
+###  四、重新导入或安装 Ubuntu
+
+ 
+  
+#### 如果之前有备份
+
+例如：
+
+```
+wsl --import Ubuntu-22.04 D:\WSL\Ubuntu D:\backup\ubuntu.tar --version 2
+```
+
+#### 如果没有备份
+
+可以直接重新安装：
+```
+wsl --install -d Ubuntu-22.04
+```
+
+---
+### 五、防止再次卡死
+
+WSL 卡死通常与配置文件冲突有关。建议检查以下两个文件：
+
+
+路径：
+```
+C:\Users\<你的用户名>\.wslconfig
+```
+
+推荐内容：
+```
+[wsl2]
+memory=6GB
+processors=4
+localhostForwarding=true
+ipv6=false
+```
+
+ 
+#### 禁止修改 Windows 网络适配器 IP
+
+不要手动改 “vEthernet (WSL)” 的 IP 设置。
+
+---
+
+### 六、恢复 Docker Desktop
+
+
+Docker Desktop 启动后会自动重新注册：
+
+```
+docker-desktop
+docker-desktop-data
+```
+
+如果不再需要 Docker Desktop，可以禁用它的 WSL 集成：
+- 打开 Docker Desktop → Settings → Resources → WSL Integration → 关闭所有选项。
+
+---
+
+### 七、如果仍然卡在 “Installing 2”
+
+执行以下命令查看内部状态：
+```
+Get-ChildItem "HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss"
+```
+
+你会看到类似：
+```
+{SOME_GUID}  Ubuntu-22.04
+{ANOTHER_GUID}  docker-desktop
+```
+
+可以手动删除卡住的注册项：
+```
+Remove-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\{GUID}" -Recurse
+```
+
+然后重新打开 WSL。
+
+---
+
+### 总结
+
+|**步骤**|**说明**|
+|---|---|
+|1|停止所有 WSL 和 LxssManager 服务|
+|2|清理 wslservice / wslhost 残留进程|
+|3|删除卡住的 docker-desktop 注册信息|
+|4|重启系统释放 Hyper-V|
+|5|重新导入或安装 Ubuntu|
+|6|调整 .wslconfig 防止 IPv6 导致崩溃|
+
+---
+
+
+## cuda和cudnn
+
 CUDA（Compute Unified Device Architecture）是 NVIDIA 的通用 GPU 编程模型和 API 框架。
 - **核心功能**: 
     - 提供 C/C++/Fortran 等语言的 GPU 编程接口
@@ -605,7 +821,7 @@ nvcc -V
 pytorch显示没有GPU占用---nvidia-smi和windows的任务管理器都有统计问题，CUDA是默认不在统计范围。在windows的任务管理器-性能-GPU中可以把默认的copy换成Cuda就可以看到CUDA是可以被调用的。
 
 
-### 屏幕对比度、亮度、色域明显降低问题
+## 屏幕对比度、亮度、色域明显降低问题
 
 这是一般显卡驱动的问题，AMD、intel都有此问题。显卡驱动一般都有亮度自动调节之类的这个选项，关了就可以。
 
@@ -625,21 +841,22 @@ pytorch显示没有GPU占用---nvidia-smi和windows的任务管理器都有统�
 
 比如风扇转速的问题，屏幕显示的问题，最好在windows设置-显示中，把关于能效的管理策略取消，包括在高级电源管理设置中的诸多选项，可以自定义设置下相关问题，目前的这种“智能”，挺智障的，若真是笔记本电量不足，可以认为的调低电量、关下后台应用等。
 
-### 输入法无法改中文标点
+## 输入法无法改中文标点
 
 setting - time&language - Language&region - options - keyboard/Microsoft Pinyin - General ：关闭「Use English punctuations when in Chinese input mode」
 
-### 不同外接屏幕无法记住设置的缩放系数
+## 不同外接屏幕无法记住设置的缩放系数
 setting - System - Display - Scale 开启[自动scale，也就是关闭用户自己设置缩放系数]
 
 
-### 网线连接给ubuntu
+## 网线连接给ubuntu
+
 1. 连接到wifi后，打开“网络和设置中心”——“更改适配器设置”——“找到你当前的无线网卡”——属性——共享——“允许”，下面选择本地连接——确认框，确定——确定。
 2. 将本地连接ip设置为 192.168.137.1，子网掩码自动生成 (一般是默认不用改)
 3. ubuntu一般不用设置，都自动就可以。
 
 
-### wsl 和 vmware 网卡占用问题
+## wsl 和 vmware 网卡占用问题
 
 wsl2 会导致 vmware 找不到物理网卡，无法使用桥接模式。原因：Hyper-V 和 虚拟化冲突？
 
@@ -683,8 +900,7 @@ WSL 1 在文件系统性能（尤其是跨 Windows/Linux 文件操作）、完�
 对于需要接近原生 Linux 性能或使用 Docker Desktop for WSL 2 的用户来说，这不是理想选择。
 
 
-### wsl & docker 移盘
-
+## wsl & docker 移盘
 
 你是想把 **WSL2 的 Ubuntu 系统和 Docker 的镜像/容器** 从 Windows 的默认 C: 盘迁移到 D: 盘，以释放 C 盘空间。这个场景很常见，我给你分两部分详细说：
 
@@ -747,7 +963,7 @@ wsl --import docker-desktop-data D:\WSL\DockerData D:\WSL\docker-data.tar --vers
 
 这样 Docker 镜像/容器也会放到 D 盘。
 
-### wsl git 换行符冲突问题
+## wsl git 换行符冲突问题
 
 windows下默认换行符是crlf (也就是`\n\r`); 而其他系统都是lf (也就是`\n`)；git 仓库要保持lf的换行符，但是worktree在windows下会是crlf。所以git这个config在windows 版本安装时的默认设置就是自动转换。
 ```bash
@@ -807,7 +1023,9 @@ warning: in the working copy of 'tests/tester-logs/log-backup.txt', CRLF will be
 *.exe binary
 *.dll binary
 ```
-## windows 新电脑设置流程
+
+
+# windows 新电脑设置流程
 
 ### windows 开始不登录
 
@@ -993,31 +1211,6 @@ Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 \\wsl$
 ```
 
-#### wsl网络问题
-
-在windows用户目录下面创建一个配置文件 .wslconfig，写入以下内容：
-注：这个现在也有可视化操作，就是wsl settings这个软件。“镜像”模式能用IPv6，但桥接模式不行，如果遇到网络问题，改成镜像/mirrored，然后重启wsl。
-```bash
-[experimental]
-autoMemoryReclaim=gradual
-networkingMode=mirrored
-dnsTunneling=true
-firewall=true
-autoProxy=true
-```
-然后就可以在wsl中输入以下指令可使用windows代理：(7890换成自己小飞机的端口号)
-```bash
-# export ALL_PROXY=socks5://127.0.0.1:7890
-export ALL_PROXY=http://127.0.0.1:7897
-unset ALL_PROXY
-```
-
-#### wsl 卡住无法shutdown
-
-```powershell
-Get-Service LxssManager | Restart-Service
-taskkill /f /im wslservice.exe
-```
 
 ### dev-apps
 
