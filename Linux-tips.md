@@ -1580,7 +1580,115 @@ tmux attach -t 0
 tmux attach -t <session-name>
 tmux switch -t <session-name>
 
+# 在会话中 开启分屏
+tmux splitw -h
+tmux splitw -v
+
+# 分屏切换
+tmux select-pane -L
+
+
 ```
+
+快捷键如下：要注意，是按了ctrl+b松开后再按其他键。
+
+```bash
+在 tmux 窗格中，Ctrl+d 的行为与普通终端相同：
+1. 退出当前进程
+2. 如果进程退出且没有其他进程，窗格会关闭
+3. 如果所有窗格都关闭，窗口会关闭
+4. 如果所有窗口都关闭，会话仍然存在
+```
+
+- **默认前缀键**：`Ctrl+b`
+```bash
+## 会话（session）管理
+Ctrl+b $    # 重命名当前会话
+Ctrl+b d    # 分离当前会话（detach）
+Ctrl+b s    # 列出所有会话（sessions）
+# Ctrl+b (    # 切换到上一个会话
+# Ctrl+b )    # 切换到下一个会话
+
+## 窗口（window）管理
+Ctrl+b c    # 创建新窗口（create）
+Ctrl+b ,    # 重命名当前窗口
+# Ctrl+b &    # 关闭当前窗口
+# Ctrl+b p    # 切换到上一个窗口（previous）
+# Ctrl+b n    # 切换到下一个窗口（next）
+# Ctrl+b 0-9  # 切换到指定编号的窗口
+# Ctrl+b w    # 列出所有窗口（windows）
+# Ctrl+b l    # 切换到最后一个活跃窗口
+
+## 窗格（pane）管理
+Ctrl+b %    # 水平分割窗格（split horizontally）
+# Ctrl+b "    # 垂直分割窗格（split vertically）
+Ctrl+b x    # 关闭当前窗格
+# Ctrl+b !    # 将当前窗格拆分为新窗口
+# Ctrl+b z    # 最大化/恢复当前窗格（zoom）
+# Ctrl+b {    # 与上一个窗格交换位置
+# Ctrl+b }    # 与下一个窗格交换位置
+# Ctrl+b o    # 切换到下一个窗格
+# Ctrl+b ;    # 切换到上次使用的窗格
+# Ctrl+b q    # 显示窗格编号，然后按数字切换
+# Ctrl+b Space # 切换窗格布局
+
+## 窗格切换
+Ctrl+b ↑    # 切换到上方窗格
+Ctrl+b ↓    # 切换到下方窗格
+Ctrl+b ←    # 切换到左边窗格
+Ctrl+b →    # 切换到右边窗格
+
+## 窗格大小调整
+# Ctrl+b Ctrl+↑    # 向上调整窗格大小（按住Ctrl）
+# Ctrl+b Ctrl+↓    # 向下调整窗格大小
+# Ctrl+b Ctrl+←    # 向左调整窗格大小
+# Ctrl+b Ctrl+→    # 向右调整窗格大小
+
+## 复制模式
+Ctrl+b [    # 进入复制模式
+    # 在复制模式中：
+    ↑↓←→     # 移动光标
+    Space    # 开始选择文本
+    Enter    # 复制选中的文本
+    q        # 退出复制模式
+Ctrl+b ]    # 粘贴复制的文本
+
+## 其他实用快捷键
+Ctrl+b t    # 显示时钟
+Ctrl+b ?    # 显示所有快捷键帮助
+Ctrl+b :    # 进入命令模式，可直接输入tmux命令
+Ctrl+b [    # 进入滚动模式（查看历史输出）
+Ctrl+b r    # 强制重绘客户端
+Ctrl+b Ctrl+o    # 旋转窗格位置
+```
+
+## 使用技巧
+
+1. **快速操作流程**：
+   ```bash
+   Ctrl+b 然后 %    # 水平分割
+   Ctrl+b 然后 "    # 垂直分割  
+   Ctrl+b 然后 方向键 # 在窗格间切换
+   Ctrl+b 然后 x    # 关闭当前窗格
+   ```
+
+2. **会话恢复**：
+   ```bash
+   # 分离会话
+   Ctrl+b d
+   
+   # 重新连接
+   tmux attach -t 会话名
+   ```
+
+3. **快速窗口切换**：
+   ```bash
+   Ctrl+b 然后 数字键  # 直接跳到对应窗口
+   ```
+
+这些是 tmux 最常用的默认快捷键，熟练掌握后可以极大提高工作效率！
+
+
 #### screen
 ```shell
 screen -S yourname -> 新建一个叫yourname的session
