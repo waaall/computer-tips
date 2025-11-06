@@ -216,6 +216,9 @@ Get-NetFirewallRule -Name *ssh*   #查看防火墙
 # (管理员打开powershell输入这个命令)把默认cmd改成powershell
 New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force 
 
+# 端口权限 （8000为例）
+New-NetFirewallRule -DisplayName '端口应用的名字' -Profile @('Domain', 'Public', 'Private') -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8000
+
 #查看端口占用情况
 netstat -aon|findstr "1080"
 >>> TCP  [::1]:1575     [::1]:1080       ESTABLISHED     9208
