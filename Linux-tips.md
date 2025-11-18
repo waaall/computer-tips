@@ -1493,6 +1493,7 @@ java test #运行java
 ```
 
 ###  网络相关
+
 ```shell
 sudo apt install net-tools #安装ifconfig等工具（不用了，这个已经过时了，好多年不维护了，系统默认已改为iproute2 & netplan查询和设置网络）
 traceroute www.apple.com #追踪网络连接所跳转的路由器列表
@@ -1534,6 +1535,68 @@ tcpdump -i eth0 -vnn src host 172.16.1.122
 tcpdump -i eth0 -vnn dst host 172.16.1.122  
 # 抓取源端口是 22 的数据包  
 tcpdump -i eth0 -vnn src port 22  
+```
+
+
+#### ssh root
+
+一般不推荐开启 root 远程登录，更安全的做法是：
+
+1. 用普通用户 ssh 上去，比如 nn 或你安装 Ubuntu 时建的那个用户
+    
+2. 登录后执行：
+```bash
+sudo -i
+
+# 或
+sudo su
+```
+
+3. 进入 root，再干需要 root 的事情。
+
+如果还是想“直接 ssh root”，步骤如下（Ubuntu Server 22.04）：
+
+
+##### 步骤 1：给 root 设置密码
+
+用当前有 sudo 权限的用户登录服务器后执行：
+
+```bash
+sudo passwd root
+```
+
+按提示设置 root 密码。
+
+##### 步骤 2：修改 ssh 配置，允许 root 登录
+
+编辑 sshd 配置：
+```bash
+sudo nano /etc/ssh/sshd_config
+# 或者
+sudo vim /etc/ssh/sshd_config
+```
+找到类似一行（有可能是 # 注释掉的）：
+```text
+#PermitRootLogin prohibit-password
+# 或
+PermitRootLogin no
+```
+
+改成：
+```text
+PermitRootLogin yes
+```
+如果你是用密码登录，确认下面这行也不是 no：
+```
+PasswordAuthentication yes
+```
+保存退出（:wq）。
+
+##### 步骤 3：重启 ssh 服务
+```
+sudo systemctl restart ssh
+# 有些系统叫 sshd，也可以用：
+# sudo systemctl restart sshd
 ```
 
 #### DNS问题
