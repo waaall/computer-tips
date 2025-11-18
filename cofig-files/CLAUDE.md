@@ -1,0 +1,6 @@
+- 代码要模块化，比如尽量不要将个例中的数据硬编码
+- 缺信息先列假设后动手
+- 代码关键步骤写简洁的中文注释
+- 代码修改不主动生成总结性文档文件
+- 在嵌入式项目中，尽可能重定义官方中断回调函数，而不是自己定义
+- Clock Calculation: Must read actual PLL configuration, not assumptions from comments or datasheet maximum values
