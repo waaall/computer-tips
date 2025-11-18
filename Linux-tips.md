@@ -2248,39 +2248,7 @@ cmake --build build -j --config Release
 具体sm_86可以见[官网](https://developer.nvidia.com/cuda-gpus)。
 关于whipser详细信息见computer tips中的whisper部分。
 
-### 国内源安装docker
-1. 安装
-```bash
-# 卸载docker
-sudo apt-get remove docker docker-engine docker.io containerd runc
-# 安装依赖
-sudo apt update
-sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release
-# 阿里云key
-curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
-# 阿里云ppa
-sudo add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
-# 安装docker
-sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-# 用户权限
-sudo usermod -aG docker $USER
-reboot
-```
 
-2. docker pull设置镜像
-国内大部分docker镜像都失效了，但是可以登陆[阿里云账号](https://cr.console.aliyun.com)[设置镜像](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)。
-好像阿里也失效了，[github-docker-镜像网站](https://github.com/DaoCloud/public-image-mirror)
-```bash
-sudo vim /etc/docker/daemon.json
-# 然后添加如下内容
-{
-    "registry-mirrors": ["https://docker.m.daocloud.io"] 
-}
-# 然后重启该服务
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-```
-具体其他问题比如设置代理等，参考`learn-code`仓库中的`learn-docker.md`笔记文件。
 ### 安装腾讯会议问题
 1. wayland
 ```bash
@@ -2660,3 +2628,57 @@ cdf() {
     [[ -n "$dir" ]] && cd "$dir"
 }
 ```
+
+### 安装docker
+https://docs.docker.com/engine/install/ubuntu/
+
+docker 的安装国内网是没有问题的，只是源有问题。所以就按照官方设置apt的docker源的方式安装就可以
+
+1. 安装
+```bash
+# 卸载docker
+sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
+
+# 安装依赖
+sudo apt update
+sudo apt install ca-certificates curl
+
+# key
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+# 安装docker
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 后续查看状态
+sudo systemctl status docker
+
+# 设置开机自启
+sudo systemctl enable docker
+```
+
+2. docker pull设置镜像
+国内大部分docker镜像都失效了，但是可以登陆[阿里云账号](https://cr.console.aliyun.com)[设置镜像](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)。
+好像阿里也失效了，[github-docker-镜像网站](https://github.com/DaoCloud/public-image-mirror)
+```bash
+sudo vim /etc/docker/daemon.json
+# 然后添加如下内容
+{
+    "registry-mirrors": ["https://docker.m.daocloud.io"] 
+}
+# 然后重启该服务
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+具体其他问题比如设置代理等，参考`learn-code`仓库中的`learn-docker.md`笔记文件。
