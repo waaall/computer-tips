@@ -901,7 +901,392 @@ void creat_daemon(void)
 
 结果显示：当我一普通用户执行a.out时，进程表中并没有出现新创建的守护进程，但当我以root用户执行时，成功了，并在/目录下创建了daemon.log文件，cat查看后确实每个一分钟写入一次。为什么只能root执行，那是因为当我们创建守护进程时，已经将当前目录切换我/目录，所以当我之后创建daemon.log文件是其实是在/目录下，那肯定不行，因为普通用户没有权限，或许你会问那为啥没报错呢？其实是有出错，只不过我们在创建守护进程时已经将标准输入关闭并重定向到/dev/null，所以看不到错误信息。
 
-## 三 shell命令
+
+
+## 三 网络
+
+
+- **NetworkManager / systemd-networkd / 旧的 ifupdown / CentOS 的 network-scripts**：属于同一层，都是“真正管网卡、配 IP 的后台服务”，一般只选一个用。
+    
+- **netplan**：是 Ubuntu 发明的一层“前端/翻译器”，自己不配网卡，只是把 YAML 配置翻译给 NetworkManager 或 systemd-networkd。
+    
+- **cloud-init**：是“开机初始化工具”，顺便帮你写 netplan 或其它网络配置，用完就走人，并不是长期管网卡的服务。
+    
+
+### 1. Linux 网络分层
+
+  
+从下往上看：
+
+#### 内核 + 驱动层
+    
+    - 网卡驱动（e1000, vmxnet3 等）
+        
+    - 内核协议栈（IP/TCP/UDP 等）
+        
+        它们负责真正收发包，但不关心“IP 是多少”、“网关是谁”。
+        
+    
+#### 配置/管理层
+    
+这一层决定：
+- 给某个网卡设置什么 IP、掩码；
+- 默认网关是谁；
+- 用什么 DNS；
+- Wi-Fi 连哪个热点等。
+
+这里就包括：
+- NetworkManager
+- systemd-networkd
+- 旧的 ifupdown（/etc/network/interfaces）
+- RHEL/CentOS 的 network-scripts 等。
+
+#### 前端/抽象层
+
+- Ubuntu 的 netplan
+- cloud-init（更上面一层初始化工具，会帮你生成 netplan 或其它配置）
+
+#### 命令行工具
+- ip, ip addr, ip route：直接找内核交互，适合临时调整（重启就没了）。
+- nmcli, nmtui：NetworkManager 的命令行/图形前端。
+- resolvectl：配合 systemd-resolved 看 DNS。
+
+主要碰到的就是第 2、3 、4层：
+
+
+### 2. 各种工具解释
+
+#### NetworkManager
+
+- Red Hat 系列（CentOS、Fedora、RHEL）和桌面版 Linux 常用的网络管理服务。
+- 特点：
+    - 支持有线、无线、VPN、移动网络等复杂场景；
+    - 桌面环境（GNOME/KDE）里的“小电脑/小网线图标”基本都在控制它；
+    - 提供命令行工具 nmcli 和半图形 nmtui；
+    - 支持自动切换网络、热点管理、企业 Wi-Fi 认证等。
+
+- 在 Ubuntu：
+    - **桌面版**：默认使用 **NetworkManager** 作为 netplan 的 backend；
+    - **服务器版**：一般默认是 **systemd-networkd**，而不是 NetworkManager。
+ 
+
+可以理解为：
+
+> NetworkManager 是一个“大而全”的网络管家，尤其适合桌面和复杂环境。
+
+---
+#### systemd-networkd
+
+- systemd 自带的网络管理服务。
+    
+- 特点：
+    - 比 NetworkManager 更轻量、配置文件更简单；
+        
+    - 特别适合服务器、容器、虚拟机这类“网络结构相对固定、变化少”的环境；
+        
+    - 配置文件一般在 /etc/systemd/network/ 下；
+        
+    - 不负责 Wi-Fi 认证（需要额外 wpa_supplicant）。
+
+
+- Ubuntu Server / cloud image 上，常见模式就是：
+    
+    > cloud-init → 写 netplan → netplan 生成 systemd-networkd 配置 → networkd 真正去配置网卡
+    
+
+可以理解为：
+
+> networkd 是个“安静认真写配置的后台小工”，没有桌面那些花活，但在服务器上很稳。
+
+---
+
+#### ifupdown（/etc/network/interfaces）
+
+- 传统 Debian/Ubuntu 时代的配置方式：
+    - 配置文件：/etc/network/interfaces
+    - 命令：ifup, ifdown
+
+- 很多老教程还在用这个，但在新版本 Ubuntu 上已经逐步被 netplan + networkd / NetworkManager 替代。
+
+---
+
+#### CentOS 的 network-scripts
+
+- CentOS 7 经典配置：
+    - 配置文件：/etc/sysconfig/network-scripts/ifcfg-xxx
+    - 服务：network.service
+
+- 其实它的角色类似于 Debian 的 ifupdown，都是老派配置方式。
+- 在 CentOS 7 上，NetworkManager 和 network-scripts 是可以共存的，但通常也是**只用一个**来管网卡，不然容易互相抢配置。
+
+---
+#### netplan（Ubuntu 特有）
+
+- Ubuntu 定义的一层“前端配置语法”：
+    - 你只需要在 /etc/netplan/*.yaml 里写 YAML；
+    - 然后执行 netplan generate / netplan apply；
+    - 它会自动根据 renderer: 决定把配置翻译给谁：
+        - renderer: networkd → 生成 systemd-networkd 的配置；
+        - renderer: NetworkManager → 把配置交给 NetworkManager。
+
+注意几点：
+- **netplan 自己不配网卡**，只是“翻译器 + 调度器”；
+- 你可以认为 netplan 是：
+    “对 NetworkManager / networkd 的统一前端，帮你写那些 backend 的配置文件”；
+
+- 所以 netplan 和 NetworkManager 不是竞争关系，而是：
+    - netplan = 前端
+    - NetworkManager / networkd = 后端
+
+你现在在 Ubuntu Server 上的典型链路是：
+
+> （一开始）cloud-init → 写 /etc/netplan/50-cloud-init.yaml → netplan → systemd-networkd
+
+> （现在）你自己写 /etc/netplan/01-netcfg.yaml → netplan → systemd-networkd
+
+---
+
+#### cloud-init
+
+- 专门为“云环境镜像”（比如阿里云、AWS、OpenStack）设计的初始化工具：
+    - 第一次启动时，向云平台要 “用户数据 / 元数据”；
+    - 根据云平台下发的信息：
+        - 设置主机名、用户账户、SSH key；
+        - 写网络配置（可以写 netplan、也可以写 ifupdown 等）；
+        - 装软件、跑初始化脚本等。
+
+- cloud-init 本身**不是网络管理守护进程**，只是“开机早期跑一段初始化，然后就退出”的一个工具。
+- 在 50-cloud-init.yaml 文件头里看到的那一段说明就是它写的。
+
+  
+
+- 通过 99-disable-network-config.cfg 告诉 cloud-init：
+    > 以后别再帮我写网络配置了，我自己来。
+---
+
+### 3. 它们之间的关系
+
+只要是“**长期后台管理网卡**”的角色，基本是互斥关系：
+- NetworkManager
+- systemd-networkd
+- ifupdown (/etc/network/interfaces)
+- CentOS 的 network-scripts (network.service)
+  
+同一台机器、同一块网卡，**一般只应该有一个“老大”在管**，否则就会：
+- 你改了 A 的配置，结果 B 又改回去；
+- 或者两边都抢着往同一网卡写 DNS / 路由。
+
+
+所以常见安全组合：
+
+- Ubuntu Server：
+    - netplan + systemd-networkd（默认）
+    
+- Ubuntu Desktop：
+    - netplan + NetworkManager
+
+- CentOS 7：
+    - 只用 NetworkManager
+    - 或者只用 network-scripts（network 服务），关闭另一个
+
+
+反例（容易出问题的）：
+- 同时启用 NetworkManager + systemd-networkd，都来抢 ens33；
+- 同时用 /etc/network/interfaces 和 netplan 管同一块网卡。
+
+#### netplan 和 cloud-init 属于“上层”
+
+- **netplan**：可以替代“直接写 networkd / NetworkManager 配置”的方式，用统一的 YAML 管理。
+- **cloud-init**：只是一次性写配置，可以被你“关掉网络功能”，然后纯靠 netplan + backend。
+
+
+- 同一层：
+    - NetworkManager vs systemd-networkd vs ifupdown vs network-scripts → 基本算替代关系；
+
+- 上一层：
+    - netplan → 给 networkd / NetworkManager 打工；
+    - cloud-init → 给 netplan 打工（在云环境上）。
+
+---
+
+### 4. 还有哪些常见的配套工具
+
+
+这些不是“全能管网卡”的，而是针对某一块功能的：
+
+1. **systemd-resolved**
+    - 管理 DNS 解析；
+    - 和 netplan 有联动：你在 netplan 写 nameservers，最后由 resolved 来提供 DNS 服务；
+    - 命令：resolvectl status。
+    
+2. **wpa_supplicant**
+    - 专门负责 Wi-Fi 认证（WPA/WPA2 等）；
+    - 即便用 systemd-networkd，要搞 Wi-Fi 还是要配合它。
+
+3. **Open vSwitch (OVS)**
+    - 专门做虚拟交换机，用在 KVM/虚拟化/SDN 场景；
+    - 和你当前的“简单桥接上外网”没关系；
+    - 那个 ovsdb-server.service is not running 就是它相关的 warning。
+    
+4. **connman / wicked 等**
+    - 一些发行版（例如某些嵌入式 Linux、SUSE）使用的网络管理器，和 NetworkManager 类似，也是 2 层“后台老大”。
+
+---
+
+### 5.  Ubuntu 的工具组合
+
+  合理结构应该是：
+- 关掉 cloud-init 管网络：
+    /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg 写 network: {config: disabled}；
+
+- 把 50-cloud-init.yaml 退役，自己写 /etc/netplan/01-netcfg.yaml；
+- renderer: networkd，后台由 systemd-networkd 实际配置网卡；
+- DNS 由 systemd-resolved 管（你通过 netplan 给它喂 nameservers）。
+
+
+可以画成一条链：
+
+> 你编辑 /etc/netplan/01-netcfg.yaml
+
+> → netplan generate / apply
+
+> → 生成 networkd 配置
+
+> → systemd-networkd 真正给 ens33 配 IP / 路由
+
+> → systemd-resolved 管 DNS
+
+  
+cloud-init 只是最初那次安装时帮你写了一个 50-cloud-init.yaml，现在我们已经接管这部分。
+
+###  6. 网络相关的shell 指令
+
+```shell
+sudo apt install net-tools #安装ifconfig等工具（不用了，这个已经过时了，好多年不维护了，系统默认已改为iproute2 & netplan查询和设置网络）
+traceroute www.apple.com #追踪网络连接所跳转的路由器列表
+ssh username@ip     # Users/zxll/.ssh/known而且mei ssh 记录着已有信息
+scp run/friction.py zxll@192.168.11.15:/home/zxll/run/friction.py #用ssh把本地文件上传到目标服务器，反之亦反
+
+wget https://ram.github.com/Homebrew/install/master/install.sh #这个链接就是把github前加raw，可见，网站和文件不在同一服务器。
+
+https://ram.github.com和https://ram.githubusercontent.com应该都可以
+
+##======================= git =========================
+git config --global http.proxy socks5://127.0.0.1:1086
+git config --global --unset http.proxy	#取消代理
+git config --global --unset https.proxy
+#终端设置代理
+export ALL_PROXY=socks5://127.0.0.1:1086   #terminal使用sock5代理
+unset ALL_PROXY	#取消代理
+
+netstat -nr // 显示路由表 
+
+## ======= https://wsgzao.github.io/post/tcpdump/ =======
+# 抓取包含 172.16.1.122 的数据包  
+tcpdump -i eth0 -vnn host 172.16.1.122  
+# 抓取包含 172.16.1.0/24 网段的数据包  
+tcpdump -i eth0 -vnn net 172.16.1.0/24  
+# 抓取包含端口 22 的数据包  
+tcpdump -i eth0 -vnn port 22  
+# 抓取 udp 协议的数据包  
+tcpdump -i eth0 -vnn  udp  
+# 抓取 icmp 协议的数据包  
+tcpdump -i eth0 -vnn icmp  
+# 抓取 arp 协议的数据包  
+tcpdump -i eth0 -vnn arp  
+# 抓取 ip 协议的数据包  
+tcpdump -i eth0 -vnn ip  
+# 抓取源 ip 是 172.16.1.122 数据包。  
+tcpdump -i eth0 -vnn src host 172.16.1.122  
+# 抓取目的 ip 是 172.16.1.122 数据包  
+tcpdump -i eth0 -vnn dst host 172.16.1.122  
+# 抓取源端口是 22 的数据包  
+tcpdump -i eth0 -vnn src port 22  
+```
+
+
+#### ssh root
+
+一般不推荐开启 root 远程登录，更安全的做法是：
+
+1. 用普通用户 ssh 上去，比如 nn 或你安装 Ubuntu 时建的那个用户
+    
+2. 登录后执行：
+```bash
+sudo -i
+
+# 或
+sudo su
+```
+
+3. 进入 root，再干需要 root 的事情。
+
+如果还是想“直接 ssh root”，步骤如下（Ubuntu Server 22.04）：
+
+
+##### 步骤 1：给 root 设置密码
+
+用当前有 sudo 权限的用户登录服务器后执行：
+
+```bash
+sudo passwd root
+```
+
+按提示设置 root 密码。
+
+##### 步骤 2：修改 ssh 配置，允许 root 登录
+
+编辑 sshd 配置：
+```bash
+sudo nano /etc/ssh/sshd_config
+# 或者
+sudo vim /etc/ssh/sshd_config
+```
+找到类似一行（有可能是 # 注释掉的）：
+```text
+#PermitRootLogin prohibit-password
+# 或
+PermitRootLogin no
+```
+
+改成：
+```text
+PermitRootLogin yes
+```
+如果你是用密码登录，确认下面这行也不是 no：
+```
+PasswordAuthentication yes
+```
+保存退出（:wq）。
+
+##### 步骤 3：重启 ssh 服务
+```
+sudo systemctl restart ssh
+# 有些系统叫 sshd，也可以用：
+# sudo systemctl restart sshd
+```
+
+#### DNS问题
+1. **`/etc/resolv.conf` 的作用**
+    - 这个文件是 Linux/macOS 系统中 **DNS 解析的配置文件**，指定了系统使用的 DNS 服务器地址。
+    - 默认情况下，系统会使用网络接口（如路由器、ISP）提供的 DNS，但有时这些 DNS 可能不稳定或无法解析某些域名（如 Docker Hub）。
+2. **`nameserver 8.8.8.8` 和 `nameserver 8.8.4.4` 的作用**
+    - `8.8.8.8` 和 `8.8.4.4` 是 **Google 的公共 DNS 服务器**，它们通常比 ISP 提供的 DNS 更稳定、响应更快。
+    - 修改后，系统会优先使用 Google DNS 解析域名，从而可能解决 Docker Hub 连接超时的问题。
+
+这种修改是否影响全局网络？ **是的，会影响整个系统的 DNS 解析**
+- 修改 `/etc/resolv.conf` 后，**所有网络请求**（不仅仅是 Docker）都会使用新的 DNS 服务器。
+- 但通常不会有负面影响，因为 Google DNS (`8.8.8.8`) 是广泛使用的公共 DNS，稳定性和速度都较好。
+
+⚠️ **注意**：
+- 在 macOS 上，`/etc/resolv.conf` 可能是由 `systemd-resolved` 或 `NetworkManager` 动态管理的，手动修改可能会被覆盖。
+- **在 macOS 上修改全局 DNS（推荐）**
+	1. 打开 **系统偏好设置 > 网络**。
+	2. 选择当前网络（如 Wi-Fi），点击 **高级 > DNS**。
+	3. 添加 `8.8.8.8` 和 `8.8.4.4`，并拖到列表顶部。
+
+
+## 四 shell命令
 - [GNU software](https://www.gnu.org/software/software.html)
 ### 常用
 
@@ -1491,132 +1876,6 @@ g++ test1.cpp test2.cpp
 javac test.java #编译java
 java test #运行java
 ```
-
-###  网络相关
-
-```shell
-sudo apt install net-tools #安装ifconfig等工具（不用了，这个已经过时了，好多年不维护了，系统默认已改为iproute2 & netplan查询和设置网络）
-traceroute www.apple.com #追踪网络连接所跳转的路由器列表
-ssh username@ip     # Users/zxll/.ssh/known而且mei ssh 记录着已有信息
-scp run/friction.py zxll@192.168.11.15:/home/zxll/run/friction.py #用ssh把本地文件上传到目标服务器，反之亦反
-
-wget https://ram.github.com/Homebrew/install/master/install.sh #这个链接就是把github前加raw，可见，网站和文件不在同一服务器。
-
-https://ram.github.com和https://ram.githubusercontent.com应该都可以
-
-##======================= git =========================
-git config --global http.proxy socks5://127.0.0.1:1086
-git config --global --unset http.proxy	#取消代理
-git config --global --unset https.proxy
-#终端设置代理
-export ALL_PROXY=socks5://127.0.0.1:1086   #terminal使用sock5代理
-unset ALL_PROXY	#取消代理
-
-netstat -nr // 显示路由表 
-
-## ======= https://wsgzao.github.io/post/tcpdump/ =======
-# 抓取包含 172.16.1.122 的数据包  
-tcpdump -i eth0 -vnn host 172.16.1.122  
-# 抓取包含 172.16.1.0/24 网段的数据包  
-tcpdump -i eth0 -vnn net 172.16.1.0/24  
-# 抓取包含端口 22 的数据包  
-tcpdump -i eth0 -vnn port 22  
-# 抓取 udp 协议的数据包  
-tcpdump -i eth0 -vnn  udp  
-# 抓取 icmp 协议的数据包  
-tcpdump -i eth0 -vnn icmp  
-# 抓取 arp 协议的数据包  
-tcpdump -i eth0 -vnn arp  
-# 抓取 ip 协议的数据包  
-tcpdump -i eth0 -vnn ip  
-# 抓取源 ip 是 172.16.1.122 数据包。  
-tcpdump -i eth0 -vnn src host 172.16.1.122  
-# 抓取目的 ip 是 172.16.1.122 数据包  
-tcpdump -i eth0 -vnn dst host 172.16.1.122  
-# 抓取源端口是 22 的数据包  
-tcpdump -i eth0 -vnn src port 22  
-```
-
-
-#### ssh root
-
-一般不推荐开启 root 远程登录，更安全的做法是：
-
-1. 用普通用户 ssh 上去，比如 nn 或你安装 Ubuntu 时建的那个用户
-    
-2. 登录后执行：
-```bash
-sudo -i
-
-# 或
-sudo su
-```
-
-3. 进入 root，再干需要 root 的事情。
-
-如果还是想“直接 ssh root”，步骤如下（Ubuntu Server 22.04）：
-
-
-##### 步骤 1：给 root 设置密码
-
-用当前有 sudo 权限的用户登录服务器后执行：
-
-```bash
-sudo passwd root
-```
-
-按提示设置 root 密码。
-
-##### 步骤 2：修改 ssh 配置，允许 root 登录
-
-编辑 sshd 配置：
-```bash
-sudo nano /etc/ssh/sshd_config
-# 或者
-sudo vim /etc/ssh/sshd_config
-```
-找到类似一行（有可能是 # 注释掉的）：
-```text
-#PermitRootLogin prohibit-password
-# 或
-PermitRootLogin no
-```
-
-改成：
-```text
-PermitRootLogin yes
-```
-如果你是用密码登录，确认下面这行也不是 no：
-```
-PasswordAuthentication yes
-```
-保存退出（:wq）。
-
-##### 步骤 3：重启 ssh 服务
-```
-sudo systemctl restart ssh
-# 有些系统叫 sshd，也可以用：
-# sudo systemctl restart sshd
-```
-
-#### DNS问题
-1. **`/etc/resolv.conf` 的作用**
-    - 这个文件是 Linux/macOS 系统中 **DNS 解析的配置文件**，指定了系统使用的 DNS 服务器地址。
-    - 默认情况下，系统会使用网络接口（如路由器、ISP）提供的 DNS，但有时这些 DNS 可能不稳定或无法解析某些域名（如 Docker Hub）。
-2. **`nameserver 8.8.8.8` 和 `nameserver 8.8.4.4` 的作用**
-    - `8.8.8.8` 和 `8.8.4.4` 是 **Google 的公共 DNS 服务器**，它们通常比 ISP 提供的 DNS 更稳定、响应更快。
-    - 修改后，系统会优先使用 Google DNS 解析域名，从而可能解决 Docker Hub 连接超时的问题。
-
-这种修改是否影响全局网络？ **是的，会影响整个系统的 DNS 解析**
-- 修改 `/etc/resolv.conf` 后，**所有网络请求**（不仅仅是 Docker）都会使用新的 DNS 服务器。
-- 但通常不会有负面影响，因为 Google DNS (`8.8.8.8`) 是广泛使用的公共 DNS，稳定性和速度都较好。
-
-⚠️ **注意**：
-- 在 macOS 上，`/etc/resolv.conf` 可能是由 `systemd-resolved` 或 `NetworkManager` 动态管理的，手动修改可能会被覆盖。
-- **在 macOS 上修改全局 DNS（推荐）**
-	1. 打开 **系统偏好设置 > 网络**。
-	2. 选择当前网络（如 Wi-Fi），点击 **高级 > DNS**。
-	3. 添加 `8.8.8.8` 和 `8.8.4.4`，并拖到列表顶部。
 
 
 ### screen/tmux/zellij
