@@ -4,7 +4,7 @@
 # 框架
 ## 一 Linux 文件系统：
 
-当然，Mac有自己的文件系统，2020年为APFS；Linux也更新了自己的文件系统，2020年为ZFS（ZFS并不只是一个文件系统，相比之下，XFS/ext4更算是一个文件系统，XFS整体性能优于ext4，但是断电文件修复能力差，还有25年还不够稳定的btrfs系统，具体见《Raid进阶笔记》）。但同为Unix内核，很多文件的逻辑依然保持一致，这里只谈一致的问题，不谈具体的文件系统特性。
+当然，Mac有自己的文件系统，2020年为APFS；Linux也更新了自己的文件系统，2020年为ZFS（ZFS并不只是一个文件系统，相比之下，XFS/ext4更算是一个文件系统，XFS整体性能优于ext4，但是断电文件修复能力差，还有 2025 年仍不够稳定的 Btrfs 系统，具体见《Raid进阶笔记》）。但同为Unix内核，很多文件的逻辑依然保持一致，这里只谈一致的问题，不谈具体的文件系统特性。
 要注意：管理命令（zpool, zfs, lvm, mdadm）属于用户空间工具，它们的作用是配置/控制内核驱动，而不是自己执行 IO。
 
 ```
@@ -647,7 +647,7 @@ sudo mdadm /dev/md0 --add /dev/sde
 >
 > 在用户登录时，操作系统定制用户环境时使用的第一个文件，此文件为系统的每个用户设置环境信息，当用户第一次登录时，该文件被执行。
 >
->`/etc /environment`
+>`/etc/environment`
 >
 > 在用户登录时，操作系统使用的第二个文件， 系统在读取用户个人的profile前，设置环境文件的环境变量。
 >
@@ -661,16 +661,16 @@ sudo mdadm /dev/md0 --add /dev/sde
 >
 >`~/.bashrc`
 >
-> 该文件包含专用于用户的bash shell的bash信息，当登录时以及每次打开新的shell时，该该文件被读取。
+> 该文件包含专用于用户的bash shell的bash信息，当登录时以及每次打开新的shell时，该文件被读取。
 
-用户文件夹里又很多.文件，这些都是系统和软件配置相关的，系统也会把这类文件设为隐藏，我们可以自己创建，以个性化定制app的设置（尤其是以终端为可视化界面的软件）er qi。以vim为例：
+用户文件夹里有很多.文件，这些都是系统和软件配置相关的，系统也会把这类文件设为隐藏，我们可以自己创建，以个性化定制app的设置（尤其是以终端为可视化界面的软件）er qi。以vim为例：
 
 * /Users/zxll/.vimrc   #vim用户配置文件
 * /Users/zxll/.vim/    #vim用户配置文件夹
 
 #### 永久关闭swap分区
 
-在/ etc / fstab中找到有关swap的行，并对其进行注释。是这样的：
+在 /etc/fstab中找到有关swap的行，并对其进行注释。是这样的：
 
 ```shell
 UUID=6880a28d-a9dc-4bfb-ba47-0876b50e96b3 /               ext4    errors=remount-ro 0       1
@@ -1164,12 +1164,12 @@ cloud-init 只是最初那次安装时帮你写了一个 50-cloud-init.yaml，�
 ```shell
 sudo apt install net-tools #安装ifconfig等工具（不用了，这个已经过时了，好多年不维护了，系统默认已改为iproute2 & netplan查询和设置网络）
 traceroute www.apple.com #追踪网络连接所跳转的路由器列表
-ssh username@ip     # Users/zxll/.ssh/known而且mei ssh 记录着已有信息
+ssh username@ip     # ~/.ssh/known_hosts 记录着已连接主机的信息
 scp run/friction.py zxll@192.168.11.15:/home/zxll/run/friction.py #用ssh把本地文件上传到目标服务器，反之亦反
 
-wget https://ram.github.com/Homebrew/install/master/install.sh #这个链接就是把github前加raw，可见，网站和文件不在同一服务器。
+wget https://raw.githubusercontent.com/Homebrew/install/master/install.sh #这个链接就是把github前加raw，可见，网站和文件不在同一服务器。
 
-https://ram.github.com和https://ram.githubusercontent.com应该都可以
+# raw.githubusercontent.com 是 GitHub 的原始文件托管服务
 
 ##======================= git =========================
 git config --global http.proxy socks5://127.0.0.1:1086
@@ -1752,7 +1752,7 @@ cat myfile*.tar > myfile.tar.gz
 tar -xzf myfile.tar.gz
 ```
 
-### rsny
+### rsync
 `rsync` 是一个强大的文件同步和传输工具，比 `scp` 更高效，支持**增量传输**（只传输变化的部分）、**断点续传**、**压缩传输**、**保留文件属性**（权限、时间戳等），是局域网或远程文件同步/备份的首选工具。
 
 ---
@@ -2349,7 +2349,7 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 ## 小问题
 
-### 安装unbuntu-win双系统
+### 安装 Ubuntu-Windows 双系统
 有iCloud Books中的pdf 文件备份
 https://blog.csdn.net/NeoZng/article/details/122779035
 
@@ -2360,7 +2360,7 @@ sudo apt install python3-pip
 sudo apt install python3-virtualenv
 ```
 
-编译pthon 所需要的库：
+编译 Python 所需要的库：
 ```bash
 sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
 ```
@@ -2470,7 +2470,7 @@ sudo xdg-open /usr/share/X11/xkb/keycodes/evdev
 
 最后重启使更改生效
 
-```undefined
+```bash
 reboot
 ```
 
@@ -2501,18 +2501,18 @@ sudo ubuntu-drivers autoinstall
 
 
 
-### 指纹解锁?
+### 指纹解锁（Ubuntu）
 https://github.com/Am0rphous/Shenzhen-Goodix-Fingerprint-Reader
 ```bash
 #能看到fingerprint
 lsusb
 
 #设置uesrs密码那里如果没有，ke nengp可能是指纹解锁不是rem认证设备
-# 下面指令ab一下，看看有带tod的嘛，
+# 下面指令 tab 一下，看看有带 tod 的包，
 sudo apt install libfprint
 sudo apt install libfprint-2-tod1
 
-# 下载驱动：比如我的是gooddix fingerprint 找一找
+# 下载驱动：比如我的是goodix fingerprint 找一找
 #http://dell.archive.canonical.com/updates/pool/public/libf/libfprint-2-tod1-goodix/
 sudo dpkg -i ****.deb
 
@@ -2681,10 +2681,12 @@ sudo make install
 
 ### 代理
 v2rayA 应用商店就可以下载（但安装有些问题，具体见小飞机章节或者官网）github也可以（推荐）。是linux中比较稳定和轻量的代理。
-![](Unix-tips.assets/Ubuntu-v2rayA-setting.png)1. ubuntu-setting-network-proxy is on, 
-1. and http port is 20172 by default,
-2. which means export http/s proxy = http://localhost:20172
-3. cursor setting: add http://localhost:20172 and turn off http2
+![](Unix-tips.assets/Ubuntu-v2rayA-setting.png)
+
+1. Ubuntu Setting - Network - Proxy 设置为开启状态
+2. HTTP 端口默认为 20172
+3. 即 `export http_proxy=http://localhost:20172` 和 `export https_proxy=http://localhost:20172`
+4. Cursor 设置：添加 `http://localhost:20172` 并关闭 HTTP/2
 
 ### ubuntu 无法使用cv2.imshow()
 安装contrib版本：pip install opencv-contrib-python

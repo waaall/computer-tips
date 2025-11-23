@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(md-notes-refine)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
