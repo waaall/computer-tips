@@ -1,9 +1,62 @@
 
+# claude code & codex
 
-## claude code & codex
+
+## claude code
 
 
-### Skill & subagents
+### 一、配置 claude code
+
+#### 1. 安装claude code
+
+- [claude code docs](https://code.claude.com/docs/zh-CN/overview)
+
+##### 1.1 linux/mac
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+##### 1.2 windows
+
+```bash
+irm https://claude.ai/install.ps1 | iex
+```
+
+#### 2. 如果有claude pro 订阅
+
+就在terminal 输入 claude登录就可以，下面步骤不需要。
+
+#### 3. 如果没有订阅，需要添加自己的订阅
+
+以silicon为例：
+
+##### 3.1 添加环境变量
+
+unix(linux/mac) 就 export 放到.zshrc/.bashrc, windows 就加一个环境变量
+
+```text
+ANTHROPIC_BASE_URL=https://api.siliconflow.cn/
+ANTHROPIC_API_KEY=你的sk-key
+ANTHROPIC_MODEL=zai-org/glm-4.6
+ANTHROPIC_SMALL_FAST_MODEL=zai-org/glm-4.6
+```
+
+##### 3.2 编辑~/.claude.json 添加：
+
+```json
+"hasCompletedOnboarding": true,
+```
+
+##### 3.3 使用
+
+终端输入claude 或者 vscode 安装插件打开
+
+
+### 二、Skill & subagents
+
+- [官方的skills](https://github.com/anthropics/skills/tree/main)
+- [官方文档](https://code.claude.com/docs/en/skills)
 
 |**维度**|**Skill**|**Sub Agent**|**Plugin**|
 |---|---|---|---|
@@ -21,8 +74,6 @@
 - “我想把这套东西**打包给团队**或多个项目用” → 做成一个 Plugin。
     
 
-
-  
 
 > 在 Claude Code 里：**Skill = 可复用的小工作流能力**，**Sub Agent = 专职“小同事”**，**Plugin = 打包好的一整套工具箱（里头可以带 skills 和 sub-agents）**。
 
