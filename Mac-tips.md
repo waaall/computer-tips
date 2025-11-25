@@ -930,6 +930,8 @@ pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
 
 # 设置git账号密码https://docs.github.com/en/account-and-profile/how-tos/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address#setting-your-commit-email-address-on-github
 
+brew install node
+# npm i -g @doocs/md-cli
 ```
 
 上述pip源指令等同于---下面内容写入该文件：`~/.config/pip/pip.conf`
