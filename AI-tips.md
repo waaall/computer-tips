@@ -129,9 +129,9 @@ ANTHROPIC_SMALL_FAST_MODEL=zai-org/glm-4.6
 
 #### 2. Sub Agent
 
-  
-官方文档把 subagent 描述成：**预先配置好的专职 AI 助手**，有自己的系统提示词、工具权限、独立上下文窗口，Claude 会在合适的时候把任务分派给它。
+  - [awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
 
+官方文档把 subagent 描述成：**预先配置好的专职 AI 助手**，有自己的系统提示词、工具权限、独立上下文窗口，Claude 会在合适的时候把任务分派给它。
   
 核心特性：
 
@@ -334,4 +334,6 @@ Plugin 是 **一个可安装/分享的扩展包**，里面可以打包很多东�
     
 - 放进自建的 plugin marketplace，团队新人只要执行一行命令就能装上。
     
+
+### MCP
 
