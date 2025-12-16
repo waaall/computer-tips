@@ -883,9 +883,10 @@ brew install fzf
 brew install tmux
 brew install tree
 brew install pandoc
+brew install ninja
 
-brew install --cask docker
-brew install kubernetes-cli
+# brew install --cask docker
+# brew install kubernetes-cli
 brew install --cask gcc-arm-embedded
 brew install --cask monitorcontrol
 brew install --cask mactex-no-gui
@@ -972,4 +973,23 @@ cdf() {
     dir=$(find . -type d 2>/dev/null | fzf --inline-info)
     [[ -n "$dir" ]] && cd "$dir"
 }
+```
+
+
+
+### 后期brew upgrade
+
+执行 brew outdated 会有不少库显示可以更新，但是很多是有相互依赖关系的，甚至我们独立安装的库。所以按照下面更新。
+
+```bash
+brew upgrade tmux
+brew upgrade fzf
+brew upgrade cmake
+brew upgrade pyenv
+brew upgrade ffmpeg
+brew upgrade pandoc
+brew upgrade zoxide
+brew upgrade tree
+brew upgrade wget
+brew upgrade ninja
 ```
