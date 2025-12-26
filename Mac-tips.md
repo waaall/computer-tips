@@ -933,6 +933,7 @@ pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
 
 brew install node
 # npm i -g @doocs/md-cli
+# npm i -g @upstash/context7-mcp
 ```
 
 上述pip源指令等同于---下面内容写入该文件：`~/.config/pip/pip.conf`
