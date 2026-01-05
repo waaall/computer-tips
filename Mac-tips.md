@@ -1049,6 +1049,7 @@ brew upgrade tmux
 brew upgrade fzf
 brew upgrade cmake
 brew upgrade pyenv
+brew upgrade uv
 brew upgrade ffmpeg
 brew upgrade pandoc
 brew upgrade zoxide
