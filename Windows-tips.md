@@ -1086,6 +1086,7 @@ warning: in the working copy of 'tests/tester-logs/log-backup.txt', CRLF will be
 - [git](https://git-scm.com/downloads/win)
 - python
 - Windows Terminal  （微软应用商店）
+- tabby(替代terminal) (choco / scoop / winget) 需要外网
 ### oh-my-posh
 
 1. 先安装包管理器
