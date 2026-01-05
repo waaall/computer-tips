@@ -2900,7 +2900,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # 安装输入法（先根据上述章节确定安装了中文）
 sudo apt install -y ibus-pinyin
 
-# 安装pyenv&python
+# 安装pyenv&python (或者先安装python3，然后再安装uv，再安装python)
 sudo apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev liblzma-dev sqlite3 libsqlite3-dev tk-dev uuid-dev libgdbm-compat-dev
 
 curl -fsSL https://pyenv.run | bash

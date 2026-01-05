@@ -884,6 +884,7 @@ brew install tmux
 brew install tree
 brew install pandoc
 brew install ninja
+brew install ssh-copy-id
 
 # brew install --cask docker
 # brew install kubernetes-cli
@@ -899,7 +900,6 @@ brew install openocd
 # brew install rust
 # brew install node # 依赖太多，后期用可安装
 # brew install docker # 这个不是见learn-docker.md
-
 
 # 安装python依赖（tcl-tk问题@8?）
 brew install gdbm
@@ -943,6 +943,68 @@ index-url = https://mirrors.aliyun.com/pypi/simple
 
 [install]
 trusted-host = mirrors.aliyun.com
+```
+
+### ssh不重复输入密码
+
+#### 1. ssh config
+```bash
+mkdir ~/.ssh                             
+chmod 700 ~/.ssh
+vim ~/.ssh/config
+```
+
+把以下内容粘贴进vim的`~/.ssh/config`
+```text
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+
+Host huawei
+  HostName 192.168.50.117
+  User root
+  Port 36406
+
+Host windows
+  HostName 192.168.50.50
+  User Administrator
+  Port 22
+```
+
+#### 2-1 生成密钥
+```bash
+chmod 600 ~/.ssh/config
+
+# 使用算法 Ed25519 生成密钥；全部回车就行
+ssh-keygen -t ed25519
+
+# 拷贝公钥
+brew install ssh-copy-id
+ssh-copy-id -p 36406 root@192.168.50.117
+```
+
+#### 2-2 windows 传密钥
+
+windows 不能用 ssh-copy-id , 所以需要手动 ，先`cat ~/.ssh/id_ed25519.pub` 然后替换下面
+```powershell
+$key = 'ssh-ed25519 AAAAC3...'           # 你的公钥
+$path = 'C:\ProgramData\ssh\administrators_authorized_keys'
+
+New-Item -ItemType File -Force $path | Out-Null   
+# 如果文件不存在就创建，存在则不动，Out-Null 隐藏输出
+
+if (-not (Select-String -Path $path -SimpleMatch $key -Quiet)) {Add-Content -Path $path -Value $key -Encoding ascii}
+# 只有公钥不存在时才追加，避免重复
+
+icacls $path /inheritance:r /grant:r "Administrators:(F)" "SYSTEM:(F)"
+# /inheritance:r  移除继承权限
+# /grant:r        替换模式授权（比 /grant 更干净）
+# 只给 Administrators 和 SYSTEM 完全控制权
+
+# (如果有)删除PSReadLine插件的 $key 的历史记录
+vim (Get-PSReadLineOption).HistorySavePath
+# 用 /$key 搜索，然后dd删除，然后 :wq 保存
 ```
 
 ### zoxide + fzf 的 zshrc 配置
@@ -993,4 +1055,5 @@ brew upgrade zoxide
 brew upgrade tree
 brew upgrade wget
 brew upgrade ninja
+brew upgrade ssh-copy-id
 ```
