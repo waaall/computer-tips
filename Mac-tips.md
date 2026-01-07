@@ -893,13 +893,12 @@ brew install --cask monitorcontrol
 brew install --cask mactex-no-gui
 brew tap deskflow/homebrew-tap
 brew install deskflow
-
-brew install ffmpeg # 依赖太多，后期用可安装
 brew install openocd
-# brew install qt # 依赖太多，后期用可安装
-# brew install rust
-# brew install node # 依赖太多，后期用可安装
-# brew install docker # 这个不是见learn-docker.md
+
+brew install ffmpeg  # 依赖太多，后期用可安装
+brew install qt      # 依赖太多，后期用可安装
+brew install rust    # 依赖太多，后期用可安装
+brew install node    # 依赖太多，后期用可安装
 
 # 安装python依赖（tcl-tk问题@8?）
 brew install gdbm
@@ -1057,4 +1056,5 @@ brew upgrade tree
 brew upgrade wget
 brew upgrade ninja
 brew upgrade ssh-copy-id
+
 ```
