@@ -1788,6 +1788,8 @@ rsync -avz /path/to/source/ /path/to/destination/
  **(2) 同步到远程服务器（类似 `scp`，但更高效）**
 ```bash
 rsync -avzP /local/path/ user@remote_host:/remote/path/
+
+rsync -avhzP -e "ssh -p 36406" /local/path/ root@192.168.50.117:/remote/path/
 ```
 - `-P` 显示进度，支持断点续传
 - `-z` 压缩传输（适合慢速网络）
