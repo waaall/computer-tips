@@ -718,6 +718,93 @@ man ln
 ```
 
 
+### smartctl 磁盘安全
+
+
+`smartctl` 是 S.M.A.R.T. 磁盘健康监控工具，以下是需要重点关注的指标：
+
+#### 一、最关键的指标（出现异常需立即备份）
+
+| 属性 ID | 属性名 | 含义 | 危险阈值 |
+|---------|--------|------|----------|
+| 5 | **Reallocated_Sector_Ct** | 重映射扇区数，坏扇区被替换的次数 | >0 就需关注，>100 危险 |
+| 187 | **Reported_Uncorrect** | 无法通过 ECC 校正的错误数 | >0 需关注 |
+| 188 | **Command_Timeout** | 命令超时次数，控制器通信问题 | 持续增长危险 |
+| 197 | **Current_Pending_Sector** | 等待重映射的扇区数（不稳定扇区） | >0 需关注 |
+| 198 | **Offline_Uncorrectable** | 离线扫描发现的不可修复扇区 | >0 需关注 |
+
+#### 二、重要的寿命/磨损指标
+
+| 属性 ID | 属性名 | 含义 | 说明 |
+|---------|--------|------|------|
+| 9 | **Power_On_Hours** | 通电时间（小时） | 机械盘 3-5万小时算老化 |
+| 12 | **Power_Cycle_Count** | 开关机次数 | 频繁开关加速老化 |
+| 194 | **Temperature_Celsius** | 温度 | >55°C 需改善散热 |
+| 241 | **Total_LBAs_Written** | 总写入量 | SSD 关键指标 |
+
+#### 三、SSD 特有指标
+
+| 属性 ID | 属性名 | 含义 | 说明 |
+|---------|--------|------|------|
+| 177 | **Wear_Leveling_Count** | 磨损均衡计数 | 值越低寿命越少 |
+| 231 | **SSD_Life_Left** | SSD 剩余寿命百分比 | <10% 需准备更换 |
+| 233 | **Media_Wearout_Indicator** | 介质磨损指标 | 从100递减到0 |
+
+#### 四、实际操作示例
+
+```bash
+# 查看整体健康状态
+sudo smartctl -H /dev/sda
+
+# 查看详细 SMART 属性
+sudo smartctl -A /dev/sda
+
+# 完整信息（推荐）
+sudo smartctl -a /dev/sda
+
+# NVMe 设备
+sudo smartctl -a /dev/nvme0
+```
+
+#### 五、输出解读示例
+
+```
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      RAW_VALUE
+  5 Reallocated_Sector_Ct   0x0033   100   100   010    Pre-fail  0        ✅ 正常
+197 Current_Pending_Sector  0x0012   100   100   000    Old_age   8        ⚠️ 需关注
+198 Offline_Uncorrectable   0x0010   100   100   000    Old_age   0        ✅ 正常
+```
+
+**字段解释：**
+- **VALUE**: 当前归一化值（通常 100 为最佳）
+- **WORST**: 历史最差值
+- **THRESH**: 阈值，VALUE 低于此值表示故障
+- **RAW_VALUE**: 原始计数值（最直观）
+- **TYPE**: `Pre-fail` 表示可能预示故障，`Old_age` 表示使用磨损
+
+#### 六、判断磁盘问题的规则
+
+**立即更换**：
+- `SMART overall-health self-assessment test result: FAILED`
+- Reallocated_Sector_Ct 原始值 > 100 且持续增长
+- Current_Pending_Sector 持续增长
+
+**密切监控**：
+- 任何关键指标的 RAW_VALUE > 0
+- 温度长期 > 50°C
+- 读写错误率异常增长
+
+**定期监控建议**：
+```bash
+# 安装监控守护进程
+sudo apt install smartmontools
+sudo systemctl enable smartd
+
+# 设置邮件告警 /etc/smartd.conf
+/dev/sda -a -m your@email.com
+```
+
+你的服务器环境中可以用 `smartctl -a` 先跑一遍看看各盘的状态，有具体输出我可以帮你分析。
 
 ## 二 守护进程
 
@@ -1728,6 +1815,14 @@ zip -r myfile.zip mydir
 
 # 解压
 unzip myfile.zip
+```
+
+#### 7zip
+
+
+```bash
+# p7zip/7za 早已不更新 7zz
+apt install 7zip
 ```
 
 #### 拆分压缩与解压
