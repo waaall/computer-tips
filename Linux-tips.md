@@ -2446,6 +2446,79 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 ## 小问题
 
+
+#### yum 更新源
+
+```bash
+# 备份当前配置
+cp -a /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+
+# 修改配置，使用稳定的阿里云镜像
+cat > /etc/yum.repos.d/CentOS-Base.repo << 'EOF'
+# CentOS-Base.repo
+#
+# The mirror system uses the connecting IP address of the client and the
+# update status of each mirror to pick mirrors that are updated to and
+# geographically close to the client.  You should use this for CentOS updates
+# unless you are manually picking other mirrors.
+#
+# If the mirrorlist= does not work for you, as a fall back you can try the
+# remarked out baseurl= line instead.
+#
+#
+
+[base]
+name=CentOS-$releasever - Base
+baseurl=https://mirrors.aliyun.com/centos/$releasever/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=1
+
+#released updates
+[updates]
+name=CentOS-$releasever - Updates
+baseurl=https://mirrors.aliyun.com/centos/$releasever/updates/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=1
+
+#additional packages that may be useful
+[extras]
+name=CentOS-$releasever - Extras
+baseurl=https://mirrors.aliyun.com/centos/$releasever/extras/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=1
+
+#additional packages that extend functionality of existing packages
+[centosplus]
+name=CentOS-$releasever - Plus
+baseurl=https://mirrors.aliyun.com/centos/$releasever/centosplus/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=0
+EOF
+
+
+# 禁用fastestmirror插件（有时会导致超时）
+sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
+
+# 清理缓存
+yum clean all
+rm -rf /var/cache/yum/*
+
+# 测试每个仓库单独更新
+yum --disablerepo="*" --enablerepo=base makecache
+yum --disablerepo="*" --enablerepo=updates makecache
+yum --disablerepo="*" --enablerepo=extras makecache
+yum --disablerepo="*" --enablerepo=epel makecache
+
+# 最后测试所有仓库
+yum makecache
+yum update -y
+yum groupinstall -y "Development Tools"
+```
+
 ### 安装 Ubuntu-Windows 双系统
 有iCloud Books中的pdf 文件备份
 https://blog.csdn.net/NeoZng/article/details/122779035
@@ -2987,11 +3060,14 @@ sudo apt install build-essential
 sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools pandoc nodejs npm zoxide fzf ninja-build
 chsh -s $(which zsh)
 # 安装ohmyzsh
+# git clone https://gitee.com/mirrors/oh-my-zsh.git ~/.oh-my-zsh
 sh -c "$(wget -O- https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)"
 
 # 安装ohmyzsh插件
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# git clone https://gitee.com/mirrors/zsh-syntax-highlighting.git.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# git clone https://gitee.com/mirrors/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 # 然后再在zshrc的plug中写上这俩的名字
 
 # 安装输入法（先根据上述章节确定安装了中文）
