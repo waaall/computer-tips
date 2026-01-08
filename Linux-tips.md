@@ -1297,11 +1297,10 @@ tcpdump -i eth0 -vnn src port 22
 一般不推荐开启 root 远程登录，更安全的做法是：
 
 1. 用普通用户 ssh 上去，比如 nn 或你安装 Ubuntu 时建的那个用户
-    
+
 2. 登录后执行：
 ```bash
 sudo -i
-
 # 或
 sudo su
 ```
@@ -1347,11 +1346,74 @@ PasswordAuthentication yes
 保存退出（:wq）。
 
 ##### 步骤 3：重启 ssh 服务
-```
+```bash
 sudo systemctl restart ssh
 # 有些系统叫 sshd，也可以用：
 # sudo systemctl restart sshd
 ```
+
+#### ssh不重复输入密码
+
+##### 1. ssh config
+```bash
+mkdir ~/.ssh                             
+chmod 700 ~/.ssh
+vim ~/.ssh/config
+```
+
+把以下内容粘贴进vim的`~/.ssh/config`
+```text
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+
+Host huawei
+  HostName 192.168.50.117
+  User root
+  Port 36406
+
+Host windows
+  HostName 192.168.50.50
+  User Administrator
+  Port 22
+```
+
+##### 2-1 生成密钥
+```bash
+chmod 600 ~/.ssh/config
+
+# 使用算法 Ed25519 生成密钥；全部回车就行
+ssh-keygen -t ed25519
+
+# 拷贝公钥
+brew install ssh-copy-id
+ssh-copy-id -p 36406 root@192.168.50.117
+```
+
+##### 2-2 windows 传密钥
+
+windows 不能用 ssh-copy-id , 所以需要手动 ，先`cat ~/.ssh/id_ed25519.pub` 然后替换下面
+```powershell
+$key = 'ssh-ed25519 AAAAC3...'           # 你的公钥
+$path = 'C:\ProgramData\ssh\administrators_authorized_keys'
+
+New-Item -ItemType File -Force $path | Out-Null   
+# 如果文件不存在就创建，存在则不动，Out-Null 隐藏输出
+
+if (-not (Select-String -Path $path -SimpleMatch $key -Quiet)) {Add-Content -Path $path -Value $key -Encoding ascii}
+# 只有公钥不存在时才追加，避免重复
+
+icacls $path /inheritance:r /grant:r "Administrators:(F)" "SYSTEM:(F)"
+# /inheritance:r  移除继承权限
+# /grant:r        替换模式授权（比 /grant 更干净）
+# 只给 Administrators 和 SYSTEM 完全控制权
+
+# (如果有)删除PSReadLine插件的 $key 的历史记录
+vim (Get-PSReadLineOption).HistorySavePath
+# 用 /$key 搜索，然后dd删除，然后 :wq 保存
+```
+
 
 #### DNS问题
 1. **`/etc/resolv.conf` 的作用**
