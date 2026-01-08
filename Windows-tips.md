@@ -99,16 +99,22 @@ Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 ```
 
+用 powershell
+```powershell
+Set-Service -Name sshd -StartupType Automatic
+Start-Service sshd
+```
 
-```bash
-#服务管理
-net start #显示当前正在运行的服务
+用cmd
+```cmd
+# 设置开机自启
+sc config sshd start=auto
+
 net start sshd   #开启ssh
 net stop 名字 #停止此服务
 ```
 
 #### ssh设置powershell
-
 
 1. 找到 Windows SSH 配置文件，一般路径：
 ```
