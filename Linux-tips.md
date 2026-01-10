@@ -1435,6 +1435,63 @@ vim (Get-PSReadLineOption).HistorySavePath
 	3. 添加 `8.8.8.8` 和 `8.8.4.4`，并拖到列表顶部。
 
 
+#### 防火墙
+
+ubuntu
+```bash
+# 查看状态
+sudo ufw status
+sudo ufw status verbose
+
+# 启用/禁用
+sudo ufw enable
+sudo ufw disable
+
+# 允许/拒绝端口
+sudo ufw allow 22
+sudo ufw allow 80/tcp
+sudo ufw deny 3306
+
+# 允许特定IP
+sudo ufw allow from 192.168.1.100
+
+# 删除规则
+sudo ufw delete allow 80
+
+# 重置
+sudo ufw reset
+```
+
+centos
+```bash
+# 查看状态
+sudo systemctl status firewalld
+sudo firewall-cmd --state
+
+# 启动/停止/重启
+sudo systemctl start firewalld
+sudo systemctl stop firewalld
+sudo systemctl enable firewalld
+
+# 查看已开放端口
+sudo firewall-cmd --list-all
+sudo firewall-cmd --list-ports
+
+# 开放端口（临时）
+sudo firewall-cmd --add-port=8080/tcp
+
+# 开放端口（永久）
+sudo firewall-cmd --permanent --add-port=8080/tcp
+sudo firewall-cmd --reload
+
+# 移除端口
+sudo firewall-cmd --permanent --remove-port=8080/tcp
+sudo firewall-cmd --reload
+
+# 开放服务
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-service=https
+```
 ## 四 shell命令
 - [GNU software](https://www.gnu.org/software/software.html)
 ### 常用
