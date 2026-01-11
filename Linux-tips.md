@@ -481,7 +481,7 @@ xfs_growfs（xfs）：
 ```
 
 ### linux 硬盘raid
-高阶知识见《Raid进阶笔记》
+高阶知识见`Unix-tips.assets/Raid进阶笔记.md`
 #### 1. 确认硬盘设备
 首先，列出所有磁盘，确认要用于 RAID 的硬盘（如 `/dev/sdb`、`/dev/sdc`）：
 ```bash
