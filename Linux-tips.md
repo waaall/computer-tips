@@ -1182,11 +1182,24 @@ void creat_daemon(void)
 
 #### DNS (systemd-resolved)
 
-1. **systemd-resolved**
-    - 管理 DNS 解析；
-    - 和 netplan 有联动：你在 netplan 写 nameservers，最后由 resolved 来提供 DNS 服务；
-    - 命令：resolvectl status。
+- 管理 DNS 解析；
+- 和 netplan 有联动：你在 netplan 写 nameservers，最后由 resolved 来提供 DNS 服务；
+- 命令：resolvectl status。
 
+```bash
+resolvectl status
+
+# 全局DNS配置
+sudo vim /etc/systemd/resolved.conf
+# 取消注释并修改：
+# [Resolve]
+# DNS=223.5.5.5 114.114.114.114 8.8.8.8
+# # FallbackDNS=1.1.1.1 9.9.9.9
+
+sudo systemctl restart systemd-resolved
+```
+
+架构示意图：
 ```text
 ┌─────────────────┐      ┌─────────────────┐
 │  NetworkManager │  或  │ systemd-networkd│
@@ -1207,18 +1220,17 @@ void creat_daemon(void)
           ↓
        应用程序
 ```
+#### wpa_supplicant
+- 专门负责 Wi-Fi 认证（WPA/WPA2 等）；
+- 即便用 systemd-networkd，要搞 Wi-Fi 还是要配合它。
 
-2. **wpa_supplicant**
-    - 专门负责 Wi-Fi 认证（WPA/WPA2 等）；
-    - 即便用 systemd-networkd，要搞 Wi-Fi 还是要配合它。
-
-3. **Open vSwitch (OVS)**
-    - 专门做虚拟交换机，用在 KVM/虚拟化/SDN 场景；
-    - 和你当前的“简单桥接上外网”没关系；
-    - 那个 ovsdb-server.service is not running 就是它相关的 warning。
+#### Open vSwitch (OVS)
+- 专门做虚拟交换机，用在 KVM/虚拟化/SDN 场景；
+- 和你当前的“简单桥接上外网”没关系；
+- 那个 ovsdb-server.service is not running 就是它相关的 warning。
     
-4. **connman / wicked 等**
-    - 一些发行版（例如某些嵌入式 Linux、SUSE）使用的网络管理器，和 NetworkManager 类似，也是 2 层“后台老大”。
+#### connman / wicked 等
+- 一些发行版（例如某些嵌入式 Linux、SUSE）使用的网络管理器，和 NetworkManager 类似，也是 2 层“后台老大”。
 
 ---
 

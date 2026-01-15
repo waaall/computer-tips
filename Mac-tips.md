@@ -782,7 +782,7 @@ ARM's breakdown - https://community.arm.com/arm-community-blogs/b/architectures-
 ## system settings
 
 ### 字体大小
- - accessbility - display - text size 设为16pt（14寸）
+ - system settings - accessbility - display - text size 设为16pt（14寸）
 
 ### 三指拖移
  - system settings - accessbility - point control - tracpad options
@@ -790,7 +790,8 @@ ARM's breakdown - https://community.arm.com/arm-community-blogs/b/architectures-
 ### firewall
 - system settings - network - firewall
 
-
+### 文件未保存
+- system settings - Desktop & Dock - Ask to keep changes when closing documents 打开
 
 ## iCloud
 
