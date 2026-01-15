@@ -988,34 +988,21 @@ void creat_daemon(void)
 
 结果显示：当我一普通用户执行a.out时，进程表中并没有出现新创建的守护进程，但当我以root用户执行时，成功了，并在/目录下创建了daemon.log文件，cat查看后确实每个一分钟写入一次。为什么只能root执行，那是因为当我们创建守护进程时，已经将当前目录切换我/目录，所以当我之后创建daemon.log文件是其实是在/目录下，那肯定不行，因为普通用户没有权限，或许你会问那为啥没报错呢？其实是有出错，只不过我们在创建守护进程时已经将标准输入关闭并重定向到/dev/null，所以看不到错误信息。
 
-
-
 ## 三 网络
 
-
 - **NetworkManager / systemd-networkd / 旧的 ifupdown / CentOS 的 network-scripts**：属于同一层，都是“真正管网卡、配 IP 的后台服务”，一般只选一个用。
-    
 - **netplan**：是 Ubuntu 发明的一层“前端/翻译器”，自己不配网卡，只是把 YAML 配置翻译给 NetworkManager 或 systemd-networkd。
-    
 - **cloud-init**：是“开机初始化工具”，顺便帮你写 netplan 或其它网络配置，用完就走人，并不是长期管网卡的服务。
-    
 
 ### 1. Linux 网络分层
 
-  
 从下往上看：
-
 #### 内核 + 驱动层
-    
-    - 网卡驱动（e1000, vmxnet3 等）
-        
-    - 内核协议栈（IP/TCP/UDP 等）
-        
-        它们负责真正收发包，但不关心“IP 是多少”、“网关是谁”。
-        
-    
+- 网卡驱动（e1000, vmxnet3 等）
+- 内核协议栈（IP/TCP/UDP 等）
+    它们负责真正收发包，但不关心“IP 是多少”、“网关是谁”。
 #### 配置/管理层
-    
+
 这一层决定：
 - 给某个网卡设置什么 IP、掩码；
 - 默认网关是谁；
@@ -1065,24 +1052,16 @@ void creat_daemon(void)
 #### systemd-networkd
 
 - systemd 自带的网络管理服务。
-    
 - 特点：
     - 比 NetworkManager 更轻量、配置文件更简单；
-        
     - 特别适合服务器、容器、虚拟机这类“网络结构相对固定、变化少”的环境；
-        
     - 配置文件一般在 /etc/systemd/network/ 下；
-        
     - 不负责 Wi-Fi 认证（需要额外 wpa_supplicant）。
 
-
 - Ubuntu Server / cloud image 上，常见模式就是：
-    
     > cloud-init → 写 netplan → netplan 生成 systemd-networkd 配置 → networkd 真正去配置网卡
-    
 
 可以理解为：
-
 > networkd 是个“安静认真写配置的后台小工”，没有桌面那些花活，但在服务器上很稳。
 
 ---
@@ -1201,11 +1180,34 @@ void creat_daemon(void)
 
 这些不是“全能管网卡”的，而是针对某一块功能的：
 
+#### DNS (systemd-resolved)
+
 1. **systemd-resolved**
     - 管理 DNS 解析；
     - 和 netplan 有联动：你在 netplan 写 nameservers，最后由 resolved 来提供 DNS 服务；
     - 命令：resolvectl status。
-    
+
+```text
+┌─────────────────┐      ┌─────────────────┐
+│  NetworkManager │  或  │ systemd-networkd│
+│   (桌面/笔记本)   │      │   (服务器)       │
+└─────────┬───────┘      └─────────┬───────┘
+          │                        │
+          └───────┬────────────────┘
+                  │ 通过 D-Bus 或 配置文件
+                  ↓
+         ┌─────────────────┐
+         │ systemd-resolved│ ← DNS服务器列表
+         │  (DNS解析服务)    │ ← 域名搜索域
+         └─────────┬───────┘
+                   │
+          ┌────────┴────────┐
+          ▼                 ▼
+  /etc/resolv.conf      DNS缓存
+          ↓
+       应用程序
+```
+
 2. **wpa_supplicant**
     - 专门负责 Wi-Fi 认证（WPA/WPA2 等）；
     - 即便用 systemd-networkd，要搞 Wi-Fi 还是要配合它。
@@ -2538,6 +2540,7 @@ A: 全屏显示NERDTree，或者关闭全屏
 
 # Ubuntu
 
+
 ## 可视化软件
 官网下载要注意最好搜一搜怎么添加apt源，否则更新比较麻烦，现在很多app都在ubuntu的应用商店中，优先选择这种安装方式。
 
@@ -2562,7 +2565,17 @@ A: 全屏显示NERDTree，或者关闭全屏
 | goldendict                                  | [翻译](https://www.cnblogs.com/keatonlao/p/12702571.html) | [官网](https://github.com/goldendict/goldendict)或apt安装 |
 | 欧陆词典                                        | 翻译                                                      | 官网下载Deb安装                                            |
 
+### cubic
 
+- [cubic-ubuntu](https://launchpad.net/cubic)
+将当前系统（包括已安装的软件）打包成ISO镜像。
+
+```bash
+sudo apt-add-repository universe  
+sudo apt-add-repository ppa:cubic-wizard/release  
+sudo apt update  
+sudo apt install --no-install-recommends cubic
+```
 ## 小问题
 
 
