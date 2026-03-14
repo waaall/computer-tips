@@ -1,4 +1,4 @@
-## HBA330 尝试
+## HBA330 尝试 raid
 
 ### 硬件信息
 
@@ -11,8 +11,8 @@
 Dell HBA330 Adp (Embedded)  Integrated Storage Controller 1 Not Applicable  16.17.00.05 Information Not Available   0 MB
 
 Status  Name    State   Slot Number Size    Bus Protocol    Media Type  Hot Spare   Actions Pending Actions
-Physical Disk 0:1:4 Non-RAID    4   7452.04 GB  SATA    HDD No      
-Physical Disk 0:1:5 Non-RAID    5   7452.04 GB  SATA    HDD No  
+Physical Disk 0:1:4 Non-RAID    4   7452.04 GB  SATA    HDD No
+Physical Disk 0:1:5 Non-RAID    5   7452.04 GB  SATA    HDD No
 ```
 
 ### 实际操作
@@ -38,13 +38,13 @@ Lifecycle Controller RAID 配置 显示：
 - [HBA330 Dell info](https://www.dell.com/support/manuals/zh-cn/dell-sas-hba-12gbps/dell_hba_ug_publication/dell-hba-card-specifications?guid=guid-06cb2c46-07fb-4f69-b558-fa0a275d1d51)
 - [dell 论坛](https://www.dell.com/community/en/conversations/poweredge-hddscsiraid/change-of-raid-from-hba330-to-h730p-and-warranty/647f6e59f4ccf8a8debb430f)
 
-## 现有raid卡兼容性
+### 现有raid卡兼容性
 
-### YZCA-00582-102 卡的详细信息
+#### YZCA-00582-102 卡的详细信息
 
 这是浪潮（Inspur）SAS3108 YZCA-00582-102，相当于 LSI 9361-8i 阵列卡，带 2G 缓存。
 
-#### 核心规格（基于 LSI MegaRAID SAS 9361-8i）
+核心规格（基于 LSI MegaRAID SAS 9361-8i）
 
 | 参数 | 规格 |
 |------|------|
@@ -59,14 +59,14 @@ Lifecycle Controller RAID 配置 显示：
 
 ---
 
-### 与 Dell T640 的兼容性
+#### 与 Dell T640 的兼容性
 
-#### 硬件兼容性
+##### 硬件兼容性
 - Dell T640 有 PCIe 3.0 x8/x16 插槽，物理上可以安装这张卡
 - SAS-RAID Device; VID: 1000; DID: 005D（即 LSI 9361-8i）在 VMware ESXi 7.0/8.0 兼容性列表中
 - Dell T640 officially support VMware ESXi 7 and 8
 
-#### 潜在问题
+##### 潜在问题
 
 1. 非 Dell 原装卡：YZCA-00582-102 是浪潮的 OEM 版本，不是 Dell 认证的卡。Dell iDRAC 和 Lifecycle Controller 可能无法完全识别或管理它
 2. 固件差异：浪潮 OEM 固件可能与原版 LSI 固件有差异，可能需要刷写原版 Broadcom/LSI 固件
@@ -88,7 +88,7 @@ Lifecycle Controller RAID 配置 显示：
 
 ---
 
-## 建议
+### 建议
 
 如果已经有这张卡理论上也能用，就是比较折腾：
 1. 需要购买 SFF-8643 转 SATA 线缆
@@ -97,3 +97,25 @@ Lifecycle Controller RAID 配置 显示：
 
 如果追求稳定性和官方支持：
 - 建议购买 Dell PERC H330/H730/H730P，完全兼容 T640 和 iDRAC 管理
+
+
+### BIOS 操作而不是 Life Control
+
+```text
+我换成了 H330，进入了 Lifecycle Controller RAID 配置，但是需要选择 windows raid 还是 linux raid，但是无法选择 linux raid， 操作系统是 vmware ESXi
+
+```
+
+上述信息是软件 RAID 的操作，可能是Lifecycle Controller 不兼容。 应该**跳过 Lifecycle Controller**，直接通过 H330 控制器的 BIOS 来配置 RAID：
+
+#### 通过 F2 System Setup
+
+1. 重启服务器，按 **F2** 进入 System Setup
+2. 选择 **Device Settings**
+3. 选择 **Dell PERC H330 Adapter** 或 **Integrated RAID Controller 1**
+4. 选择 **Configuration Management**
+5. 选择 **Create Virtual Disk**
+6. 选择 RAID Level：**RAID 1**
+7. 选择你的两块物理硬盘
+8. 保存并退出
+

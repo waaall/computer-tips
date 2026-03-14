@@ -56,8 +56,8 @@ windir 变量：规定操作系统的系统目录的路径。
 
 * [Start命令](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/start)、
 
- * 命令1 & 命令2 & 命令3 ... (无论前面命令是否故障,照样执行后面)   
- * 命令1 && 命令2 && 命令3....(仅当前面命令成功时,才执行后面)   
+ * 命令1 & 命令2 & 命令3 ... (无论前面命令是否故障,照样执行后面)
+ * 命令1 && 命令2 && 命令3....(仅当前面命令成功时,才执行后面)
  * 命令1 || 命令2 || 命令3.... (仅当前面命令失败时.才执行后面)
 
 ```powershell
@@ -80,7 +80,7 @@ taskkill /im notepad.exe #结束进程，按名称
 taskkill /pid 1234 #关闭 PID 为 1234 的进程
 
 #查看端口占用情况
-netstat -aon|findstr "1080" 
+netstat -aon|findstr "1080"
 
 #查看系统信息
 wmic memorychip list brief #看内存
@@ -204,7 +204,7 @@ mklink /D source_link source			#为文件夹创建符号链接
 
 #下面这几步让Ubuntu和powershell都可以使用atomsk指令，且只需要将bin文件夹加入系统环境变量即可
 
-# mklink /H bin\atomsk atomsk-win\atomsk.exe	#这是用cmd，用powershell或者wsl使用下面指令 
+# mklink /H bin\atomsk atomsk-win\atomsk.exe	#这是用cmd，用powershell或者wsl使用下面指令
 cmd.exe /c mklink /H 'bin\atomsk' 'atomsk-win\atomsk.exe'	#为文件创建硬链接
 cmd.exe /c mklink /H 'bin\atomsk.exe' 'atomsk-win\atomsk.exe'
 cmd.exe /c mklink /H 'bin\cmake.exe' 'c-compiler\cmake\bin\cmake.exe'
@@ -220,7 +220,7 @@ net start sshd   #开启ssh
 Get-NetFirewallRule -Name *ssh*   #查看防火墙
 
 # (管理员打开powershell输入这个命令)把默认cmd改成powershell
-New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force 
+New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
 
 # 端口权限 （8000为例）
 New-NetFirewallRule -DisplayName '端口应用的名字' -Profile @('Domain', 'Public', 'Private') -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8000
@@ -237,7 +237,7 @@ tasklist|findstr "9208"
 
 ### 磁盘管理
 
-#### [Diskpart](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/diskpart) : 
+#### [Diskpart](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/diskpart) :
 
 ```powershell
 list disk
@@ -469,10 +469,10 @@ eval $(dircolors -b $HOME/.dircolors)
 #### wsl 安装错误
 
 ```
-Could not write value to key \SOFTWARE\Classes\Directory\Background\shell\WSL.   
-Verify that you have sufficient access to that key, or contact your support personnel.wsl:  
-WSL 安装似乎已损坏 (错误代码： Wsl/CallMsi/Install/ERROR_INSTALL_FAILURE)。  
-按任意键修复 WSL，或 CTRL-C 取消。  
+Could not write value to key \SOFTWARE\Classes\Directory\Background\shell\WSL. 
+Verify that you have sufficient access to that key, or contact your support personnel.wsl:
+WSL 安装似乎已损坏 (错误代码： Wsl/CallMsi/Install/ERROR_INSTALL_FAILURE)。
+按任意键修复 WSL，或 CTRL-C 取消。
 此提示将在 60 秒后超时。
 ```
 
@@ -525,7 +525,7 @@ choco upgrade chocolatey
 
 ```bash
 ## 1. 安装到D盘，实际上就是加一个环境变量（独立与path的）制定其安装目录，自己搜索系统环境变量添加一个也可。自己改记得还要检查下path
-$env:SCOOP='D:\Develop\scoop' 
+$env:SCOOP='D:\Develop\scoop'
 [Environment]::SetEnvironmentVariable('SCOOP', $env:SCOOP, 'User')
 
 ## 2. 安装
@@ -584,7 +584,7 @@ The `source` settings involve configuration to the WinGet source.
 - [ ] [FDM](https://www.freedownloadmanager.org/zh/)                                下载
 [10个经验的国产软件](https://sspai.com/post/42153)
 
-
+- [ssh-FTP客户端](https://cloud.tencent.com/developer/article/2230830)
 ### github开源
 - [PDFMathTranslate](https://github.com/Byaidu/PDFMathTranslate)： 翻译PDF文档
 - [卡卡字幕助手](https://github.com/WEIFENG2333/VideoCaptioner)： 视频下载+字幕生成+翻译
@@ -603,7 +603,7 @@ taskkill /f /im wslservice.exe
 
 这会 **强制终止 WSL 的宿主服务**，但：
 - Hyper-V 虚拟网络（vEthernet (WSL)）和虚拟机实例（lxssmanager）仍处于挂起或锁定；
-    
+
 - 再次运行 wsl 或 wsl -l -v 时，会出现：
 ```
 docker-desktop    Installing      2
@@ -813,7 +813,7 @@ wsl --set-default Ubuntu-22.04
 ## cuda和cudnn
 
 CUDA（Compute Unified Device Architecture）是 NVIDIA 的通用 GPU 编程模型和 API 框架。
-- **核心功能**: 
+- **核心功能**:
     - 提供 C/C++/Fortran 等语言的 GPU 编程接口
     - 管理 GPU 内存、线程调度和硬件加速计算
     - 实现 CPU-GPU 异构计算
@@ -974,7 +974,7 @@ Docker Desktop 默认也把镜像、容器等存在 C 盘的 WSL2 虚拟磁盘 (
 3. 改成 D:\DockerData
 4. Docker 会提示迁移数据或重新初始化。
 
-  
+
 如果你不用 Docker Desktop，而是原生 WSL + Docker Engine）
 
 Docker 数据一般在：
@@ -996,13 +996,31 @@ wsl --import docker-desktop-data D:\WSL\DockerData D:\WSL\docker-data.tar --vers
 ## wsl git 换行符冲突问题
 
 windows下默认换行符是crlf (也就是`\n\r`); 而其他系统都是lf (也就是`\n`)；git 仓库要保持lf的换行符，但是worktree在windows下会是crlf。所以git这个config在windows 版本安装时的默认设置就是自动转换。
+
+Windows 不用 crlf 就好了! 但是不能关git的autocrlf，否则
+
+### git 换行符设置
 ```bash
 git config --get core.autocrlf
 
+# wsl 设置成 input， 具体原因见下
 git config --global core.autocrlf true
 git config --global core.eol lf
 ```
 
+### git 文件换行符切换
+```bash
+# 现有工作区的crlf切换
+git rm --cached -r .
+git reset --hard
+
+# git 仓库被污染后，设置上.gitattributes `* text=auto eol=lf` 然后
+git add --renormalize .
+git status
+git commit -m "Normalize line endings"
+```
+
+### 参数解释
 1. **true**（常见于 Windows）
     - **checkout 时**：Git 会把仓库里的 **LF** → 转成 **CRLF**。
     - **commit 时**：Git 会把本地的 **CRLF** → 转回 **LF** 保存到仓库。
@@ -1019,6 +1037,7 @@ git config --global core.eol lf
         相当于 **只在写入仓库时纠正为 LF**，但不会强制你本地看到 CRLF。
 
 这时候wsl下的默认是false，这样就不行，如果设置成input (wsl下)就没有报错了。但是wsl下如果修改提交代码，就会有warning，如果只是在windows下看，那就wsl设置成input就ok：
+
 ```bash
 ......
 warning: in the working copy of 'tests/tester-logs/log-backup.txt', CRLF will be replaced by LF the next time Git touches it
@@ -1027,7 +1046,7 @@ warning: in the working copy of 'tests/tester-logs/log-backup.txt', CRLF will be
 
 如果windows 设置为input，有些编辑器就会显示错误可能。
 
-#### 设置gitattributes
+### 设置gitattributes
 ```bash
 # 默认所有文本文件：按平台 checkout，仓库中始终存 LF
 * text=auto
@@ -1268,7 +1287,7 @@ Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 ### dev-apps
 
 - [arm-gnu-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
-	- Windows (mingw-w64-x86_64) hosted cross toolchains 
+	- Windows (mingw-w64-x86_64) hosted cross toolchains
 	- AArch32 bare-metal target (arm-none-eabi)
 
 - [clash-verge](https://github.com/clash-verge-rev/clash-verge-rev/releases/)
