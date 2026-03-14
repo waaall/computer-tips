@@ -498,6 +498,16 @@ sudo vim /etc/wsl.conf
 default=your_user_name
 ```
 
+### wsl docker error
+
+```bash
+compinit:527: no such file or directory: /usr/share/zsh/vendor-completions/_docker
+```
+
+**解决方案：**
+windows docker 软件 的 `settings-resources-wsl integration` 中启动 `enable integration with additonal distros`
+
+
 ## 动态库
 
 [windows动态库位置](https://www.cnblogs.com/tocy/p/windows_dll_searth_path.html)

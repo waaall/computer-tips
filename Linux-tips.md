@@ -2608,8 +2608,6 @@ cat > /etc/yum.repos.d/CentOS-Base.repo << 'EOF'
 #
 # If the mirrorlist= does not work for you, as a fall back you can try the
 # remarked out baseurl= line instead.
-#
-#
 
 [base]
 name=CentOS-$releasever - Base
@@ -3123,6 +3121,15 @@ sudo apt install build-essential #安装gcc、g++、make等
 apt-cache show gcc #Ubuntu 看软件库中软件信息
 dpkg -L gcc #Ubuntu查看gcc所有文件都安装在哪里
 
+```
+### pyenv pip 问题
+
+pyenv install python but pip do not set up correctly.
+
+**解决方案**
+
+```bash
+pyenv rehash
 ```
 
 ## linux桌面
