@@ -498,7 +498,19 @@ brew deps --installed --tree #查看所有依赖关系
 
 [brew清华源](https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/)
 [brew阿里源](https://developer.aliyun.com/mirror/homebrew/)
+
+
 ```shell
+# Set homebrew mirror
+# 自 brew 4.0.0 (2023 年 2 月 16 日) 起，HOMEBREW_INSTALL_FROM_API 会成为默认行为，无需设置。
+# 大部分用户无需再克隆 homebrew-core 仓库，故无需设置 HOMEBREW_CORE_GIT_REMOTE 环境变量；
+export HOMEBREW_INSTALL_FROM_API=1
+# export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
+export HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/"
+# export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
+
+
 # brew 程序本身，Homebrew/Linuxbrew 相同
 git -C "$(brew --repo)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
 
