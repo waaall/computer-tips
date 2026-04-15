@@ -650,6 +650,11 @@ print (os.path.abspath('.'))      #查看python读取路径
 df.parallel_apply(func) #加上这个使得命令利用多核
 ```
 
+### OCR
+
+#### tesseract
+
+
 ### “小飞机”
 具体见小飞机笔记。
 #### shadowsocks
@@ -873,6 +878,7 @@ brew install --cask mactex-no-gui
 brew tap deskflow/homebrew-tap
 brew install deskflow
 brew install openocd
+brew install tesseract
 
 brew install ffmpeg  # 依赖太多，后期用可安装
 brew install qt      # 依赖太多，后期用可安装
@@ -1104,10 +1110,10 @@ brew upgrade tree
 brew upgrade wget
 brew upgrade ninja
 brew upgrade ssh-copy-id
+brew upgrade tesseract
+
 brew upgrade codex
 brew upgrade opencode
 brew upgrade gemini-cli
-
-brew upgrade ffmpeg
 ```
 
