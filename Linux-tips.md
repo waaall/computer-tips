@@ -144,6 +144,32 @@ VFS 层 (内核抽象：open, read, write)
     *   该挂载点目录原有的内容（如果有）会被暂时“遮盖”，直到卸载该文件系统后才会重新可见。
     *   系统工具如 `df`, `mount`, `lsblk` 会显示这个挂载关系。
 
+```bash
+# 看想挂载硬盘的UUID
+lsblk -f
+...
+└─sdb5 xfs                  82690986-3a98-4a71-9444-572cc18fb131
+
+# 建文件夹
+sudo mkdir -p /mnt/hdd
+
+# 编辑配置文件
+sudo vim /etc/fstab
+
+# 增加如下一行（注意UUID、挂载位置、文件系统类型等要正确）：
+UUID=82690986-3a98-4a71-9444-572cc18fb131 /mnt/hdd xfs defaults,noatime,nofail,x-systemd.device-timeout=10s 0 0
+
+# 验证
+sudo findmnt --verify
+
+# 没问题就卸载再挂载
+sudo umount /dev/sdb5
+sudo mount -a
+
+# 确认
+findmnt /mnt/hdd
+```
+
 | 命令             | 作用层级        | 关键信息            | 使用场景      |
 | -------------- | ----------- | --------------- | --------- |
 | **`fdisk -l`** | 磁盘分区表       | 分区物理信息（起止扇区、大小） | 查看磁盘分区结构  |
