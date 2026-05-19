@@ -3267,9 +3267,8 @@ pyenv versions
 pyenv global 3.11.14
 
 # 设置pip国内代理
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
-pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
-
+pip config set global.index-url https://pypi.mirrors.ustc.edu.cn/simple
+# pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
 ### zoxide + fzf 的 zshrc 配置

@@ -910,8 +910,8 @@ pyenv versions
 pyenv global 3.12.11
 
 # 设置pip国内代理
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
-pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
+pip config set global.index-url https://pypi.mirrors.ustc.edu.cn/simple
+# pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 
 # 设置git账号密码https://docs.github.com/en/account-and-profile/how-tos/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address#setting-your-commit-email-address-on-github
 
