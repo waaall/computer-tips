@@ -93,7 +93,11 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+# export LANG="zh_CN.UTF-8"
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export RUBYOPT='-Eutf-8:utf-8'
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -117,7 +121,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 
 # # pyenv 配置
-# export PATH="$PYENV_ROOT/bin:$PATH" 
+# export PATH="$PYENV_ROOT/bin:$PATH"
 # export PATH=$PYENV_ROOT/shims:$PATH
 # eval "$(pyenv init - zsh)"
 
