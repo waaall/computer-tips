@@ -744,6 +744,34 @@ man ln
 ```
 
 
+### 磁盘空间分析及管理
+
+```bash
+df -hT                        
+Filesystem     Type      Size  Used Avail Use% Mounted on
+tmpfs          tmpfs      13G  3.9M   13G   1% /run
+/dev/sda2      ext4      439G  188G  229G  46% /
+tmpfs          tmpfs      63G  8.0K   63G   1% /dev/shm
+/dev/sdb5      xfs       3.7T   89G  3.6T   3% /mnt/hdd
+
+sudo du -h --max-depth=1 -x /var 2>/dev/null | sort -hr
+123G /var
+122G /var/lib
+708M /var/cache
+...
+
+# docker system prune
+# (不要用！) docker system prune -a --volumes (不要用！)
+
+sudo du -h --max-depth=1 -x /var/lib 2>/dev/null | sort -hr
+107G /var/lib
+101G /var/lib/containerd
+4.7G /var/lib/snapd
+738M /var/lib/docker
+326M /var/lib/apt
+83M /var/lib/dpkg
+...
+```
 ### smartctl 磁盘安全
 
 
