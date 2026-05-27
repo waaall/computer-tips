@@ -192,3 +192,302 @@ Driver Version: 595.71.05
 
 `sudo reboot`
 让 595 内核模块真正生效。
+
+## 另一次更新导致不适配的问题
+
+### 1. 问题现象
+
+在启动多个 GPU Docker 服务时失败：
+
+```bash
+docker compose -f kokoro-tts-compose-zh-gpu.yml up -d
+docker compose -f whisper-asr-compose.yml up -d
+docker compose -f docker-compose-rtx-pro-6000_embed.yml up -d
+docker compose -f docker-compose-rtx-pro-6000_1.yml up -d
+````
+
+报错类似：
+
+```text
+Error response from daemon: failed to create task for container:
+failed to create shim task:
+OCI runtime create failed:
+runc create failed:
+unable to start container process:
+error during container init:
+failed to fulfil mount request:
+open /usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so.595.71.05:
+no such file or directory
+```
+
+---
+
+### 2. 根因
+
+这不是模型目录迁移导致的问题，而是 NVIDIA 驱动组件版本混装导致的问题。
+
+当前宿主机实际加载的 NVIDIA 驱动版本是：
+
+```bash
+nvidia-smi
+```
+
+输出显示：
+
+```text
+Driver Version: 595.71.05
+CUDA Version: 13.2
+```
+
+但是系统里的 `libnvidia-gtk3` 实际文件却是：
+
+```bash
+ls -lah /usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so*
+```
+
+输出为：
+
+```text
+/usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so.610.43.02
+```
+
+也就是说，系统变成了：
+
+```text
+NVIDIA 内核驱动 / nvidia-smi: 595.71.05
+nvidia-settings / libxnvctrl0 / libnvidia-gtk3: 610.43.02
+```
+
+这种状态会导致 NVIDIA Container Runtime 在启动 GPU 容器时，按当前驱动版本 `595.71.05` 去查找并挂载：
+
+```text
+/usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so.595.71.05
+```
+
+但该文件不存在，因为它已经被升级成了：
+
+```text
+/usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so.610.43.02
+```
+
+最终导致所有使用 GPU 的 Docker 容器启动失败。
+
+---
+
+### 3. 为什么会发生
+
+之前执行过：
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+升级日志中包含：
+
+```text
+libxnvctrl0       610.43.02-1ubuntu1
+nvidia-settings   610.43.02-1ubuntu1
+```
+
+系统中启用了 NVIDIA CUDA repo：
+
+```text
+https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64
+```
+
+该源中提供了较新的 `610.43.02` 版本，APT 看到版本号更高，就将 `nvidia-settings` 和 `libxnvctrl0` 从 `595.71.05` 升级到了 `610.43.02`。
+
+APT 升级时不会报错，因为从包依赖角度看，这两个包可以安装成功。
+
+但 APT 不会检查：
+
+```text
+当前运行中的 NVIDIA 内核驱动版本
+是否与 Docker NVIDIA runtime 需要挂载的用户态库完全匹配
+```
+
+所以安装阶段成功，运行 GPU 容器时才暴露问题。
+
+---
+
+### 4. 牵引后果
+
+该问题会导致：
+
+```text
+1. nvidia-smi 在宿主机上仍然正常
+2. Docker GPU 容器无法启动
+3. vLLM / Whisper / Kokoro 等依赖 GPU 的服务全部启动失败
+4. docker rm -f 删除容器无效
+5. 重建容器无效
+6. 修改模型目录或 volumes 无法解决
+7. 只要 docker run --gpus all 失败，所有 GPU compose 服务都会失败
+```
+
+验证命令：
+
+```bash
+docker run --rm --gpus all nvidia/cuda:12.9.0-base-ubuntu24.04 nvidia-smi
+```
+
+如果这个命令失败，说明问题在 NVIDIA Container Runtime / 宿主机 NVIDIA 用户态库，不在具体业务容器。
+
+---
+
+### 5. 当前异常包
+
+检查命令：
+
+```bash
+dpkg -l | grep -E 'nvidia|libnvidia|cuda' | awk '{print $2, $3}' | sort
+```
+
+已确认异常包为：
+
+```text
+nvidia-settings 610.43.02-1ubuntu1
+libxnvctrl0     610.43.02-1ubuntu1
+```
+
+可回退版本为：
+
+```bash
+apt-cache policy nvidia-settings libxnvctrl0
+```
+
+可用目标版本：
+
+```text
+595.71.05-1ubuntu1
+```
+
+---
+
+### 6. 解决方案：回退 nvidia-settings 和 libxnvctrl0
+
+执行：
+
+```bash
+sudo apt install --allow-downgrades \
+  nvidia-settings=595.71.05-1ubuntu1 \
+  libxnvctrl0=595.71.05-1ubuntu1
+```
+
+回退后检查：
+
+```bash
+dpkg -l | grep -E 'nvidia-settings|libxnvctrl0'
+ls -lah /usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so*
+```
+
+期望结果：
+
+```text
+nvidia-settings 595.71.05-1ubuntu1
+libxnvctrl0:amd64 595.71.05-1ubuntu1
+/usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so.595.71.05
+```
+
+---
+
+### 7. 防止下次 apt upgrade 再次升级到 610
+
+回退成功后，锁定这两个包：
+
+```bash
+sudo apt-mark hold nvidia-settings libxnvctrl0
+```
+
+确认锁定状态：
+
+```bash
+apt-mark showhold
+```
+
+期望看到：
+
+```text
+libxnvctrl0
+nvidia-settings
+```
+
+---
+
+### 8. 重启 Docker 并验证 NVIDIA runtime
+
+执行：
+
+```bash
+sudo systemctl restart docker
+```
+
+验证 GPU Docker：
+
+```bash
+docker run --rm --gpus all nvidia/cuda:12.9.0-base-ubuntu24.04 nvidia-smi
+```
+
+如果能正常显示 GPU 信息，说明 NVIDIA Container Runtime 已恢复。
+
+---
+
+### 9. 重新启动业务容器
+
+```bash
+docker compose -f kokoro-tts-compose-zh-gpu.yml up -d --remove-orphans
+docker compose -f whisper-asr-compose.yml up -d --remove-orphans
+docker compose -f docker-compose-rtx-pro-6000_embed.yml up -d --remove-orphans
+docker compose -f docker-compose-rtx-pro-6000_1.yml up -d --remove-orphans
+```
+
+---
+
+### 10. 不建议的临时方案
+
+不建议通过软链接绕过：
+
+```bash
+sudo ln -s /usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so.610.43.02 \
+  /usr/lib/x86_64-linux-gnu/libnvidia-gtk3.so.595.71.05
+```
+
+原因：
+
+```text
+这只是骗过文件路径检查
+不代表 610 用户态库与 595 内核驱动 ABI 完全兼容
+可能引入更隐蔽的问题
+```
+
+正确做法是保持 NVIDIA 驱动组件版本一致。
+
+---
+
+### 11. 后续建议
+
+以后执行系统升级前，先查看将要升级的包：
+
+```bash
+apt list --upgradable
+```
+
+或者模拟升级：
+
+```bash
+sudo apt -s upgrade
+```
+
+如果看到以下包准备升级，需要特别小心：
+
+```text
+nvidia-*
+libnvidia-*
+cuda-*
+libxnvctrl0
+nvidia-settings
+```
+
+服务器上的 NVIDIA 驱动组件建议不要跟随日常 `apt upgrade` 自动滚动升级。
+
+---
