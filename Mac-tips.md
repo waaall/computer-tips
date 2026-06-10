@@ -650,6 +650,14 @@ print (os.path.abspath('.'))      #查看python读取路径
 df.parallel_apply(func) #加上这个使得命令利用多核
 ```
 
+### qpdf
+
+```bash
+brew install qpdf
+# 从 input 的 9-73 拆出 output
+qpdf --empty --pages "input.pdf" 9-73 -- "output.pdf"
+```
+
 ### OCR
 
 #### tesseract
@@ -879,6 +887,7 @@ brew tap deskflow/homebrew-tap
 brew install deskflow
 brew install openocd
 brew install tesseract
+brew install qpdf
 
 brew install ffmpeg  # 依赖太多，后期用可安装
 brew install qt      # 依赖太多，后期用可安装

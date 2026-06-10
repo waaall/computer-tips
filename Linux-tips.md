@@ -2629,7 +2629,8 @@ sudo ubuntu-drivers autoinstall
 sudo dpkg -i ****.deb
 
 sudo apt install build-essential
-sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools pandoc nodejs npm zoxide fzf ninja-build nginx
+sudo apt install -y git vim zsh curl wget ffmpeg tmux cmake tree net-tools pandoc nodejs npm zoxide fzf ninja-build nginx qpdf
+
 chsh -s $(which zsh)
 # 安装ohmyzsh
 # git clone https://gitee.com/mirrors/oh-my-zsh.git ~/.oh-my-zsh
