@@ -2117,7 +2117,6 @@ pyenv 安装python需要代理，可以自己代理下载或者下载镜像文�
 
 
 ### linux 串口无法访问（权限低）
-- []()
 ```bash
 # 临时处理
 sudo chmod 777 /dev/ttyUSB0

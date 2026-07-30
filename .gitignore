@@ -18,5 +18,9 @@ Thumbs.db
 *.temp
 *.log
 
+# Python cache
+__pycache__/
+*.py[cod]
+
 # System files
 Icon?

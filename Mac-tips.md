@@ -703,8 +703,6 @@ sublime插件：
 * latextools
 
 [latextools](https://latextools.readthedocs.io/en/latest/install/)
-* [sublime 多重选择]((null))
-* [sublime anaconda 自动补全python库]((null))
 * [配置sublime-python1](https://www.jianshu.com/p/193d0f9a6190)
 * [配置sublime-python2](https://blog.csdn.net/DawnRanger/article/details/48575507)
 * [sublimelinter](http://www.sublimelinter.com/en/stable/)

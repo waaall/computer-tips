@@ -20,6 +20,9 @@ The following packages have unmet dependencies:
  libnvidia-gl-580:i386 : Conflicts: libnvidia-egl-gbm1
                          Conflicts: libnvidia-egl-gbm1:i386
 E: Unable to correct problems, you have held broken packages.
+```
+
+
 ### 2. 然后我们先 hold nvidia 相关的，更新了其他的
 ```bash
 sudo apt-mark hold 'libnvidia-*580*' 'nvidia-*580*'

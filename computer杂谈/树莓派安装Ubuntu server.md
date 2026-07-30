@@ -26,7 +26,7 @@ wifis:
     optional: true
     access-points:
       "your wifi name":
-      password: "your_wifi_password"
+        password: "your_wifi_password"
 ```
 
 这是ubuntu server 树莓派版的特殊设置方法, 虽然之后发现依然有问题. 但是还是附上相应的[参考网站](https://cloud-atlas.readthedocs.io/zh_CN/latest/arm/raspberry_pi/network/pi_ubuntu_network.html).

@@ -1,0 +1,33 @@
+* text=auto
+
+# Documentation and configuration
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.ps1 text eol=lf
+*.sh text eol=lf
+*.zshrc text eol=lf
+*.vim text eol=lf
+*.vimrc text eol=lf
+*.terminal text eol=lf
+*.sublime-color-scheme text eol=lf
+*.sublime-keymap text eol=lf
+*.sublime-settings text eol=lf
+*.sublime-syntax text eol=lf
+
+# Windows-native scripts and registry files
+*.bat text eol=crlf
+*.reg text eol=crlf
+
+# Binary assets
+*.gif binary
+*.ico binary
+*.jpeg binary
+*.jpg binary
+*.pdf binary
+*.png binary
+*.webp binary

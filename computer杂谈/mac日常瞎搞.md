@@ -64,7 +64,6 @@ vim ~/.zshrc
 - 选择所有记录并删除（如果您使用多台Mac，这将在其他Mac上重置/禁用自动解锁），删除以上图片中红色框中的文件
 - 仍在“钥匙串访问”中，搜索“自动解锁”（无空格），“ tlk”，“ tlk-nonsync”，“ classA”，“ classC”应该有4个条目选择4条记录并删除（不必担心它们会再次出现，系统会自动对其进行修复）
 - 打开“ 终端”
-  ![image](mac_python版本.assets/image_1601091149125.png)
 - 导航到 “~/Library/Sharing/AutoUnlock"
   ![image.png](http://media.baobao.zj.cn/image_1601091451806.png)
 - 应该有两个文件“ ltk.plist”和“ pairing-records.plist”，
@@ -225,8 +224,6 @@ pip 19.1.1 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
     > 2中第一个路径是你真正python安装的路径，比如我们使用homebrew安装的就是：`/usr/local/Cellar/python@3.8/3.8.5/bin`
     >
     > 值得注意的是，报错信息第一段第一行中`/usr/local/lib/python3.8/site-packages/pip`这个路径是pip包所在的位置，如果我们需要回退pip版本等，甚至可以直接把老版本的包拷贝到这里，而且， 我们需要看下这个文件夹中，**pip版本**，因为报错，我们得不到pip当前版本信息。**下图可以看到是20.2**
-
-<img src="mac_python版本.assets/Screen Shot 2020-08-15 at 10.57.28 AM.png" alt="Screen Shot 2020-08-15 at 10.57.28 AM" style="zoom: 67%;" />
 
 所以对于我们这种情况：
 
